@@ -1,6 +1,7 @@
 package com.fanrende.myfirstmod;
 
 import com.fanrende.myfirstmod.blocks.FirstBlock;
+import com.fanrende.myfirstmod.blocks.FirstBlockContainer;
 import com.fanrende.myfirstmod.blocks.FirstBlockTile;
 import com.fanrende.myfirstmod.blocks.ModBlocks;
 import com.fanrende.myfirstmod.items.FirstItem;
@@ -9,12 +10,15 @@ import com.fanrende.myfirstmod.setup.IProxy;
 import com.fanrende.myfirstmod.setup.ModSetup;
 import com.fanrende.myfirstmod.setup.ServerProxy;
 import net.minecraft.block.Block;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Effect;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.ToolType;
+import net.minecraftforge.common.extensions.IForgeContainerType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -28,6 +32,8 @@ import org.apache.logging.log4j.Logger;
 @Mod("myfirstmod")
 public class MyFirstMod
 {
+	public static String MODID = "myfirstmod";
+
 	public static IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
 
 	public static ModSetup setup = new ModSetup();
@@ -74,6 +80,15 @@ public class MyFirstMod
 					TileEntityType.Builder.create(FirstBlockTile::new, ModBlocks.FIRSTBLOCK)
 							.build(null)
 							.setRegistryName("firstblock"));
+		}
+
+		@SubscribeEvent
+		public static void onContainerRegistry(final RegistryEvent.Register<ContainerType<?>> event)
+		{
+			event.getRegistry().register(IForgeContainerType.create(((windowId, inv, data) -> {
+				BlockPos pos = data.readBlockPos();
+				return new FirstBlockContainer(windowId, proxy.getClientWorld(), pos, inv);
+			})).setRegistryName("firstblock"));
 		}
 	}
 }
