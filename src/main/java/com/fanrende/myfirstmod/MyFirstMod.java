@@ -2,6 +2,7 @@ package com.fanrende.myfirstmod;
 
 import com.fanrende.myfirstmod.blocks.FirstBlock;
 import com.fanrende.myfirstmod.blocks.ModBlocks;
+import com.fanrende.myfirstmod.items.FirstItem;
 import com.fanrende.myfirstmod.setup.ClientProxy;
 import com.fanrende.myfirstmod.setup.IProxy;
 import com.fanrende.myfirstmod.setup.ModSetup;
@@ -59,10 +60,10 @@ public class MyFirstMod
 		public static void onItemsRegistry(final RegistryEvent.Register<Item> event)
 		{
 			Item.Properties properties = new Item.Properties()
-					.group(setup.itemGroup)
-					.addToolType(ToolType.PICKAXE, 2);
+					.group(setup.itemGroup);
 
 			event.getRegistry().register(new BlockItem(ModBlocks.FIRSTBLOCK, properties).setRegistryName("firstblock"));
+			event.getRegistry().register(new FirstItem());
 		}
 	}
 }

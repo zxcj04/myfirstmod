@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"xoo",
+		" s ",
+		" s "
+	],
+	"key": {
+		"x": {
+			"item": "minecraft:emerald"
+		},
+		"o": {
+			"item": "myfirstmod:firstblock"
+		},
+		"s": {
+			"item": "minecraft:cobblestone"
+		}
+	},
+	"result": {
+		"item": "myfirstmod:firstitem"
+	}
+}
