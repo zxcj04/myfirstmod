@@ -1,6 +1,7 @@
 package com.fanrende.myfirstmod;
 
 import com.fanrende.myfirstmod.blocks.FirstBlock;
+import com.fanrende.myfirstmod.blocks.FirstBlockTile;
 import com.fanrende.myfirstmod.blocks.ModBlocks;
 import com.fanrende.myfirstmod.items.FirstItem;
 import com.fanrende.myfirstmod.setup.ClientProxy;
@@ -12,6 +13,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Food;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Effect;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -59,11 +61,19 @@ public class MyFirstMod
 		@SubscribeEvent
 		public static void onItemsRegistry(final RegistryEvent.Register<Item> event)
 		{
-			Item.Properties properties = new Item.Properties()
-					.group(setup.itemGroup);
+			Item.Properties properties = new Item.Properties().group(setup.itemGroup);
 
 			event.getRegistry().register(new BlockItem(ModBlocks.FIRSTBLOCK, properties).setRegistryName("firstblock"));
 			event.getRegistry().register(new FirstItem());
+		}
+
+		@SubscribeEvent
+		public static void onTileEntityRegistry(final RegistryEvent.Register<TileEntityType<?>> event)
+		{
+			event.getRegistry().register(
+					TileEntityType.Builder.create(FirstBlockTile::new, ModBlocks.FIRSTBLOCK)
+							.build(null)
+							.setRegistryName("firstblock"));
 		}
 	}
 }

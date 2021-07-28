@@ -8,10 +8,7 @@ public class FirstItem extends Item
 {
 	public FirstItem()
 	{
-		super(new Item.Properties()
-				.maxStackSize(1)
-				.group(MyFirstMod.setup.itemGroup)
-		);
+		super(new Item.Properties().maxStackSize(1).group(MyFirstMod.setup.itemGroup));
 
 		setRegistryName("firstitem");
 	}
