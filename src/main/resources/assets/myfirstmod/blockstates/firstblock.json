@@ -1,5 +1,7 @@
 {
-  "variants": {
-    "": { "model": "myfirstmod:block/firstblock" }
-  }
+	"variants": {
+		"": {
+			"model": "myfirstmod:block/firstblock"
+		}
+	}
 }

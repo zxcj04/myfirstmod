@@ -1,3 +1,6 @@
 {
-  "block.myfirstmod.firstblock": "First Block"
+	"block.myfirstmod.firstblock": "First Block",
+
+	"_comment": "Creative Tabs",
+	"itemGroup.myfirstmod": "My First Mod"
 }

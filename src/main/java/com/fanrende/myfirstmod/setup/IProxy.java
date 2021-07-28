@@ -2,7 +2,9 @@ package com.fanrende.myfirstmod.setup;
 
 import net.minecraft.world.World;
 
-public interface IProxy {
+public interface IProxy
+{
+	void init();
 
-    World getClientWorld();
+	World getClientWorld();
 }
