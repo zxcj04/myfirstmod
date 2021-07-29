@@ -26,6 +26,16 @@ public class CustomEnergyStorage extends EnergyStorage implements INBTSerializab
 		}
 	}
 
+	public void consumeEnergy(int energy)
+	{
+		this.energy -= energy;
+
+		if (this.energy < 0)
+		{
+			this.energy = 0;
+		}
+	}
+
 	@Override
 	public CompoundNBT serializeNBT()
 	{

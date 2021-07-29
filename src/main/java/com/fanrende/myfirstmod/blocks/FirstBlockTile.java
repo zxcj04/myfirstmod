@@ -1,5 +1,6 @@
 package com.fanrende.myfirstmod.blocks;
 
+import com.fanrende.myfirstmod.Config;
 import com.fanrende.myfirstmod.tools.CustomEnergyStorage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -25,6 +26,8 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import static com.fanrende.myfirstmod.blocks.ModBlocks.FIRSTBLOCK_TILE;
 
 public class FirstBlockTile extends TileEntity implements ITickableTileEntity, INamedContainerProvider
@@ -42,34 +45,75 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 	@Override
 	public void tick()
 	{
-		if (generatorCounter > 0)
+		energyHandler.ifPresent( energyStorage ->
 		{
-			generatorCounter--;
-
-			if (generatorCounter <= 0)
+			if (generatorCounter > 0)
 			{
-				energyHandler.ifPresent(h -> ((CustomEnergyStorage) h).addEnergy(1000));
+				generatorCounter--;
+
+				((CustomEnergyStorage) energyStorage).addEnergy(Config.FIRSTBLOCK_GENERATE.get());
+
+				markDirty();
 			}
-		}
-		else
-		{
-			energyHandler.ifPresent( eh ->
+			else if(energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored())
 			{
-				if(eh.getEnergyStored() < eh.getMaxEnergyStored())
+				itemHandler.ifPresent(itemHandler ->
 				{
-					itemHandler.ifPresent(h ->
-					{
-						ItemStack stack = h.getStackInSlot(0);
+					ItemStack stack = itemHandler.getStackInSlot(0);
 
-						if (stack.getItem() == Items.COBBLESTONE)
+					if (stack.getItem() == Items.COBBLESTONE)
+					{
+						itemHandler.extractItem(0, 1, false);
+						generatorCounter = Config.FIRSTBLOCK_TICKS.get();
+
+						markDirty();
+					}
+				});
+			}
+		});
+
+		sendOutEnergy();
+	}
+
+	private void sendOutEnergy()
+	{
+		energyHandler.ifPresent(energy ->
+		{
+			AtomicInteger energyStored = new AtomicInteger(energy.getEnergyStored());
+
+			if(energyStored.get() > 0)
+			{
+				for(Direction direction: Direction.values())
+				{
+					TileEntity tileEntity = world.getTileEntity(pos.offset(direction));
+
+					if(tileEntity != null)
+					{
+						boolean doContinue = tileEntity.getCapability(CapabilityEnergy.ENERGY, direction).map(h ->
 						{
-							h.extractItem(0, 1, false);
-							generatorCounter = 20;
-						}
-					});
+							if(h.canReceive())
+							{
+								int received = h.receiveEnergy(Math.min(energyStored.get(), Config.FIRSTBLOCK_SEND.get()), false);
+
+								energyStored.addAndGet(-received);
+
+								((CustomEnergyStorage) energy).consumeEnergy(received);
+
+								markDirty();
+
+								return energyStored.get() > 0;
+							}
+							else
+								return true;
+
+						}).orElse(true);
+
+						if(!doContinue)
+							return;
+					}
 				}
-			});
-		}
+			}
+		});
 	}
 
 	@Override
@@ -102,7 +146,14 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 
 	private ItemStackHandler createItemHandler()
 	{
-		return new ItemStackHandler(1){
+		return new ItemStackHandler(1)
+		{
+			@Override
+			protected void onContentsChanged(int slot)
+			{
+				markDirty();
+			}
+
 			@Override
 			public boolean isItemValid(int slot, @Nonnull ItemStack stack)
 			{
@@ -123,7 +174,7 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 
 	private CustomEnergyStorage createEnergyHandler()
 	{
-		return new CustomEnergyStorage(10000, 0);
+		return new CustomEnergyStorage(Config.FIRSTBLOCK_MAXPOWER.get(), 0);
 	}
 
 	@Nonnull
