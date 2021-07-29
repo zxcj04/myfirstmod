@@ -76,8 +76,8 @@ public class MyFirstMod
 		@SubscribeEvent
 		public static void onTileEntityRegistry(final RegistryEvent.Register<TileEntityType<?>> event)
 		{
-			event.getRegistry().register(
-					TileEntityType.Builder.create(FirstBlockTile::new, ModBlocks.FIRSTBLOCK)
+			event.getRegistry()
+					.register(TileEntityType.Builder.create(FirstBlockTile::new, ModBlocks.FIRSTBLOCK)
 							.build(null)
 							.setRegistryName("firstblock"));
 		}
@@ -85,10 +85,11 @@ public class MyFirstMod
 		@SubscribeEvent
 		public static void onContainerRegistry(final RegistryEvent.Register<ContainerType<?>> event)
 		{
-			event.getRegistry().register(IForgeContainerType.create(((windowId, inv, data) -> {
+			event.getRegistry().register(IForgeContainerType.create(( (windowId, inv, data) ->
+			{
 				BlockPos pos = data.readBlockPos();
 				return new FirstBlockContainer(windowId, proxy.getClientWorld(), pos, inv);
-			})).setRegistryName("firstblock"));
+			} )).setRegistryName("firstblock"));
 		}
 	}
 }

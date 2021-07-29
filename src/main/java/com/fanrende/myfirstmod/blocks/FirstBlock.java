@@ -54,18 +54,28 @@ public class FirstBlock extends Block
 		}
 	}
 
+
 	@Override
 	public boolean onBlockActivated(
 			BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit
 	)
 	{
-		if(!world.isRemote)
+		if (!world.isRemote)
 		{
 			TileEntity tileEntity = world.getTileEntity(pos);
 
-			if(tileEntity instanceof INamedContainerProvider)
+			if (tileEntity instanceof INamedContainerProvider)
 			{
-				NetworkHooks.openGui((ServerPlayerEntity) player, (INamedContainerProvider) tileEntity, tileEntity.getPos());
+				NetworkHooks.openGui((ServerPlayerEntity) player,
+						(INamedContainerProvider) tileEntity,
+						tileEntity.getPos()
+				);
+
+				return true;
+			}
+			else
+			{
+				throw new IllegalStateException("Our named container provider is missing!");
 			}
 		}
 
@@ -74,10 +84,9 @@ public class FirstBlock extends Block
 
 	private static Direction getFacingFromEntity(BlockPos clickedPos, LivingEntity entity)
 	{
-		return Direction.getFacingFromVector(
-				(float) (entity.posX - clickedPos.getX()),
-				(float) (entity.posY - clickedPos.getY()),
-				(float) (entity.posZ - clickedPos.getZ())
+		return Direction.getFacingFromVector((float) ( entity.posX - clickedPos.getX() ),
+				(float) ( entity.posY - clickedPos.getY() ),
+				(float) ( entity.posZ - clickedPos.getZ() )
 		);
 	}
 
