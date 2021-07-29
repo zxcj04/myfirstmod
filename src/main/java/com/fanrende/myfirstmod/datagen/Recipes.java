@@ -13,14 +13,17 @@ import net.minecraftforge.common.Tags;
 
 import java.util.function.Consumer;
 
-public class Recipes extends RecipeProvider {
+public class Recipes extends RecipeProvider
+{
 
-	public Recipes(DataGenerator generatorIn) {
+	public Recipes(DataGenerator generatorIn)
+	{
 		super(generatorIn);
 	}
 
 	@Override
-	protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
+	protected void registerRecipes(Consumer<IFinishedRecipe> consumer)
+	{
 		ShapedRecipeBuilder.shapedRecipe(ModBlocks.FIRSTBLOCK)
 				.patternLine("x#x")
 				.patternLine("# #")

@@ -52,8 +52,7 @@ public class Config
 				.defineInRange("generate", 50, 0, Integer.MAX_VALUE);
 		FIRSTBLOCK_SEND = COMMON_BUILDER.comment("Power Send Limit per tick")
 				.defineInRange("send", 100, 0, Integer.MAX_VALUE);
-		FIRSTBLOCK_TICKS = COMMON_BUILDER.comment("Ticks per fuel")
-				.defineInRange("ticks", 20, 0, Integer.MAX_VALUE);
+		FIRSTBLOCK_TICKS = COMMON_BUILDER.comment("Ticks per fuel").defineInRange("ticks", 20, 0, Integer.MAX_VALUE);
 
 		COMMON_BUILDER.pop();
 	}

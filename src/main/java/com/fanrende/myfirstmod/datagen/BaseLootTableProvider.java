@@ -48,8 +48,7 @@ public abstract class BaseLootTableProvider extends LootTableProvider
 								.func_216055_a("inv", "BlockEntityTag.inv", CopyNbt.Action.REPLACE)
 								.func_216055_a("energy", "BlockEntityTag.energy", CopyNbt.Action.REPLACE))
 						.acceptFunction(SetContents.func_215920_b()
-								.func_216075_a(DynamicLootEntry.func_216162_a(new ResourceLocation(
-										"minecraft",
+								.func_216075_a(DynamicLootEntry.func_216162_a(new ResourceLocation("minecraft",
 										"contents"
 								)))));
 		return LootTable.builder().addLootPool(builder);
@@ -63,8 +62,7 @@ public abstract class BaseLootTableProvider extends LootTableProvider
 		Map<ResourceLocation, LootTable> tables = new HashMap<>();
 		for (Map.Entry<Block, LootTable.Builder> entry : lootTables.entrySet())
 		{
-			tables.put(
-					entry.getKey().getLootTable(),
+			tables.put(entry.getKey().getLootTable(),
 					entry.getValue().setParameterSet(LootParameterSets.BLOCK).build()
 			);
 		}

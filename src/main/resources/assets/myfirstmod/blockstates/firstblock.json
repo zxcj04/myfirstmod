@@ -23,7 +23,6 @@
 			"model": "myfirstmod:block/firstblock",
 			"x": 90
 		},
-
 		"facing=north,powered=true": {
 			"model": "myfirstmod:block/firstblock_powered"
 		},

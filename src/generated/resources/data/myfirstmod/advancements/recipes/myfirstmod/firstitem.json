@@ -1,32 +1,32 @@
 {
-  "parent": "minecraft:recipes/root",
-  "rewards": {
-    "recipes": [
-      "myfirstmod:firstitem"
-    ]
-  },
-  "criteria": {
-    "firstblock": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "item": "myfirstmod:firstblock"
-          }
-        ]
-      }
-    },
-    "has_the_recipe": {
-      "trigger": "minecraft:recipe_unlocked",
-      "conditions": {
-        "recipe": "myfirstmod:firstitem"
-      }
-    }
-  },
-  "requirements": [
-    [
-      "firstblock",
-      "has_the_recipe"
-    ]
-  ]
+	"parent": "minecraft:recipes/root",
+	"rewards": {
+		"recipes": [
+			"myfirstmod:firstitem"
+		]
+	},
+	"criteria": {
+		"firstblock": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"item": "myfirstmod:firstblock"
+					}
+				]
+			}
+		},
+		"has_the_recipe": {
+			"trigger": "minecraft:recipe_unlocked",
+			"conditions": {
+				"recipe": "myfirstmod:firstitem"
+			}
+		}
+	},
+	"requirements": [
+		[
+			"firstblock",
+			"has_the_recipe"
+		]
+	]
 }

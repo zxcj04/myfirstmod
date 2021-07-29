@@ -47,21 +47,21 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 	@Override
 	public void tick()
 	{
-		if(world.isRemote)
+		if (world.isRemote)
 			return;
 
-		energyHandler.ifPresent( energyStorage ->
+		energyHandler.ifPresent(energyStorage ->
 		{
 			if (generatorCounter > 0)
 			{
 				generatorCounter--;
 
-				((CustomEnergyStorage) energyStorage).addEnergy(Config.FIRSTBLOCK_GENERATE.get());
+				( (CustomEnergyStorage) energyStorage ).addEnergy(Config.FIRSTBLOCK_GENERATE.get());
 
 				markDirty();
 			}
 
-			if(generatorCounter <= 0 && energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored())
+			if (generatorCounter <= 0 && energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored())
 			{
 				itemHandler.ifPresent(itemHandler ->
 				{
@@ -80,7 +80,7 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 
 		BlockState state = world.getBlockState(pos);
 
-		if(state.get(BlockStateProperties.POWERED) != generatorCounter > 0)
+		if (state.get(BlockStateProperties.POWERED) != generatorCounter > 0)
 			world.setBlockState(pos, state.with(BlockStateProperties.POWERED, generatorCounter > 0), 3);
 
 		sendOutEnergy();
@@ -92,23 +92,26 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 		{
 			AtomicInteger energyStored = new AtomicInteger(energy.getEnergyStored());
 
-			if(energyStored.get() > 0)
+			if (energyStored.get() > 0)
 			{
-				for(Direction direction: Direction.values())
+				for (Direction direction : Direction.values())
 				{
 					TileEntity tileEntity = world.getTileEntity(pos.offset(direction));
 
-					if(tileEntity != null)
+					if (tileEntity != null)
 					{
 						boolean doContinue = tileEntity.getCapability(CapabilityEnergy.ENERGY, direction).map(h ->
 						{
-							if(h.canReceive())
+							if (h.canReceive())
 							{
-								int received = h.receiveEnergy(Math.min(energyStored.get(), Config.FIRSTBLOCK_SEND.get()), false);
+								int received = h.receiveEnergy(Math.min(
+										energyStored.get(),
+										Config.FIRSTBLOCK_SEND.get()
+								), false);
 
 								energyStored.addAndGet(-received);
 
-								((CustomEnergyStorage) energy).consumeEnergy(received);
+								( (CustomEnergyStorage) energy ).consumeEnergy(received);
 
 								markDirty();
 
@@ -119,7 +122,7 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 
 						}).orElse(true);
 
-						if(!doContinue)
+						if (!doContinue)
 							return;
 					}
 				}
@@ -131,10 +134,10 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 	public void read(CompoundNBT tag)
 	{
 		CompoundNBT invTag = tag.getCompound("inv");
-		itemHandler.ifPresent(h -> (( INBTSerializable<CompoundNBT> ) h).deserializeNBT(invTag));
+		itemHandler.ifPresent(h -> ( (INBTSerializable<CompoundNBT>) h ).deserializeNBT(invTag));
 
 		CompoundNBT energyTag = tag.getCompound("energy");
-		energyHandler.ifPresent(h -> (( INBTSerializable<CompoundNBT> ) h).deserializeNBT(energyTag));
+		energyHandler.ifPresent(h -> ( (INBTSerializable<CompoundNBT>) h ).deserializeNBT(energyTag));
 
 		super.read(tag);
 	}
@@ -142,13 +145,15 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 	@Override
 	public CompoundNBT write(CompoundNBT tag)
 	{
-		itemHandler.ifPresent(h -> {
-			CompoundNBT compound = (( INBTSerializable<CompoundNBT> ) h).serializeNBT();
+		itemHandler.ifPresent(h ->
+		{
+			CompoundNBT compound = ( (INBTSerializable<CompoundNBT>) h ).serializeNBT();
 			tag.put("inv", compound);
 		});
 
-		energyHandler.ifPresent(h -> {
-			CompoundNBT compound = (( INBTSerializable<CompoundNBT>) h).serializeNBT();
+		energyHandler.ifPresent(h ->
+		{
+			CompoundNBT compound = ( (INBTSerializable<CompoundNBT>) h ).serializeNBT();
 			tag.put("energy", compound);
 		});
 
@@ -175,7 +180,7 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 			@Override
 			public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate)
 			{
-				if(stack.getItem() != Items.COBBLESTONE)
+				if (stack.getItem() != Items.COBBLESTONE)
 					return stack;
 
 				return super.insertItem(slot, stack, simulate);

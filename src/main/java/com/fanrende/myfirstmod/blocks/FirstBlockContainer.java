@@ -52,7 +52,8 @@ public class FirstBlockContainer extends Container
 			@Override
 			public void set(int value)
 			{
-				tileEntity.getCapability(CapabilityEnergy.ENERGY).ifPresent(h -> (( CustomEnergyStorage ) h).setEnergy(value));
+				tileEntity.getCapability(CapabilityEnergy.ENERGY)
+						.ifPresent(h -> ( (CustomEnergyStorage) h ).setEnergy(value));
 			}
 		});
 	}

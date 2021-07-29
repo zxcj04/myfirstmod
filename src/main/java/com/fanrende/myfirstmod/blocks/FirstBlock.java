@@ -39,7 +39,7 @@ public class FirstBlock extends Block
 	@Override
 	public int getLightValue(BlockState state)
 	{
-		return state.get(BlockStateProperties.POWERED)? super.getLightValue(state): 0;
+		return state.get(BlockStateProperties.POWERED) ? super.getLightValue(state) : 0;
 	}
 
 	@Nullable
