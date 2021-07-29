@@ -2,6 +2,7 @@ package com.fanrende.myfirstmod.blocks;
 
 import com.fanrende.myfirstmod.Config;
 import com.fanrende.myfirstmod.tools.CustomEnergyStorage;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -9,6 +10,7 @@ import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -45,6 +47,9 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 	@Override
 	public void tick()
 	{
+		if(world.isRemote)
+			return;
+
 		energyHandler.ifPresent( energyStorage ->
 		{
 			if (generatorCounter > 0)
@@ -55,7 +60,8 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 
 				markDirty();
 			}
-			else if(energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored())
+
+			if(generatorCounter <= 0 && energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored())
 			{
 				itemHandler.ifPresent(itemHandler ->
 				{
@@ -71,6 +77,11 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 				});
 			}
 		});
+
+		BlockState state = world.getBlockState(pos);
+
+		if(state.get(BlockStateProperties.POWERED) != generatorCounter > 0)
+			world.setBlockState(pos, state.with(BlockStateProperties.POWERED, generatorCounter > 0), 3);
 
 		sendOutEnergy();
 	}

@@ -36,6 +36,12 @@ public class FirstBlock extends Block
 		return true;
 	}
 
+	@Override
+	public int getLightValue(BlockState state)
+	{
+		return state.get(BlockStateProperties.POWERED)? super.getLightValue(state): 0;
+	}
+
 	@Nullable
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world)
@@ -50,7 +56,10 @@ public class FirstBlock extends Block
 	{
 		if (placer != null)
 		{
-			world.setBlockState(pos, state.with(BlockStateProperties.FACING, getFacingFromEntity(pos, placer)), 2);
+			state = state.with(BlockStateProperties.FACING, getFacingFromEntity(pos, placer));
+			state = state.with(BlockStateProperties.POWERED, false);
+
+			world.setBlockState(pos, state, 2);
 		}
 	}
 
@@ -70,13 +79,13 @@ public class FirstBlock extends Block
 						(INamedContainerProvider) tileEntity,
 						tileEntity.getPos()
 				);
-
-				return true;
 			}
 			else
 			{
 				throw new IllegalStateException("Our named container provider is missing!");
 			}
+
+			return true;
 		}
 
 		return super.onBlockActivated(state, world, pos, player, handIn, hit);
@@ -93,6 +102,6 @@ public class FirstBlock extends Block
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
 	{
-		builder.add(BlockStateProperties.FACING);
+		builder.add(BlockStateProperties.FACING, BlockStateProperties.POWERED);
 	}
 }
