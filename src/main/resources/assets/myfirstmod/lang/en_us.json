@@ -1,6 +1,7 @@
 {
 	"block.myfirstmod.firstblock": "First Block",
 	"item.myfirstmod.firstitem": "First Item",
+	"block.myfirstmod.bakedblock": "Baked Block",
 	"item.myfirstmod.weirdmob_egg": "Weird Mob Egg",
 	"_comment": "Creative Tabs",
 	"itemGroup.myfirstmod": "My First Mod"

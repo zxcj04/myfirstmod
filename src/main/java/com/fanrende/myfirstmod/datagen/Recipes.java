@@ -11,8 +11,7 @@ import net.minecraftforge.common.Tags;
 
 import java.util.function.Consumer;
 
-import static com.fanrende.myfirstmod.setup.Registration.FIRSTBLOCK;
-import static com.fanrende.myfirstmod.setup.Registration.FIRSTITEM;
+import static com.fanrende.myfirstmod.setup.Registration.*;
 
 public class Recipes extends RecipeProvider
 {
@@ -44,6 +43,16 @@ public class Recipes extends RecipeProvider
 				.key('o', Items.DIAMOND)
 				.setGroup("myfirstmod")
 				.addCriterion("firstblock", InventoryChangeTrigger.Instance.forItems(FIRSTBLOCK.get()))
+				.build(consumer);
+
+		ShapedRecipeBuilder.shapedRecipe(BAKEDBLOCK.get())
+				.patternLine("## ")
+				.patternLine("xx ")
+				.patternLine("xx ")
+				.key('x', Blocks.COBBLESTONE)
+				.key('#', Tags.Items.DYES_BLUE)
+				.setGroup("myfirstmod")
+				.addCriterion("cobblestone", InventoryChangeTrigger.Instance.forItems(Blocks.COBBLESTONE))
 				.build(consumer);
 	}
 }

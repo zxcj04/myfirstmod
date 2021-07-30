@@ -1,6 +1,7 @@
 package com.fanrende.myfirstmod.setup;
 
 import com.fanrende.myfirstmod.MyFirstMod;
+import com.fanrende.myfirstmod.blocks.BakedBlock;
 import com.fanrende.myfirstmod.blocks.FirstBlock;
 import com.fanrende.myfirstmod.blocks.FirstBlockContainer;
 import com.fanrende.myfirstmod.blocks.FirstBlockTile;
@@ -60,6 +61,11 @@ public class Registration
 				BlockPos pos = data.readBlockPos();
 				return new FirstBlockContainer(windowId, inv.player.getEntityWorld(), pos, inv);
 			})
+	);
+
+	public static final RegistryObject<BakedBlock> BAKEDBLOCK = BLOCKS.register("bakedblock", BakedBlock::new);
+	public static final RegistryObject<Item> BAKEDBLOCK_ITEM = ITEMS.register("bakedblock",
+			() -> new BlockItem(BAKEDBLOCK.get(), new Item.Properties().group(ModSetup.ITEM_GROUP))
 	);
 
 	public static final RegistryObject<FirstItem> FIRSTITEM = ITEMS.register("firstitem", FirstItem::new);

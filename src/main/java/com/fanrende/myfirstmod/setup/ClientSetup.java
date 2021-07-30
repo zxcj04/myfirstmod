@@ -1,11 +1,14 @@
 package com.fanrende.myfirstmod.setup;
 
 import com.fanrende.myfirstmod.MyFirstMod;
+import com.fanrende.myfirstmod.blocks.BakedModelLoader;
 import com.fanrende.myfirstmod.blocks.FirstBlockScreen;
 import com.fanrende.myfirstmod.entities.WeirdMobRenderer;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -20,6 +23,7 @@ public class ClientSetup
 	{
 		ScreenManager.registerFactory(FIRSTBLOCK_CONTAINER.get(), FirstBlockScreen::new);
 		RenderingRegistry.registerEntityRenderingHandler(WEIRDMOB.get(), WeirdMobRenderer::new);
+		ModelLoaderRegistry.registerLoader(new ResourceLocation(MyFirstMod.MODID, "bakedloader"), new BakedModelLoader());
 	}
 
 	@SubscribeEvent
