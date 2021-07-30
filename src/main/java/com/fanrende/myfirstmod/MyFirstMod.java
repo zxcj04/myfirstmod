@@ -4,12 +4,16 @@ import com.fanrende.myfirstmod.blocks.FirstBlock;
 import com.fanrende.myfirstmod.blocks.FirstBlockContainer;
 import com.fanrende.myfirstmod.blocks.FirstBlockTile;
 import com.fanrende.myfirstmod.blocks.ModBlocks;
+import com.fanrende.myfirstmod.entities.WeirdMobEntity;
 import com.fanrende.myfirstmod.items.FirstItem;
+import com.fanrende.myfirstmod.items.WeirdMobEggItem;
 import com.fanrende.myfirstmod.setup.ClientProxy;
 import com.fanrende.myfirstmod.setup.IProxy;
 import com.fanrende.myfirstmod.setup.ModSetup;
 import com.fanrende.myfirstmod.setup.ServerProxy;
 import net.minecraft.block.Block;
+import net.minecraft.entity.EntityClassification;
+import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Food;
@@ -35,7 +39,7 @@ import org.apache.logging.log4j.Logger;
 @Mod("myfirstmod")
 public class MyFirstMod
 {
-	public static String MODID = "myfirstmod";
+	public static final String MODID = "myfirstmod";
 
 	public static IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
 
@@ -80,6 +84,7 @@ public class MyFirstMod
 
 			event.getRegistry().register(new BlockItem(ModBlocks.FIRSTBLOCK, properties).setRegistryName("firstblock"));
 			event.getRegistry().register(new FirstItem());
+			event.getRegistry().register(new WeirdMobEggItem());
 		}
 
 		@SubscribeEvent
@@ -99,6 +104,18 @@ public class MyFirstMod
 				BlockPos pos = data.readBlockPos();
 				return new FirstBlockContainer(windowId, proxy.getClientWorld(), pos, inv);
 			} )).setRegistryName("firstblock"));
+		}
+
+		@SubscribeEvent
+		public static void onEntityRegistry(final RegistryEvent.Register<EntityType<?>> event)
+		{
+			event.getRegistry()
+					.register(EntityType.Builder.create(WeirdMobEntity::new, EntityClassification.CREATURE)
+							.size(1, 1)
+							.setShouldReceiveVelocityUpdates(false)
+							.build("weirdmob")
+							.setRegistryName(MyFirstMod.MODID, "weirdmob"));
+
 		}
 	}
 }
