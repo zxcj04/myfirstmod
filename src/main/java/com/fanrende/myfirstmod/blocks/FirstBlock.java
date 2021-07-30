@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -65,7 +66,7 @@ public class FirstBlock extends Block
 
 
 	@Override
-	public boolean onBlockActivated(
+	public ActionResultType onBlockActivated(
 			BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit
 	)
 	{
@@ -85,7 +86,7 @@ public class FirstBlock extends Block
 				throw new IllegalStateException("Our named container provider is missing!");
 			}
 
-			return true;
+			return ActionResultType.SUCCESS;
 		}
 
 		return super.onBlockActivated(state, world, pos, player, handIn, hit);
@@ -93,9 +94,11 @@ public class FirstBlock extends Block
 
 	private static Direction getFacingFromEntity(BlockPos clickedPos, LivingEntity entity)
 	{
-		return Direction.getFacingFromVector((float) ( entity.posX - clickedPos.getX() ),
-				(float) ( entity.posY - clickedPos.getY() ),
-				(float) ( entity.posZ - clickedPos.getZ() )
+		BlockPos position = entity.getPosition();
+
+		return Direction.getFacingFromVector((float) ( position.getX() - clickedPos.getX() ),
+				(float) ( position.getY() - clickedPos.getY() ),
+				(float) ( position.getZ() - clickedPos.getZ() )
 		);
 	}
 

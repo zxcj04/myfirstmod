@@ -2,6 +2,7 @@ package com.fanrende.myfirstmod.setup;
 
 import com.fanrende.myfirstmod.blocks.FirstBlockScreen;
 import com.fanrende.myfirstmod.blocks.ModBlocks;
+import com.fanrende.myfirstmod.entities.ModEntities;
 import com.fanrende.myfirstmod.entities.WeirdMobEntity;
 import com.fanrende.myfirstmod.entities.WeirdMobRenderer;
 import net.minecraft.client.Minecraft;
@@ -15,7 +16,7 @@ public class ClientProxy implements IProxy
 	public void init()
 	{
 		ScreenManager.registerFactory(ModBlocks.FIRSTBLOCK_CONTAINER, FirstBlockScreen::new);
-		RenderingRegistry.registerEntityRenderingHandler(WeirdMobEntity.class, WeirdMobRenderer::new);
+		RenderingRegistry.registerEntityRenderingHandler(ModEntities.WEIRDMOB, WeirdMobRenderer::new);
 	}
 
 	@Override

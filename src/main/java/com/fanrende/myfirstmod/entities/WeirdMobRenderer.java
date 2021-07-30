@@ -22,7 +22,7 @@ public class WeirdMobRenderer extends MobRenderer<WeirdMobEntity, WeirdMobModel>
 
 	@Nullable
 	@Override
-	protected ResourceLocation getEntityTexture(WeirdMobEntity entity)
+	public ResourceLocation getEntityTexture(WeirdMobEntity entity)
 	{
 		return TEXTURE;
 	}
