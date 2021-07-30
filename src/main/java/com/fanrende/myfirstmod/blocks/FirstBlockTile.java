@@ -30,18 +30,18 @@ import javax.annotation.Nullable;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.fanrende.myfirstmod.blocks.ModBlocks.FIRSTBLOCK_TILE;
+import static com.fanrende.myfirstmod.setup.Registration.FIRSTBLOCK_TILE;
 
 public class FirstBlockTile extends TileEntity implements ITickableTileEntity, INamedContainerProvider
 {
-	private LazyOptional<IItemHandler> itemHandler = LazyOptional.of(this::createItemHandler);
-	private LazyOptional<IEnergyStorage> energyHandler = LazyOptional.of(this::createEnergyHandler);
+	private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(this::createItemHandler);
+	private final LazyOptional<IEnergyStorage> energyHandler = LazyOptional.of(this::createEnergyHandler);
 
 	private int generatorCounter = 0;
 
 	public FirstBlockTile()
 	{
-		super(FIRSTBLOCK_TILE);
+		super(FIRSTBLOCK_TILE.get());
 	}
 
 	@Override

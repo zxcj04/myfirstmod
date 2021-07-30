@@ -1,7 +1,5 @@
 package com.fanrende.myfirstmod.datagen;
 
-import com.fanrende.myfirstmod.blocks.ModBlocks;
-import com.fanrende.myfirstmod.items.ModItem;
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.DataGenerator;
@@ -12,6 +10,9 @@ import net.minecraft.item.Items;
 import net.minecraftforge.common.Tags;
 
 import java.util.function.Consumer;
+
+import static com.fanrende.myfirstmod.setup.Registration.FIRSTBLOCK;
+import static com.fanrende.myfirstmod.setup.Registration.FIRSTITEM;
 
 public class Recipes extends RecipeProvider
 {
@@ -24,7 +25,7 @@ public class Recipes extends RecipeProvider
 	@Override
 	protected void registerRecipes(Consumer<IFinishedRecipe> consumer)
 	{
-		ShapedRecipeBuilder.shapedRecipe(ModBlocks.FIRSTBLOCK)
+		ShapedRecipeBuilder.shapedRecipe(FIRSTBLOCK.get())
 				.patternLine("x#x")
 				.patternLine("# #")
 				.patternLine("x#x")
@@ -34,15 +35,15 @@ public class Recipes extends RecipeProvider
 				.addCriterion("cobblestone", InventoryChangeTrigger.Instance.forItems(Blocks.COBBLESTONE))
 				.build(consumer);
 
-		ShapedRecipeBuilder.shapedRecipe(ModItem.FIRSTITEM)
+		ShapedRecipeBuilder.shapedRecipe(FIRSTITEM.get())
 				.patternLine("o##")
 				.patternLine(" x ")
 				.patternLine(" x ")
 				.key('x', Blocks.COBBLESTONE)
-				.key('#', ModBlocks.FIRSTBLOCK)
+				.key('#', FIRSTBLOCK.get())
 				.key('o', Items.DIAMOND)
 				.setGroup("myfirstmod")
-				.addCriterion("firstblock", InventoryChangeTrigger.Instance.forItems(ModBlocks.FIRSTBLOCK))
+				.addCriterion("firstblock", InventoryChangeTrigger.Instance.forItems(FIRSTBLOCK.get()))
 				.build(consumer);
 	}
 }

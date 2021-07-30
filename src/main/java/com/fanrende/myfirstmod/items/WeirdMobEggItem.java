@@ -1,7 +1,6 @@
 package com.fanrende.myfirstmod.items;
 
-import com.fanrende.myfirstmod.MyFirstMod;
-import com.fanrende.myfirstmod.entities.ModEntities;
+import com.fanrende.myfirstmod.setup.ModSetup;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -19,13 +18,14 @@ import net.minecraft.world.spawner.AbstractSpawner;
 
 import java.util.Objects;
 
+import static com.fanrende.myfirstmod.setup.Registration.WEIRDMOB;
+
 public class WeirdMobEggItem extends Item
 {
 
 	public WeirdMobEggItem()
 	{
-		super(new Item.Properties().maxStackSize(1).group(MyFirstMod.setup.itemGroup));
-		setRegistryName("weirdmob_egg");
+		super(new Item.Properties().maxStackSize(1).group(ModSetup.ITEM_GROUP));
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class WeirdMobEggItem extends Item
 				if (tileentity instanceof MobSpawnerTileEntity)
 				{
 					AbstractSpawner abstractspawner = ( (MobSpawnerTileEntity) tileentity ).getSpawnerBaseLogic();
-					abstractspawner.setEntityType(ModEntities.WEIRDMOB);
+					abstractspawner.setEntityType(WEIRDMOB.get());
 					tileentity.markDirty();
 					world.notifyBlockUpdate(blockpos, blockstate, blockstate, 3);
 					itemstack.shrink(1);
@@ -70,7 +70,7 @@ public class WeirdMobEggItem extends Item
 				blockpos1 = blockpos.offset(direction);
 			}
 
-			if (ModEntities.WEIRDMOB.spawn(
+			if (WEIRDMOB.get().spawn(
 					world,
 					itemstack,
 					context.getPlayer(),

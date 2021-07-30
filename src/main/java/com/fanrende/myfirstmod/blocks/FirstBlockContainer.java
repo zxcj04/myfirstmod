@@ -19,16 +19,17 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
-import static com.fanrende.myfirstmod.blocks.ModBlocks.FIRSTBLOCK_CONTAINER;
+import static com.fanrende.myfirstmod.setup.Registration.FIRSTBLOCK;
+import static com.fanrende.myfirstmod.setup.Registration.FIRSTBLOCK_CONTAINER;
 
 public class FirstBlockContainer extends Container
 {
-	private TileEntity tileEntity;
-	private IItemHandler playerInventory;
+	private final TileEntity tileEntity;
+	private final IItemHandler playerInventory;
 
 	public FirstBlockContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory)
 	{
-		super(FIRSTBLOCK_CONTAINER, windowId);
+		super(FIRSTBLOCK_CONTAINER.get(), windowId);
 
 		this.tileEntity = world.getTileEntity(pos);
 
@@ -68,7 +69,7 @@ public class FirstBlockContainer extends Container
 	{
 		return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()),
 				playerEntity,
-				ModBlocks.FIRSTBLOCK
+				FIRSTBLOCK.get()
 		);
 	}
 

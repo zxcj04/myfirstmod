@@ -1,7 +1,8 @@
 package com.fanrende.myfirstmod.datagen;
 
-import com.fanrende.myfirstmod.blocks.ModBlocks;
 import net.minecraft.data.DataGenerator;
+
+import static com.fanrende.myfirstmod.setup.Registration.FIRSTBLOCK;
 
 public class LootTables extends BaseLootTableProvider
 {
@@ -14,6 +15,6 @@ public class LootTables extends BaseLootTableProvider
 	@Override
 	protected void addTables()
 	{
-		lootTables.put(ModBlocks.FIRSTBLOCK, createStandardTable("firstblock", ModBlocks.FIRSTBLOCK));
+		lootTables.put(FIRSTBLOCK.get(), createStandardTable("firstblock", FIRSTBLOCK.get()));
 	}
 }

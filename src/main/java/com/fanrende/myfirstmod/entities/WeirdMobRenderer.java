@@ -10,8 +10,7 @@ import javax.annotation.Nullable;
 public class WeirdMobRenderer extends MobRenderer<WeirdMobEntity, WeirdMobModel>
 {
 
-	private static final ResourceLocation TEXTURE = new ResourceLocation(
-			MyFirstMod.MODID,
+	private static final ResourceLocation TEXTURE = new ResourceLocation(MyFirstMod.MODID,
 			"textures/entity/weirdmob.png"
 	);
 

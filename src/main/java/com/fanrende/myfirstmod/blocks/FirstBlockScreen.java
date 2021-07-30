@@ -11,7 +11,7 @@ import net.minecraft.util.text.ITextComponent;
 
 public class FirstBlockScreen extends ContainerScreen<FirstBlockContainer>
 {
-	private ResourceLocation GUI = new ResourceLocation(MyFirstMod.MODID, "textures/gui/firstblock_gui.png");
+	private final ResourceLocation GUI = new ResourceLocation(MyFirstMod.MODID, "textures/gui/firstblock_gui.png");
 
 	public FirstBlockScreen(
 			FirstBlockContainer container, PlayerInventory inventory, ITextComponent name
