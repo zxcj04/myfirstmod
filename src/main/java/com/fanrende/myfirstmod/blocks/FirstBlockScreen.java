@@ -3,7 +3,6 @@ package com.fanrende.myfirstmod.blocks;
 import com.fanrende.myfirstmod.MyFirstMod;
 import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ResourceLoadProgressGui;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;

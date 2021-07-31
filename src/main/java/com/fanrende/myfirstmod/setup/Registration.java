@@ -1,6 +1,5 @@
 package com.fanrende.myfirstmod.setup;
 
-import com.fanrende.myfirstmod.MyFirstMod;
 import com.fanrende.myfirstmod.blocks.BakedBlock;
 import com.fanrende.myfirstmod.blocks.FirstBlock;
 import com.fanrende.myfirstmod.blocks.FirstBlockContainer;
@@ -13,10 +12,8 @@ import com.fanrende.myfirstmod.items.InfinityEye;
 import com.fanrende.myfirstmod.items.InfinityPearl;
 import com.fanrende.myfirstmod.items.WeirdMobEggItem;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.item.EnderPearlEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;

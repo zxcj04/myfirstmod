@@ -2,7 +2,6 @@ package com.fanrende.myfirstmod.blocks;
 
 import com.fanrende.myfirstmod.MyFirstMod;
 import com.google.common.collect.ImmutableList;
-import javafx.scene.shape.VertexFormat;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.model.BakedQuad;

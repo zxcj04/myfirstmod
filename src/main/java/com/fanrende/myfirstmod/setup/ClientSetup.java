@@ -25,8 +25,7 @@ public class ClientSetup
 	{
 		ScreenManager.registerFactory(FIRSTBLOCK_CONTAINER.get(), FirstBlockScreen::new);
 		RenderingRegistry.registerEntityRenderingHandler(WEIRDMOB.get(), WeirdMobRenderer::new);
-		RenderingRegistry.registerEntityRenderingHandler(
-				INFINITYEYE_ENTITY.get(),
+		RenderingRegistry.registerEntityRenderingHandler(INFINITYEYE_ENTITY.get(),
 				manager -> new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer())
 		);
 		ModelLoaderRegistry.registerLoader(new ResourceLocation(MyFirstMod.MODID, "bakedloader"),

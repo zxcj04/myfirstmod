@@ -2,7 +2,6 @@ package com.fanrende.myfirstmod.items;
 
 import com.fanrende.myfirstmod.entities.InfinityPearlEntity;
 import com.fanrende.myfirstmod.setup.ModSetup;
-import net.minecraft.entity.item.EnderPearlEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

@@ -27,7 +27,6 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.fanrende.myfirstmod.setup.Registration.FIRSTBLOCK_TILE;
