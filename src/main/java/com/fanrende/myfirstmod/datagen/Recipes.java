@@ -54,5 +54,25 @@ public class Recipes extends RecipeProvider
 				.setGroup("myfirstmod")
 				.addCriterion("cobblestone", InventoryChangeTrigger.Instance.forItems(Blocks.COBBLESTONE))
 				.build(consumer);
+
+		ShapedRecipeBuilder.shapedRecipe(INFINITY_PEARL.get())
+				.patternLine("ooo")
+				.patternLine("oxo")
+				.patternLine("ooo")
+				.key('x', Items.EGG)
+				.key('o', Items.ENDER_PEARL)
+				.setGroup("myfirstmod")
+				.addCriterion("enderpearl", InventoryChangeTrigger.Instance.forItems(Items.ENDER_PEARL))
+				.build(consumer);
+
+		ShapedRecipeBuilder.shapedRecipe(INFINITY_EYE.get())
+				.patternLine("ooo")
+				.patternLine("oxo")
+				.patternLine("ooo")
+				.key('x', Items.BLAZE_ROD)
+				.key('o', INFINITY_PEARL.get())
+				.setGroup("myfirstmod")
+				.addCriterion("infinitypearl", InventoryChangeTrigger.Instance.forItems(INFINITY_PEARL.get()))
+				.build(consumer);
 	}
 }

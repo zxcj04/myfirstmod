@@ -5,12 +5,18 @@ import com.fanrende.myfirstmod.blocks.BakedBlock;
 import com.fanrende.myfirstmod.blocks.FirstBlock;
 import com.fanrende.myfirstmod.blocks.FirstBlockContainer;
 import com.fanrende.myfirstmod.blocks.FirstBlockTile;
+import com.fanrende.myfirstmod.entities.InfinityEyeEntity;
+import com.fanrende.myfirstmod.entities.InfinityPearlEntity;
 import com.fanrende.myfirstmod.entities.WeirdMobEntity;
 import com.fanrende.myfirstmod.items.FirstItem;
+import com.fanrende.myfirstmod.items.InfinityEye;
+import com.fanrende.myfirstmod.items.InfinityPearl;
 import com.fanrende.myfirstmod.items.WeirdMobEggItem;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.item.EnderPearlEntity;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -71,6 +77,24 @@ public class Registration
 	public static final RegistryObject<FirstItem> FIRSTITEM = ITEMS.register("firstitem", FirstItem::new);
 	public static final RegistryObject<WeirdMobEggItem> WEIRDMOB_EGG = ITEMS.register("weirdmob_egg",
 			WeirdMobEggItem::new
+	);
+	public static final RegistryObject<InfinityPearl> INFINITY_PEARL = ITEMS.register("infinitypearl",
+			InfinityPearl::new
+	);
+	public static final RegistryObject<InfinityEye> INFINITY_EYE = ITEMS.register("infinityeye", InfinityEye::new);
+
+	public static final RegistryObject<EntityType<InfinityPearlEntity>> INFINITYPEARL_ENTITY = ENTITIES.register(
+			"infinitypearl_entity",
+			() -> EntityType.Builder.<InfinityPearlEntity>create(InfinityPearlEntity::new, EntityClassification.MISC)
+					.size(0.25F, 0.25F)
+					.build("infinitypearl_entity")
+	);
+
+	public static final RegistryObject<EntityType<InfinityEyeEntity>> INFINITYEYE_ENTITY = ENTITIES.register(
+			"infinityeye_entity",
+			() -> EntityType.Builder.<InfinityEyeEntity>create(InfinityEyeEntity::new, EntityClassification.MISC)
+					.size(0.25F, 0.25F)
+					.build("infinityeye_entity")
 	);
 
 	public static final RegistryObject<EntityType<WeirdMobEntity>> WEIRDMOB = ENTITIES.register("weirdmob",

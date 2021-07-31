@@ -3,6 +3,8 @@
 	"item.myfirstmod.firstitem": "First Item",
 	"block.myfirstmod.bakedblock": "Baked Block",
 	"item.myfirstmod.weirdmob_egg": "Weird Mob Egg",
+	"item.myfirstmod.infinitypearl": "Infinity Pearl",
+	"item.myfirstmod.infinityeye": "Infinity Eye",
 	"_comment": "Creative Tabs",
 	"itemGroup.myfirstmod": "My First Mod"
 }

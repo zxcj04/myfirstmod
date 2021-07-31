@@ -31,9 +31,7 @@ public class BakedBlockModel implements IDynamicBakedModel
 
 	private TextureAtlasSprite getTexture()
 	{
-		return Minecraft.getInstance()
-				.getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE)
-				.apply(TEXTURE);
+		return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(TEXTURE);
 	}
 
 	private void putVertex(
@@ -89,10 +87,10 @@ public class BakedBlockModel implements IDynamicBakedModel
 		BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
 
 		builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
-		putVertex(builder, normal, v1.x, v1.y, v1.z,  0,  0, sprite, 1.0f, 1.0f, 1.0f);
-		putVertex(builder, normal, v2.x, v2.y, v2.z,  0, 16, sprite, 1.0f, 1.0f, 1.0f);
+		putVertex(builder, normal, v1.x, v1.y, v1.z, 0, 0, sprite, 1.0f, 1.0f, 1.0f);
+		putVertex(builder, normal, v2.x, v2.y, v2.z, 0, 16, sprite, 1.0f, 1.0f, 1.0f);
 		putVertex(builder, normal, v3.x, v3.y, v3.z, 16, 16, sprite, 1.0f, 1.0f, 1.0f);
-		putVertex(builder, normal, v4.x, v4.y, v4.z, 16,  0, sprite, 1.0f, 1.0f, 1.0f);
+		putVertex(builder, normal, v4.x, v4.y, v4.z, 16, 0, sprite, 1.0f, 1.0f, 1.0f);
 
 		return builder.build();
 	}

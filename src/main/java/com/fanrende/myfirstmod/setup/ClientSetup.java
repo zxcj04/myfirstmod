@@ -4,7 +4,9 @@ import com.fanrende.myfirstmod.MyFirstMod;
 import com.fanrende.myfirstmod.blocks.BakedModelLoader;
 import com.fanrende.myfirstmod.blocks.FirstBlockScreen;
 import com.fanrende.myfirstmod.entities.WeirdMobRenderer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -23,7 +25,13 @@ public class ClientSetup
 	{
 		ScreenManager.registerFactory(FIRSTBLOCK_CONTAINER.get(), FirstBlockScreen::new);
 		RenderingRegistry.registerEntityRenderingHandler(WEIRDMOB.get(), WeirdMobRenderer::new);
-		ModelLoaderRegistry.registerLoader(new ResourceLocation(MyFirstMod.MODID, "bakedloader"), new BakedModelLoader());
+		RenderingRegistry.registerEntityRenderingHandler(
+				INFINITYEYE_ENTITY.get(),
+				manager -> new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer())
+		);
+		ModelLoaderRegistry.registerLoader(new ResourceLocation(MyFirstMod.MODID, "bakedloader"),
+				new BakedModelLoader()
+		);
 	}
 
 	@SubscribeEvent

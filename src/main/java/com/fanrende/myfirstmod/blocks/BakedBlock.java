@@ -16,11 +16,7 @@ public class BakedBlock extends Block
 
 	public BakedBlock()
 	{
-		super(
-			Properties.create(Material.WOOD)
-				.sound(SoundType.WOOD)
-				.hardnessAndResistance(1.0f)
-		);
+		super(Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(1.0f));
 	}
 
 	@Override
