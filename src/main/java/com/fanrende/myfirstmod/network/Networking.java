@@ -18,8 +18,7 @@ public class Networking
 
 	public static void registerMessages()
 	{
-		INSTANCE = NetworkRegistry.newSimpleChannel(
-				new ResourceLocation(MyFirstMod.MODID, "myfirstmod"),
+		INSTANCE = NetworkRegistry.newSimpleChannel(new ResourceLocation(MyFirstMod.MODID, "myfirstmod"),
 				() -> "1.0",
 				s -> true,
 				s -> true

@@ -24,8 +24,7 @@ public class SpawnScreen extends Screen
 
 	private void spawn(String id)
 	{
-		Networking.INSTANCE.sendToServer(new PacketSpawn(
-				id,
+		Networking.INSTANCE.sendToServer(new PacketSpawn(id,
 				minecraft.player.dimension,
 				minecraft.player.getPosition()
 		));
