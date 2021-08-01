@@ -3,6 +3,7 @@ package com.fanrende.myfirstmod.items;
 import com.fanrende.myfirstmod.setup.ModSetup;
 import com.fanrende.myfirstmod.tools.CustomEnergyStorage;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -50,8 +51,12 @@ public class EnergyPickaxe extends Item
 	{
 		if (blockIn.getHarvestTool() == ToolType.PICKAXE)
 			return true;
-		else
-			return super.canHarvestBlock(blockIn);
+
+		Material material = blockIn.getMaterial();
+		if(material == Material.ROCK || material == Material.IRON || material == Material.ANVIL)
+			return true;
+
+		return super.canHarvestBlock(blockIn);
 	}
 
 	@Override
