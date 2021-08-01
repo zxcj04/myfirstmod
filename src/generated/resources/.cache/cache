@@ -1,4 +1,5 @@
 984f8a578212e02b15587ce5c49b335a191b30a7 data/myfirstmod/advancements/recipes/myfirstmod/bakedblock.json
+e0540d52cab285e4d12b6ee53d2c34838715b625 data/myfirstmod/advancements/recipes/myfirstmod/energypickaxe.json
 3ade4c6e1fab87192e94e2fc8c01d948d7bab163 data/myfirstmod/advancements/recipes/myfirstmod/firstblock.json
 f3bf3a44ab40f15710ff9b838c3407b80f1290c5 data/myfirstmod/advancements/recipes/myfirstmod/firstitem.json
 1801fcc82c6d0c22691d363b0bf8349fc2a1289c data/myfirstmod/advancements/recipes/myfirstmod/infinityeye.json
@@ -6,6 +7,7 @@ aa1396d3b5dfd793b77b665949bc711cae23cc1b data/myfirstmod/advancements/recipes/my
 84b4442ec50eb49a8505e694d9352cbeb4a6956d data/myfirstmod/loot_tables/blocks/bakedblock.json
 a0afabaae2b8f5b83826350e6e3b7de2249e91a6 data/myfirstmod/loot_tables/blocks/firstblock.json
 776dc3fbc1b26ead68e6e5616c197e62f0f1bd04 data/myfirstmod/recipes/bakedblock.json
+18f7c906ec58b33e2c220e7fa51cffa247fdc047 data/myfirstmod/recipes/energypickaxe.json
 2c9198cb915c3ab408919bad11da81cc416af548 data/myfirstmod/recipes/firstblock.json
 a26b01828f5b9779ff24482a68155e2b637f01c1 data/myfirstmod/recipes/firstitem.json
 0246808f5a539c7cc07278eec5ba9fa9f1e64321 data/myfirstmod/recipes/infinityeye.json

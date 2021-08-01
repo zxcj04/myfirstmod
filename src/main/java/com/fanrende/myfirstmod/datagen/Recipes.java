@@ -45,6 +45,16 @@ public class Recipes extends RecipeProvider
 				.addCriterion("firstblock", InventoryChangeTrigger.Instance.forItems(FIRSTBLOCK.get()))
 				.build(consumer);
 
+		ShapedRecipeBuilder.shapedRecipe(ENERGYPICKAXE.get())
+				.patternLine("ooo")
+				.patternLine(" x ")
+				.patternLine(" x ")
+				.key('x', Items.BLAZE_ROD)
+				.key('o', Blocks.OBSIDIAN)
+				.setGroup("myfirstmod")
+				.addCriterion("energypickaxe", InventoryChangeTrigger.Instance.forItems(Blocks.OBSIDIAN))
+				.build(consumer);
+
 		ShapedRecipeBuilder.shapedRecipe(BAKEDBLOCK.get())
 				.patternLine("## ")
 				.patternLine("xx ")
