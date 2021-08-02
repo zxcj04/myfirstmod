@@ -1,5 +1,6 @@
 package com.fanrende.myfirstmod.items;
 
+import com.fanrende.myfirstmod.Config;
 import com.fanrende.myfirstmod.setup.ModSetup;
 import com.fanrende.myfirstmod.tools.CustomEnergyStorage;
 import net.minecraft.block.BlockState;
@@ -37,7 +38,7 @@ public class EnergyPickaxe extends Item
 			ItemStack stack, @Nullable CompoundNBT nbt
 	)
 	{
-		return new CustomEnergyStorage.Item.Provider(stack, 10000, 1000);
+		return new CustomEnergyStorage.Item.Provider(stack, Config.ENERGYPICKAXE_MAXPOWER.get(), Config.ENERGYPICKAXE_MINECOST.get());
 	}
 
 	@Override
@@ -72,7 +73,7 @@ public class EnergyPickaxe extends Item
 
 		stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(h -> energyStored.set(h.getEnergyStored()));
 
-		return (double) 1 - ( (double) energyStored.get() / (double) 10000 );
+		return (double) 1 - ( (double) energyStored.get() / (double) Config.ENERGYPICKAXE_MAXPOWER.get() );
 	}
 
 	@Override
@@ -90,7 +91,7 @@ public class EnergyPickaxe extends Item
 
 		stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(h ->
 		{
-			( (CustomEnergyStorage.Item) h ).setEnergy(10000);
+			( (CustomEnergyStorage.Item) h ).setEnergy(Config.ENERGYPICKAXE_MAXPOWER.get());
 
 			System.out.println(h.getEnergyStored());
 		});
@@ -112,7 +113,7 @@ public class EnergyPickaxe extends Item
 	{
 		AtomicBoolean stopBreaking = new AtomicBoolean(false);
 
-		stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(h -> stopBreaking.set(h.getEnergyStored() < 1000));
+		stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(h -> stopBreaking.set(h.getEnergyStored() < Config.ENERGYPICKAXE_MINECOST.get()));
 
 		if (stopBreaking.get())
 			return true;
@@ -127,7 +128,7 @@ public class EnergyPickaxe extends Item
 	{
 		stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(h ->
 		{
-			( (CustomEnergyStorage.Item) h ).extractEnergy(1000, false);
+			( (CustomEnergyStorage.Item) h ).extractEnergy(Config.ENERGYPICKAXE_MINECOST.get(), false);
 
 			System.out.println(h.getEnergyStored());
 		});
