@@ -21,22 +21,6 @@ public class FirstBlockItem extends BlockItem
 
 	private int getEnergyStored(ItemStack stack)
 	{
-		if (!stack.getOrCreateTag().getBoolean("checked"))
-		{
-			int energyStored = stack.getOrCreateChildTag("BlockEntityTag").getCompound("energy").getInt("energy");
-			stack.getCapability(CapabilityEnergy.ENERGY)
-					.ifPresent(h -> ( (CustomEnergyStorage.Item) h ).setEnergy(energyStored));
-
-			stack.getOrCreateTag().putBoolean("checked", true);
-		}
-		else
-		{
-			stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(h ->
-			{
-				stack.getOrCreateChildTag("BlockEntityTag").getCompound("energy").putInt("energy", h.getEnergyStored());
-			});
-		}
-
 		return stack.getCapability(CapabilityEnergy.ENERGY).map(h -> h.getEnergyStored()).orElse(0);
 	}
 
@@ -46,7 +30,7 @@ public class FirstBlockItem extends BlockItem
 			ItemStack stack, @Nullable CompoundNBT nbt
 	)
 	{
-		return new CustomEnergyStorage.Item.Provider(stack, Config.FIRSTBLOCK_MAXPOWER.get(), 0);
+		return new CustomEnergyStorage.BlockItem.Provider(stack, Config.FIRSTBLOCK_MAXPOWER.get(), 0);
 	}
 
 	@Override
