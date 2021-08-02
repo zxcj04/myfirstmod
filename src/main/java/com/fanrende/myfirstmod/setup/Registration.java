@@ -1,9 +1,6 @@
 package com.fanrende.myfirstmod.setup;
 
-import com.fanrende.myfirstmod.blocks.BakedBlock;
-import com.fanrende.myfirstmod.blocks.FirstBlock;
-import com.fanrende.myfirstmod.blocks.FirstBlockContainer;
-import com.fanrende.myfirstmod.blocks.FirstBlockTile;
+import com.fanrende.myfirstmod.blocks.*;
 import com.fanrende.myfirstmod.entities.InfinityEyeEntity;
 import com.fanrende.myfirstmod.entities.InfinityPearlEntity;
 import com.fanrende.myfirstmod.entities.WeirdMobEntity;
@@ -49,7 +46,7 @@ public class Registration
 
 	public static final RegistryObject<FirstBlock> FIRSTBLOCK = BLOCKS.register("firstblock", FirstBlock::new);
 	public static final RegistryObject<Item> FIRSTBLOCK_ITEM = ITEMS.register("firstblock",
-			() -> new BlockItem(FIRSTBLOCK.get(), new Item.Properties().group(ModSetup.ITEM_GROUP))
+			() -> new FirstBlockItem(FIRSTBLOCK.get(), new Item.Properties().group(ModSetup.ITEM_GROUP))
 	);
 	public static final RegistryObject<TileEntityType<FirstBlockTile>> FIRSTBLOCK_TILE = TILES.register("firstblock",
 			() -> TileEntityType.Builder.create(FirstBlockTile::new, FIRSTBLOCK.get()).build(null)
