@@ -53,7 +53,7 @@ public class EnergyPickaxe extends Item
 			return true;
 
 		Material material = blockIn.getMaterial();
-		if(material == Material.ROCK || material == Material.IRON || material == Material.ANVIL)
+		if (material == Material.ROCK || material == Material.IRON || material == Material.ANVIL)
 			return true;
 
 		return super.canHarvestBlock(blockIn);

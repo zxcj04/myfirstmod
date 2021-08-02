@@ -3,14 +3,10 @@ package com.fanrende.myfirstmod.blocks;
 import com.fanrende.myfirstmod.Config;
 import com.fanrende.myfirstmod.tools.CustomEnergyStorage;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 
@@ -25,10 +21,11 @@ public class FirstBlockItem extends BlockItem
 
 	private int getEnergyStored(ItemStack stack)
 	{
-		if(!stack.getOrCreateTag().getBoolean("checked"))
+		if (!stack.getOrCreateTag().getBoolean("checked"))
 		{
 			int energyStored = stack.getOrCreateChildTag("BlockEntityTag").getCompound("energy").getInt("energy");
-			stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(h -> ( (CustomEnergyStorage.Item) h ).setEnergy(energyStored));
+			stack.getCapability(CapabilityEnergy.ENERGY)
+					.ifPresent(h -> ( (CustomEnergyStorage.Item) h ).setEnergy(energyStored));
 
 			stack.getOrCreateTag().putBoolean("checked", true);
 		}
@@ -63,7 +60,7 @@ public class FirstBlockItem extends BlockItem
 	{
 		int energyStored = getEnergyStored(stack);
 
-		return (double) 1 - ((double) energyStored / (double) Config.FIRSTBLOCK_MAXPOWER.get());
+		return (double) 1 - ( (double) energyStored / (double) Config.FIRSTBLOCK_MAXPOWER.get() );
 	}
 
 	@Override

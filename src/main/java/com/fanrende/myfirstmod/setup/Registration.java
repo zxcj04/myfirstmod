@@ -66,7 +66,10 @@ public class Registration
 	);
 
 	public static final RegistryObject<FirstItem> FIRSTITEM = ITEMS.register("firstitem", FirstItem::new);
-	public static final RegistryObject<EnergyPickaxe> ENERGYPICKAXE = ITEMS.register("energypickaxe", EnergyPickaxe::new);
+	public static final RegistryObject<EnergyPickaxe> ENERGYPICKAXE = ITEMS.register(
+			"energypickaxe",
+			EnergyPickaxe::new
+	);
 	public static final RegistryObject<SpawnTool> SPAWNTOOL = ITEMS.register("spawntool", SpawnTool::new);
 	public static final RegistryObject<WeirdMobEggItem> WEIRDMOB_EGG = ITEMS.register("weirdmob_egg",
 			WeirdMobEggItem::new
