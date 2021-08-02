@@ -3,14 +3,19 @@ package com.fanrende.myfirstmod.blocks;
 import com.fanrende.myfirstmod.Config;
 import com.fanrende.myfirstmod.tools.CustomEnergyStorage;
 import net.minecraft.block.Block;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class FirstBlockItem extends BlockItem
 {
@@ -51,5 +56,13 @@ public class FirstBlockItem extends BlockItem
 	public int getRGBDurabilityForDisplay(ItemStack stack)
 	{
 		return MathHelper.hsvToRGB(0.72F, 0.66F, 1.0F);
+	}
+
+	@Override
+	public void addInformation(
+			ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn
+	)
+	{
+		tooltip.add(new StringTextComponent("\u00A75" + "energy: \u00A77" + getEnergyStored(stack) + "\u00A75/\u00A77" + Config.FIRSTBLOCK_MAXPOWER.get()));
 	}
 }
