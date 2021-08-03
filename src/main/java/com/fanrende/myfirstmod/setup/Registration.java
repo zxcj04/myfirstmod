@@ -65,6 +65,14 @@ public class Registration
 			() -> new BlockItem(BAKEDBLOCK.get(), new Item.Properties().group(ModSetup.ITEM_GROUP))
 	);
 
+	public static final RegistryObject<MagicBlock> MAGICBLOCK = BLOCKS.register("magicblock", MagicBlock::new);
+	public static final RegistryObject<Item> MAGICBLOCK_ITEM = ITEMS.register("magicblock",
+			() -> new BlockItem(MAGICBLOCK.get(), new Item.Properties().group(ModSetup.ITEM_GROUP))
+	);
+	public static final RegistryObject<TileEntityType<MagicBlockTile>> MAGICBLOCK_TILE = TILES.register("magicblock",
+			() -> TileEntityType.Builder.create(MagicBlockTile::new, MAGICBLOCK.get()).build(null)
+	);
+
 	public static final RegistryObject<FirstItem> FIRSTITEM = ITEMS.register("firstitem", FirstItem::new);
 	public static final RegistryObject<EnergyPickaxe> ENERGYPICKAXE = ITEMS.register("energypickaxe",
 			EnergyPickaxe::new
