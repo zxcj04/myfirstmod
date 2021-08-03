@@ -21,7 +21,10 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 
 public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 {
-	public static final ResourceLocation MAGICBLOCK_TEXTURE = new ResourceLocation(MyFirstMod.MODID, "block/magicblock");
+	public static final ResourceLocation MAGICBLOCK_TEXTURE = new ResourceLocation(
+			MyFirstMod.MODID,
+			"block/magicblock"
+	);
 
 	public MagicTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn)
 	{
@@ -76,7 +79,16 @@ public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 		ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 		ItemStack stack = new ItemStack(Items.DIAMOND);
 		IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stack, tileEntity.getWorld(), null);
-		itemRenderer.renderItem(stack, ItemCameraTransforms.TransformType.FIXED, true, matrixStack, buffer, combinedLight, combinedOverlay, ibakedmodel);
+		itemRenderer.renderItem(
+				stack,
+				ItemCameraTransforms.TransformType.FIXED,
+				true,
+				matrixStack,
+				buffer,
+				combinedLight,
+				combinedOverlay,
+				ibakedmodel
+		);
 
 		matrixStack.pop();
 	}

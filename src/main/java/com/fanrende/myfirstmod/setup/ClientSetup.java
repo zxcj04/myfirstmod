@@ -32,6 +32,9 @@ public class ClientSetup
 		RenderingRegistry.registerEntityRenderingHandler(INFINITYEYE_ENTITY.get(),
 				manager -> new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer())
 		);
+		RenderingRegistry.registerEntityRenderingHandler(INFINITYPEARL_ENTITY.get(),
+				manager -> new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer())
+		);
 		ModelLoaderRegistry.registerLoader(new ResourceLocation(MyFirstMod.MODID, "bakedloader"),
 				new BakedModelLoader()
 		);
@@ -47,7 +50,7 @@ public class ClientSetup
 	@SubscribeEvent
 	public static void onTextureStitch(TextureStitchEvent.Pre event)
 	{
-		if(!event.getMap().getTextureLocation().equals(AtlasTexture.LOCATION_BLOCKS_TEXTURE))
+		if (!event.getMap().getTextureLocation().equals(AtlasTexture.LOCATION_BLOCKS_TEXTURE))
 			return;
 
 		event.addSprite(MAGICBLOCK_TEXTURE);

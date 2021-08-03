@@ -45,8 +45,7 @@ public class EnergyPickaxe extends Item
 			ItemStack stack, @Nullable CompoundNBT nbt
 	)
 	{
-		return new CustomEnergyStorage.Item.Provider(
-				stack,
+		return new CustomEnergyStorage.Item.Provider(stack,
 				Config.ENERGYPICKAXE_MAXPOWER.get(),
 				Config.ENERGYPICKAXE_MINECOST.get()
 		);
@@ -79,8 +78,7 @@ public class EnergyPickaxe extends Item
 		tooltip.add(new StringTextComponent("\u00A75" + "energy: \u00A77" + getEnergyStored(stack) + "\u00A75/\u00A77" + Config.ENERGYPICKAXE_MAXPOWER.get()));
 		if (Screen.hasShiftDown())
 		{
-			tooltip.add(new TranslationTextComponent(
-					"tooltip.myfirstmod.energypickaxe",
+			tooltip.add(new TranslationTextComponent("tooltip.myfirstmod.energypickaxe",
 					Config.ENERGYPICKAXE_MINECOST.get()
 			));
 		}

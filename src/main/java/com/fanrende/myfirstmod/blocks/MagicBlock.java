@@ -19,10 +19,7 @@ public class MagicBlock extends Block
 
 	public MagicBlock()
 	{
-		super(Properties.create(Material.ROCK)
-				.sound(SoundType.STONE)
-				.hardnessAndResistance(2.0f)
-		);
+		super(Properties.create(Material.ROCK).sound(SoundType.STONE).hardnessAndResistance(2.0f));
 	}
 
 	@Override
