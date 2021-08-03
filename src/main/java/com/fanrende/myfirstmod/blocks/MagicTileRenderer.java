@@ -44,7 +44,6 @@ public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 			int combinedLight, int combinedOverlay
 	)
 	{
-		System.out.println("render in");
 		TextureAtlasSprite sprite = Minecraft.getInstance()
 				.getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE)
 				.apply(MAGICBLOCK_TEXTURE);

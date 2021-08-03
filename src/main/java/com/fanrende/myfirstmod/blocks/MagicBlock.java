@@ -26,7 +26,7 @@ public class MagicBlock extends Block
 	}
 
 	@Override
-	public boolean hasTileEntity()
+	public boolean hasTileEntity(BlockState state)
 	{
 		return true;
 	}
