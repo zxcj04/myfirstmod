@@ -20,7 +20,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -31,7 +30,6 @@ import net.minecraftforge.energy.CapabilityEnergy;
 
 import javax.annotation.Nullable;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class EnergyPickaxe extends Item
@@ -47,7 +45,11 @@ public class EnergyPickaxe extends Item
 			ItemStack stack, @Nullable CompoundNBT nbt
 	)
 	{
-		return new CustomEnergyStorage.Item.Provider(stack, Config.ENERGYPICKAXE_MAXPOWER.get(), Config.ENERGYPICKAXE_MINECOST.get());
+		return new CustomEnergyStorage.Item.Provider(
+				stack,
+				Config.ENERGYPICKAXE_MAXPOWER.get(),
+				Config.ENERGYPICKAXE_MINECOST.get()
+		);
 	}
 
 	@Override
@@ -75,9 +77,12 @@ public class EnergyPickaxe extends Item
 	)
 	{
 		tooltip.add(new StringTextComponent("\u00A75" + "energy: \u00A77" + getEnergyStored(stack) + "\u00A75/\u00A77" + Config.ENERGYPICKAXE_MAXPOWER.get()));
-		if(Screen.hasShiftDown())
+		if (Screen.hasShiftDown())
 		{
-			tooltip.add(new TranslationTextComponent("tooltip.myfirstmod.energypickaxe", Config.ENERGYPICKAXE_MINECOST.get()));
+			tooltip.add(new TranslationTextComponent(
+					"tooltip.myfirstmod.energypickaxe",
+					Config.ENERGYPICKAXE_MINECOST.get()
+			));
 		}
 		else
 		{
@@ -139,8 +144,7 @@ public class EnergyPickaxe extends Item
 			System.out.println(h.getEnergyStored());
 		});
 
-		worldIn.playSound(
-				(PlayerEntity) null,
+		worldIn.playSound((PlayerEntity) null,
 				playerIn.getPosition(),
 				SoundEvents.ITEM_CROSSBOW_LOADING_MIDDLE,
 				SoundCategory.NEUTRAL,

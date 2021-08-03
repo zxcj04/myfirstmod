@@ -69,9 +69,12 @@ public class FirstBlockItem extends BlockItem
 	)
 	{
 		tooltip.add(new StringTextComponent("\u00A75" + "energy: \u00A77" + getEnergyStored(stack) + "\u00A75/\u00A77" + Config.FIRSTBLOCK_MAXPOWER.get()));
-		if(Screen.hasShiftDown())
+		if (Screen.hasShiftDown())
 		{
-			tooltip.add(new TranslationTextComponent("tooltip.myfirstmod.firstblock", Config.FIRSTBLOCK_GENERATE.get()));
+			tooltip.add(new TranslationTextComponent(
+					"tooltip.myfirstmod.firstblock",
+					Config.FIRSTBLOCK_GENERATE.get()
+			));
 		}
 		else
 		{
