@@ -3,6 +3,7 @@ package com.fanrende.myfirstmod.blocks;
 import com.fanrende.myfirstmod.Config;
 import com.fanrende.myfirstmod.tools.CustomEnergyStorage;
 import net.minecraft.block.Block;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -10,7 +11,10 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.energy.CapabilityEnergy;
 
@@ -59,10 +63,19 @@ public class FirstBlockItem extends BlockItem
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public void addInformation(
 			ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn
 	)
 	{
 		tooltip.add(new StringTextComponent("\u00A75" + "energy: \u00A77" + getEnergyStored(stack) + "\u00A75/\u00A77" + Config.FIRSTBLOCK_MAXPOWER.get()));
+		if(Screen.hasShiftDown())
+		{
+			tooltip.add(new TranslationTextComponent("tooltip.myfirstmod.firstblock", Config.FIRSTBLOCK_GENERATE.get()));
+		}
+		else
+		{
+			tooltip.add(new StringTextComponent("\u00A77press \u00A76shift\u00A77 for more info"));
+		}
 	}
 }

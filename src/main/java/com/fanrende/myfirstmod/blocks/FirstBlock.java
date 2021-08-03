@@ -63,6 +63,15 @@ public class FirstBlock extends Block
 		}
 	}
 
+	private static Direction getFacingFromEntity(BlockPos clickedPos, LivingEntity entity)
+	{
+		BlockPos position = entity.getPosition();
+
+		return Direction.getFacingFromVector((float) ( position.getX() - clickedPos.getX() ),
+				(float) ( position.getY() - clickedPos.getY() ),
+				(float) ( position.getZ() - clickedPos.getZ() )
+		);
+	}
 
 	@Override
 	public ActionResultType onBlockActivated(
@@ -84,21 +93,9 @@ public class FirstBlock extends Block
 			{
 				throw new IllegalStateException("Our named container provider is missing!");
 			}
-
-			return ActionResultType.SUCCESS;
 		}
 
-		return super.onBlockActivated(state, world, pos, player, handIn, hit);
-	}
-
-	private static Direction getFacingFromEntity(BlockPos clickedPos, LivingEntity entity)
-	{
-		BlockPos position = entity.getPosition();
-
-		return Direction.getFacingFromVector((float) ( position.getX() - clickedPos.getX() ),
-				(float) ( position.getY() - clickedPos.getY() ),
-				(float) ( position.getZ() - clickedPos.getZ() )
-		);
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override

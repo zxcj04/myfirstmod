@@ -1,5 +1,6 @@
 {
 	"block.myfirstmod.firstblock": "First Block",
+	"tooltip.myfirstmod.firstblock": "Generate rf power from cobblestone (%d rf/t)",
 	"item.myfirstmod.firstitem": "First Item",
 	"block.myfirstmod.bakedblock": "Baked Block",
 	"item.myfirstmod.weirdmob_egg": "Weird Mob Egg",
@@ -7,6 +8,7 @@
 	"item.myfirstmod.infinityeye": "Infinity Eye",
 	"item.myfirstmod.spawntool": "Spawn Tool",
 	"item.myfirstmod.energypickaxe": "Energy Pickaxe",
+	"tooltip.myfirstmod.energypickaxe": "Break blocks using rf power (%d per block)",
 	"_comment": "Creative Tabs",
 	"itemGroup.myfirstmod": "My First Mod"
 }
