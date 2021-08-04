@@ -9,6 +9,8 @@ import com.fanrende.myfirstmod.client.InWorldRenderer;
 import com.fanrende.myfirstmod.entities.WeirdMobRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.entity.SpriteRenderer;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.util.ResourceLocation;
@@ -44,6 +46,7 @@ public class ClientSetup
 		MagicTileRenderer.register();
 		MinecraftForge.EVENT_BUS.addListener(AfterLivingRenderer::render);
 		MinecraftForge.EVENT_BUS.addListener(InWorldRenderer::render);
+		RenderTypeLookup.setRenderLayer(COMPLEX_MULTIPART_BLOCK.get(), RenderType.getTranslucent());
 	}
 
 	@SubscribeEvent

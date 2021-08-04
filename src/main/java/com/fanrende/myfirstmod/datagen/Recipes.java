@@ -52,6 +52,17 @@ public class Recipes extends RecipeProvider
 				.setGroup("myfirstmod")
 				.build(consumer);
 
+		ShapedRecipeBuilder.shapedRecipe(COMPLEX_MULTIPART_BLOCK.get())
+				.patternLine("x#x")
+				.patternLine("#d#")
+				.patternLine("x#x")
+				.key('x', Blocks.OBSIDIAN)
+				.key('#', Tags.Items.GEMS_EMERALD)
+				.key('d', Items.DIAMOND)
+				.setGroup("myfirstmod")
+				.addCriterion("diamond", InventoryChangeTrigger.Instance.forItems(Items.DIAMOND))
+				.build(consumer);
+
 		ShapedRecipeBuilder.shapedRecipe(ENERGYPICKAXE.get())
 				.patternLine("ooo")
 				.patternLine(" x ")

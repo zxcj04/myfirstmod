@@ -73,6 +73,14 @@ public class Registration
 			() -> TileEntityType.Builder.create(MagicBlockTile::new, MAGICBLOCK.get()).build(null)
 	);
 
+	public static final RegistryObject<ComplexMultipartBlock> COMPLEX_MULTIPART_BLOCK = BLOCKS.register("complexmultipartblock", ComplexMultipartBlock::new);
+	public static final RegistryObject<Item> COMPLEX_MULTIPART_ITEM = ITEMS.register("complexmultipartblock",
+			() -> new BlockItem(COMPLEX_MULTIPART_BLOCK.get(), new Item.Properties().group(ModSetup.ITEM_GROUP))
+	);
+	public static final RegistryObject<TileEntityType<ComplexMultipartTile>> COMPLEX_MULTIPART_TILE = TILES.register("complexmultipartblock",
+			() -> TileEntityType.Builder.create(ComplexMultipartTile::new, COMPLEX_MULTIPART_BLOCK.get()).build(null)
+	);
+
 	public static final RegistryObject<FirstItem> FIRSTITEM = ITEMS.register("firstitem", FirstItem::new);
 	public static final RegistryObject<EnergyPickaxe> ENERGYPICKAXE = ITEMS.register("energypickaxe",
 			EnergyPickaxe::new
