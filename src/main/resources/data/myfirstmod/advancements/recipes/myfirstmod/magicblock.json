@@ -2,16 +2,16 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "myfirstmod:energypickaxe"
+      "myfirstmod:magicblock"
     ]
   },
   "criteria": {
-    "obsidian": {
+    "purpledye": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "item": "minecraft:obsidian"
+            "item": "minecraft:purple_dye"
           }
         ]
       }
@@ -19,13 +19,13 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "myfirstmod:energypickaxe"
+        "recipe": "myfirstmod:magicblock"
       }
     }
   },
   "requirements": [
     [
-      "obsidian",
+      "purpledye",
       "has_the_recipe"
     ]
   ]

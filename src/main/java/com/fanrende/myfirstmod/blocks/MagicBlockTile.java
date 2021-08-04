@@ -94,7 +94,6 @@ public class MagicBlockTile extends TileEntity
 			NetworkManager net, SUpdateTileEntityPacket pkt
 	)
 	{
-		System.out.println("in");
 		this.read(pkt.getNbtCompound());
 	}
 

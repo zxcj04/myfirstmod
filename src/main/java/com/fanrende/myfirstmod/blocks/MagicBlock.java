@@ -7,6 +7,7 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -19,6 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nullable;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MagicBlock extends Block
 {
@@ -33,6 +35,46 @@ public class MagicBlock extends Block
 	public boolean hasTileEntity(BlockState state)
 	{
 		return true;
+	}
+
+	@Override
+	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
+	{
+		if (state.hasTileEntity() && state.getBlock() != newState.getBlock())
+		{
+			TileEntity tileEntity = worldIn.getTileEntity(pos);
+			// drops everything in the inventory
+			tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h ->
+			{
+				for (int i = 0; i < h.getSlots(); i++)
+					spawnAsEntity(worldIn, pos, h.getStackInSlot(i));
+			});
+
+			worldIn.updateComparatorOutputLevel(pos, this);
+
+			tileEntity.write(new CompoundNBT());
+		}
+
+		super.onReplaced(state, worldIn, pos, newState, isMoving);
+	}
+
+	@Override
+	public boolean hasComparatorInputOverride(BlockState state)
+	{
+		return true;
+	}
+
+	@Override
+	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos)
+	{
+		AtomicBoolean itemIn = new AtomicBoolean(false);
+
+		worldIn.getTileEntity(pos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h ->
+		{
+			itemIn.set(!h.getStackInSlot(0).isEmpty());
+		});
+
+		return itemIn.get()? 15: 0;
 	}
 
 	@Nullable
@@ -72,8 +114,13 @@ public class MagicBlock extends Block
 
 				if (stack.isEmpty())
 					stack = h.extractItem(0, h.getStackInSlot(0).getCount(), false);
-				else
+				else if(h.getStackInSlot(0).isEmpty())
 					stack = h.insertItem(0, stack, false);
+				else
+				{
+					spawnAsEntity(world, pos, h.getStackInSlot(0));
+					h.extractItem(0, h.getStackInSlot(0).getCount(), false);
+				}
 
 				player.setHeldItem(hand, stack);
 			});

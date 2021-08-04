@@ -2,12 +2,12 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "name": "bakedblock",
+      "name": "magicblock",
       "rolls": 1,
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "myfirstmod:bakedblock"
+          "name": "myfirstmod:magicblock"
         }
       ]
     }

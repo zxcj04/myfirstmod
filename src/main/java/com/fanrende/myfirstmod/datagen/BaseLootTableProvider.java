@@ -54,6 +54,15 @@ public abstract class BaseLootTableProvider extends LootTableProvider
 		return LootTable.builder().addLootPool(builder);
 	}
 
+	protected LootTable.Builder createSelfDropTable(String name, Block block)
+	{
+		LootPool.Builder builder = LootPool.builder()
+				.name(name)
+				.rolls(ConstantRange.of(1))
+				.addEntry(ItemLootEntry.builder(block));
+		return LootTable.builder().addLootPool(builder);
+	}
+
 	@Override
 	public void act(DirectoryCache cache)
 	{

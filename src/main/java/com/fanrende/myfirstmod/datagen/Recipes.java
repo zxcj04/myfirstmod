@@ -45,6 +45,13 @@ public class Recipes extends RecipeProvider
 				.addCriterion("firstblock", InventoryChangeTrigger.Instance.forItems(FIRSTBLOCK.get()))
 				.build(consumer);
 
+		ShapedRecipeBuilder.shapedRecipe(MAGICBLOCK.get())
+				.patternLine("xxx")
+				.key('x', Tags.Items.DYES_PURPLE)
+				.addCriterion("purpledye", InventoryChangeTrigger.Instance.forItems(Items.PURPLE_DYE))
+				.setGroup("myfirstmod")
+				.build(consumer);
+
 		ShapedRecipeBuilder.shapedRecipe(ENERGYPICKAXE.get())
 				.patternLine("ooo")
 				.patternLine(" x ")
@@ -52,7 +59,7 @@ public class Recipes extends RecipeProvider
 				.key('x', Items.BLAZE_ROD)
 				.key('o', Blocks.OBSIDIAN)
 				.setGroup("myfirstmod")
-				.addCriterion("energypickaxe", InventoryChangeTrigger.Instance.forItems(Blocks.OBSIDIAN))
+				.addCriterion("obsidian", InventoryChangeTrigger.Instance.forItems(Blocks.OBSIDIAN))
 				.build(consumer);
 
 		ShapedRecipeBuilder.shapedRecipe(BAKEDBLOCK.get())
