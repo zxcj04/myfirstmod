@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
@@ -66,7 +67,7 @@ public class ComplexMultipartBlock extends Block
 		{
 			TileEntity tileEntity = worldIn.getTileEntity(pos);
 
-			if(tileEntity instanceof ComplexMultipartTile)
+			if(tileEntity instanceof ComplexMultipartTile && Screen.hasShiftDown())
 			{
 				ComplexMultipartTile dimentionalCellEntity = (ComplexMultipartTile) tileEntity;
 				dimentionalCellEntity.toggleMode(hit.getFace());

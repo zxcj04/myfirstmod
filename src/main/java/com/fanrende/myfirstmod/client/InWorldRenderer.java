@@ -5,6 +5,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.Matrix4f;
 import net.minecraft.client.renderer.Vector3f;
@@ -27,7 +28,7 @@ public class InWorldRenderer
 	{
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 
-		if(player.getHeldItemMainhand().getItem() == ENERGYPICKAXE.get())
+		if(player.getHeldItemMainhand().getItem() == ENERGYPICKAXE.get() && Screen.hasShiftDown())
 		{
 			showTileEntities(player, event.getMatrixStack());
 		}
