@@ -1,23 +1,23 @@
 {
-	"type": "minecraft:crafting_shaped",
-	"group": "myfirstmod",
-	"pattern": [
-		"o##",
-		" x ",
-		" x "
-	],
-	"key": {
-		"x": {
-			"item": "minecraft:cobblestone"
-		},
-		"#": {
-			"item": "myfirstmod:firstblock"
-		},
-		"o": {
-			"item": "minecraft:diamond"
-		}
-	},
-	"result": {
-		"item": "myfirstmod:firstitem"
-	}
+  "type": "minecraft:crafting_shaped",
+  "group": "myfirstmod",
+  "pattern": [
+    " # ",
+    "ox#",
+    " x "
+  ],
+  "key": {
+    "x": {
+      "item": "minecraft:cobblestone"
+    },
+    "#": {
+      "item": "myfirstmod:firstblock"
+    },
+    "o": {
+      "item": "minecraft:diamond"
+    }
+  },
+  "result": {
+    "item": "myfirstmod:firstitem"
+  }
 }

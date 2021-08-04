@@ -4,6 +4,8 @@ import com.fanrende.myfirstmod.MyFirstMod;
 import com.fanrende.myfirstmod.blocks.BakedModelLoader;
 import com.fanrende.myfirstmod.blocks.FirstBlockScreen;
 import com.fanrende.myfirstmod.blocks.MagicTileRenderer;
+import com.fanrende.myfirstmod.client.AfterLivingRenderer;
+import com.fanrende.myfirstmod.client.InWorldRenderer;
 import com.fanrende.myfirstmod.entities.WeirdMobRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
@@ -14,6 +16,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
@@ -39,6 +42,8 @@ public class ClientSetup
 				new BakedModelLoader()
 		);
 		MagicTileRenderer.register();
+		MinecraftForge.EVENT_BUS.addListener(AfterLivingRenderer::render);
+		MinecraftForge.EVENT_BUS.addListener(InWorldRenderer::render);
 	}
 
 	@SubscribeEvent

@@ -35,8 +35,8 @@ public class Recipes extends RecipeProvider
 				.build(consumer);
 
 		ShapedRecipeBuilder.shapedRecipe(FIRSTITEM.get())
-				.patternLine("o##")
-				.patternLine(" x ")
+				.patternLine(" # ")
+				.patternLine("ox#")
 				.patternLine(" x ")
 				.key('x', Blocks.COBBLESTONE)
 				.key('#', FIRSTBLOCK.get())
