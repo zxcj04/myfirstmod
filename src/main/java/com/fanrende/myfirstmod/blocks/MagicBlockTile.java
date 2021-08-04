@@ -1,22 +1,15 @@
 package com.fanrende.myfirstmod.blocks;
 
 import com.fanrende.myfirstmod.setup.Registration;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -24,9 +17,6 @@ import net.minecraftforge.items.ItemStackHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
-import static com.fanrende.myfirstmod.setup.Registration.MAGICBLOCK;
-import static com.fanrende.myfirstmod.setup.Registration.MAGICBLOCK_TILE;
 
 public class MagicBlockTile extends TileEntity
 {
@@ -53,12 +43,12 @@ public class MagicBlockTile extends TileEntity
 			public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate)
 			{
 				ItemStack handlerStack = this.getStackInSlot(0);
-				if(handlerStack.getCount() > 0)
+				if (handlerStack.getCount() > 0)
 					return stack;
 
 				ItemStack stackInsert = ItemHandlerHelper.copyStackWithSize(stack, 1);
 
-				if(stack.getCount() <= 1)
+				if (stack.getCount() <= 1)
 					stack = ItemStack.EMPTY;
 				else
 					stack.shrink(1);

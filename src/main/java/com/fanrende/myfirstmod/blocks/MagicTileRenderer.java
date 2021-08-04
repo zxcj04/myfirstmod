@@ -13,15 +13,13 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 {
-	public static final ResourceLocation MAGICBLOCK_TEXTURE = new ResourceLocation(
-			MyFirstMod.MODID,
+	public static final ResourceLocation MAGICBLOCK_TEXTURE = new ResourceLocation(MyFirstMod.MODID,
 			"block/magicblock"
 	);
 
@@ -42,9 +40,9 @@ public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 
 	private float transferFunction(long time, long delta, float scale)
 	{
-		float result = time % (delta * 2);
+		float result = time % ( delta * 2 );
 
-		if(result > delta)
+		if (result > delta)
 			result = delta * 2 - result;
 
 		return result * scale;
@@ -66,7 +64,7 @@ public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 
 		float size = transferFunction(time, 2000, 0.00025f);
 
-		float angle = (time / 20) % 360;
+		float angle = ( time / 20 ) % 360;
 		Quaternion rotation = Vector3f.YP.rotationDegrees(angle);
 
 		float itemMove = transferFunction(time, 2000, 0.00005f);
@@ -95,7 +93,7 @@ public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 		{
 			ItemStack stackInSlot = h.getStackInSlot(0);
 
-			if(stackInSlot.getCount() > 0)
+			if (stackInSlot.getCount() > 0)
 			{
 				matrixStack.translate(.5, .5, .5);
 				matrixStack.rotate(rotation);
@@ -103,9 +101,12 @@ public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 
 				matrixStack.translate(0.5, 1.5 + itemMove, 0.5);
 				ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-				IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stackInSlot, tileEntity.getWorld(), null);
-				itemRenderer.renderItem(
+				IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(
 						stackInSlot,
+						tileEntity.getWorld(),
+						null
+				);
+				itemRenderer.renderItem(stackInSlot,
 						ItemCameraTransforms.TransformType.FIXED,
 						true,
 						matrixStack,

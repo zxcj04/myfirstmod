@@ -6,7 +6,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -71,7 +70,7 @@ public class MagicBlock extends Block
 			{
 				ItemStack stack = player.getHeldItem(hand);
 
-				if(stack.isEmpty())
+				if (stack.isEmpty())
 					stack = h.extractItem(0, h.getStackInSlot(0).getCount(), false);
 				else
 					stack = h.insertItem(0, stack, false);
