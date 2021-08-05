@@ -18,6 +18,7 @@ import javax.annotation.Nullable;
 
 import java.util.Objects;
 
+import static com.fanrende.myfirstmod.setup.Registration.BAKEDBLOCK;
 import static com.fanrende.myfirstmod.setup.Registration.BAKEDBLOCK_TILE;
 
 public class BakedBlockTile extends TileEntity
@@ -33,6 +34,9 @@ public class BakedBlockTile extends TileEntity
 
 	public void setMimic(BlockState mimic)
 	{
+		if(mimic.getBlock() == BAKEDBLOCK.get())
+			return;
+
 		this.mimic = mimic;
 		markDirty();
 		world.notifyBlockUpdate(pos, getBlockState(), getBlockState(),

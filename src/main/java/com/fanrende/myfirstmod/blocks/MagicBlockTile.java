@@ -7,6 +7,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -115,5 +116,11 @@ public class MagicBlockTile extends TileEntity
 			return itemLazy.cast();
 
 		return super.getCapability(cap, side);
+	}
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox()
+	{
+		return new AxisAlignedBB(getPos(), getPos().add(1, 3, 1));
 	}
 }
