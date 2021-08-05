@@ -63,6 +63,9 @@ public class Registration
 	public static final RegistryObject<Item> BAKEDBLOCK_ITEM = ITEMS.register("bakedblock",
 			() -> new BlockItem(BAKEDBLOCK.get(), new Item.Properties().group(ModSetup.ITEM_GROUP))
 	);
+	public static final RegistryObject<TileEntityType<BakedBlockTile>> BAKEDBLOCK_TILE = TILES.register("bakedblock",
+			() -> TileEntityType.Builder.create(BakedBlockTile::new, BAKEDBLOCK.get()).build(null)
+	);
 
 	public static final RegistryObject<MagicBlock> MAGICBLOCK = BLOCKS.register("magicblock", MagicBlock::new);
 	public static final RegistryObject<Item> MAGICBLOCK_ITEM = ITEMS.register("magicblock",

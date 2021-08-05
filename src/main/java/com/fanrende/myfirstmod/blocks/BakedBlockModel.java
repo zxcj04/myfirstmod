@@ -4,7 +4,10 @@ import com.fanrende.myfirstmod.MyFirstMod;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.BakedQuad;
+import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.AtlasTexture;
@@ -13,6 +16,8 @@ import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
@@ -62,7 +67,7 @@ public class BakedBlockModel implements IDynamicBakedModel
 							builder.put(i, iu, iv);
 							break;
 						case 2:
-							builder.put(i, 0f, 1f);
+							builder.put(i, (short) 0, (short) 0);
 							break;
 						default:
 							builder.put(i);
@@ -82,14 +87,16 @@ public class BakedBlockModel implements IDynamicBakedModel
 	private BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite)
 	{
 		Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
+		int tw = sprite.getWidth();
+		int th = sprite.getHeight();
 
 		BakedQuadBuilder builder = new BakedQuadBuilder(sprite);
 
 		builder.setQuadOrientation(Direction.getFacingFromVector(normal.x, normal.y, normal.z));
 		putVertex(builder, normal, v1.x, v1.y, v1.z, 0, 0, sprite, 1.0f, 1.0f, 1.0f);
-		putVertex(builder, normal, v2.x, v2.y, v2.z, 0, 16, sprite, 1.0f, 1.0f, 1.0f);
-		putVertex(builder, normal, v3.x, v3.y, v3.z, 16, 16, sprite, 1.0f, 1.0f, 1.0f);
-		putVertex(builder, normal, v4.x, v4.y, v4.z, 16, 0, sprite, 1.0f, 1.0f, 1.0f);
+		putVertex(builder, normal, v2.x, v2.y, v2.z, 0, th, sprite, 1.0f, 1.0f, 1.0f);
+		putVertex(builder, normal, v3.x, v3.y, v3.z, tw, th, sprite, 1.0f, 1.0f, 1.0f);
+		putVertex(builder, normal, v4.x, v4.y, v4.z, tw, 0, sprite, 1.0f, 1.0f, 1.0f);
 
 		return builder.build();
 	}
@@ -105,7 +112,28 @@ public class BakedBlockModel implements IDynamicBakedModel
 			@Nullable BlockState state, @Nullable Direction side, @Nonnull Random rand, @Nonnull IModelData extraData
 	)
 	{
-		if (side != null)
+		RenderType layer = MinecraftForgeClient.getRenderLayer();
+		BlockState mimic = extraData.getData(BakedBlockTile.MIMIC);
+
+		if(mimic != null && !(mimic.getBlock() instanceof BakedBlock))
+		{
+			if(layer == null || RenderTypeLookup.canRenderInLayer(mimic, layer))
+			{
+				IBakedModel model = Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getModel(mimic);
+				try
+				{
+					return model.getQuads(mimic, side, rand, EmptyModelData.INSTANCE);
+				}
+				catch (Exception e)
+				{
+					return Collections.emptyList();
+				}
+			}
+
+			return Collections.emptyList();
+		}
+
+		if (side != null || (layer != null && !layer.equals(RenderType.getSolid())))
 			return Collections.emptyList();
 
 		TextureAtlasSprite texture = getTexture();

@@ -1,6 +1,7 @@
 package com.fanrende.myfirstmod.setup;
 
 import com.fanrende.myfirstmod.MyFirstMod;
+import com.fanrende.myfirstmod.blocks.BakedBlockColor;
 import com.fanrende.myfirstmod.blocks.BakedModelLoader;
 import com.fanrende.myfirstmod.blocks.FirstBlockScreen;
 import com.fanrende.myfirstmod.blocks.MagicTileRenderer;
@@ -44,10 +45,16 @@ public class ClientSetup
 		ModelLoaderRegistry.registerLoader(new ResourceLocation(MyFirstMod.MODID, "bakedloader"),
 				new BakedModelLoader()
 		);
+
 		MagicTileRenderer.register();
+
 		MinecraftForge.EVENT_BUS.addListener(AfterLivingRenderer::render);
 		MinecraftForge.EVENT_BUS.addListener(InWorldRenderer::render);
+
 		RenderTypeLookup.setRenderLayer(COMPLEX_MULTIPART_BLOCK.get(), RenderType.getTranslucent());
+		RenderTypeLookup.setRenderLayer(BAKEDBLOCK.get(), (RenderType) -> true);
+
+		Minecraft.getInstance().getBlockColors().register(new BakedBlockColor(), BAKEDBLOCK.get());
 	}
 
 	@SubscribeEvent
