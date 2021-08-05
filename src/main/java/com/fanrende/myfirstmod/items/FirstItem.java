@@ -1,13 +1,11 @@
 package com.fanrende.myfirstmod.items;
 
-import com.fanrende.myfirstmod.Config;
 import com.fanrende.myfirstmod.setup.ModSetup;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;

@@ -18,7 +18,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -78,8 +77,10 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 		BlockState state = world.getBlockState(pos);
 
 		if (state.get(BlockStateProperties.POWERED) != generatorCounter > 0)
-			world.setBlockState(pos, state.with(BlockStateProperties.POWERED, generatorCounter > 0),
-					Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+			world.setBlockState(pos,
+					state.with(BlockStateProperties.POWERED, generatorCounter > 0),
+					Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS
+			);
 
 		sendOutEnergy();
 	}
@@ -100,9 +101,10 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 					{
 						if (h.canReceive())
 						{
-							int received = h.receiveEnergy(Math.min(energyStored.get(),
-									Config.FIRSTBLOCK_SEND.get()
-							), false);
+							int received = h.receiveEnergy(
+									Math.min(energyStored.get(), Config.FIRSTBLOCK_SEND.get()),
+									false
+							);
 
 							energyStored.addAndGet(-received);
 

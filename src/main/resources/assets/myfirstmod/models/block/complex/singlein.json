@@ -1,24 +1,24 @@
 {
-  "textures": {
-    "single": "myfirstmod:block/complex_in"
-  },
-  "elements": [
-    {
-      "from": [
-        3,
-        3,
-        3
-      ],
-      "to": [
-        13,
-        13,
-        13
-      ],
-      "faces": {
-        "down": {
-          "texture": "#single"
-        }
-      }
-    }
-  ]
+	"textures": {
+		"single": "myfirstmod:block/complex_in"
+	},
+	"elements": [
+		{
+			"from": [
+				3,
+				3,
+				3
+			],
+			"to": [
+				13,
+				13,
+				13
+			],
+			"faces": {
+				"down": {
+					"texture": "#single"
+				}
+			}
+		}
+	]
 }

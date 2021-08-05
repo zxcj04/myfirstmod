@@ -55,8 +55,11 @@ public class WeirdMobEggItem extends Item
 					AbstractSpawner abstractspawner = ( (MobSpawnerTileEntity) tileentity ).getSpawnerBaseLogic();
 					abstractspawner.setEntityType(WEIRDMOB.get());
 					tileentity.markDirty();
-					world.notifyBlockUpdate(blockpos, blockstate, blockstate,
-							Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+					world.notifyBlockUpdate(blockpos,
+							blockstate,
+							blockstate,
+							Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS
+					);
 					itemstack.shrink(1);
 					return ActionResultType.SUCCESS;
 				}
@@ -72,8 +75,7 @@ public class WeirdMobEggItem extends Item
 				blockpos1 = blockpos.offset(direction);
 			}
 
-			if (WEIRDMOB.get().spawn(
-					world,
+			if (WEIRDMOB.get().spawn(world,
 					itemstack,
 					context.getPlayer(),
 					blockpos1,

@@ -78,9 +78,7 @@ public class EnergyPickaxe extends Item
 		tooltip.add(new StringTextComponent("\u00A75" + "energy: \u00A77" + getEnergyStored(stack) + "\u00A75/\u00A77" + Config.ENERGYPICKAXE_MAXPOWER.get()));
 		if (Screen.hasShiftDown())
 		{
-			tooltip.add(new TranslationTextComponent("message.energypickaxe",
-					Config.ENERGYPICKAXE_MINECOST.get()
-			));
+			tooltip.add(new TranslationTextComponent("message.energypickaxe", Config.ENERGYPICKAXE_MINECOST.get()));
 		}
 		else
 		{
@@ -135,12 +133,8 @@ public class EnergyPickaxe extends Item
 	{
 		ItemStack stack = playerIn.getHeldItem(handIn);
 
-		stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(h ->
-		{
-			( (CustomEnergyStorage.Item) h ).setEnergy(Config.ENERGYPICKAXE_MAXPOWER.get());
-
-			System.out.println(h.getEnergyStored());
-		});
+		stack.getCapability(CapabilityEnergy.ENERGY)
+				.ifPresent(h -> ( (CustomEnergyStorage.Item) h ).setEnergy(Config.ENERGYPICKAXE_MAXPOWER.get()));
 
 		worldIn.playSound((PlayerEntity) null,
 				playerIn.getPosition(),
@@ -169,12 +163,8 @@ public class EnergyPickaxe extends Item
 			ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving
 	)
 	{
-		stack.getCapability(CapabilityEnergy.ENERGY).ifPresent(h ->
-		{
-			( (CustomEnergyStorage.Item) h ).extractEnergy(Config.ENERGYPICKAXE_MINECOST.get(), false);
-
-			System.out.println(h.getEnergyStored());
-		});
+		stack.getCapability(CapabilityEnergy.ENERGY)
+				.ifPresent(h -> h.extractEnergy(Config.ENERGYPICKAXE_MINECOST.get(), false));
 		return super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
 	}
 }

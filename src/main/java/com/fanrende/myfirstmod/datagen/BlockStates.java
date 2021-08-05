@@ -51,6 +51,10 @@ public class BlockStates extends BlockStateProvider
 				txt,
 				txt
 		);
+
+		modelFirstblock.texture("particle", modLoc("block/firstblock_front"));
+		modelFirstblockPowered.texture("particle", modLoc("block/firstblock_front_powered"));
+
 		orientedBlock(FIRSTBLOCK.get(), state ->
 		{
 			if (state.get(BlockStateProperties.POWERED))

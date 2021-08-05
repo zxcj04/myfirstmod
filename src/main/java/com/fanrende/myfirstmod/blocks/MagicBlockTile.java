@@ -9,7 +9,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -36,8 +35,11 @@ public class MagicBlockTile extends TileEntity
 			@Override
 			protected void onContentsChanged(int slot)
 			{
-				world.notifyBlockUpdate(pos, getBlockState(), getBlockState(),
-						Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+				world.notifyBlockUpdate(pos,
+						getBlockState(),
+						getBlockState(),
+						Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS
+				);
 				markDirty();
 			}
 
@@ -78,6 +80,12 @@ public class MagicBlockTile extends TileEntity
 		tag.put("inv", item.serializeNBT());
 
 		return super.write(tag);
+	}
+
+	@Override
+	public CompoundNBT getUpdateTag()
+	{
+		return this.write(new CompoundNBT());
 	}
 
 	@Nullable

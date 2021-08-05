@@ -1,15 +1,15 @@
 {
-  "type": "minecraft:block",
-  "pools": [
-    {
-      "name": "magicblock",
-      "rolls": 1,
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "myfirstmod:magicblock"
-        }
-      ]
-    }
-  ]
+	"type": "minecraft:block",
+	"pools": [
+		{
+			"name": "magicblock",
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "myfirstmod:magicblock"
+				}
+			]
+		}
+	]
 }

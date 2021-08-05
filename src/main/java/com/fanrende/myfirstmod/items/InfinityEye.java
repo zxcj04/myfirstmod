@@ -1,6 +1,5 @@
 package com.fanrende.myfirstmod.items;
 
-import com.fanrende.myfirstmod.Config;
 import com.fanrende.myfirstmod.entities.InfinityEyeEntity;
 import com.fanrende.myfirstmod.setup.ModSetup;
 import net.minecraft.advancements.CriteriaTriggers;

@@ -11,9 +11,7 @@
 	"item.myfirstmod.energypickaxe": "Energy Pickaxe",
 	"_comment": "Creative Tabs",
 	"itemGroup.myfirstmod": "My First Mod",
-	
 	"message.pressshift": "\u00A77press \u00A76shift\u00A77 for more info",
-
 	"message.firstblock": "Generate rf power from cobblestone (%d rf/t)",
 	"message.energypickaxe": "Break blocks using rf power (%d per block)",
 	"message.firstitem": "Show overlay line on entities",

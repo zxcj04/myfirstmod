@@ -19,13 +19,15 @@ public class AfterLivingRenderer
 	{
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 
-		if(player.getHeldItemMainhand().getItem() == FIRSTITEM.get())
+		if (player.getHeldItemMainhand().getItem() == FIRSTITEM.get())
 		{
 			showMobs(event.getMatrixStack(), event.getEntity());
 		}
 	}
 
-	private static void drawLine(IVertexBuilder builder, Matrix4f positionMatrix, Vector3f line, Vector3f color, float alpha)
+	private static void drawLine(
+			IVertexBuilder builder, Matrix4f positionMatrix, Vector3f line, Vector3f color, float alpha
+	)
 	{
 		builder.pos(positionMatrix, 0.0f, 0.0f, 0.0f)
 				.color(color.getX(), color.getY(), color.getZ(), alpha)
@@ -46,7 +48,7 @@ public class AfterLivingRenderer
 
 		float alpha = 1.0f;
 
-		if(entity instanceof IMob)
+		if (entity instanceof IMob)
 			drawLine(builder, positionMatrix, line, new Vector3f(1.0f, 0.0f, 0.0f), alpha);
 		else
 			drawLine(builder, positionMatrix, line, new Vector3f(0.0f, 1.0f, 0.0f), alpha);

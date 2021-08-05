@@ -64,7 +64,7 @@ public class FirstBlockContainer extends Container
 				tileEntity.getCapability(CapabilityEnergy.ENERGY).ifPresent(h ->
 				{
 					int energyStored = h.getEnergyStored() & 0xffff0000;
-					((CustomEnergyStorage)h).setEnergy(energyStored + (value & 0xffff));
+					( (CustomEnergyStorage) h ).setEnergy(energyStored + ( value & 0xffff ));
 				});
 			}
 		});
@@ -74,7 +74,7 @@ public class FirstBlockContainer extends Container
 			@Override
 			public int get()
 			{
-				return (getEnergy() >> 16) & 0xffff;
+				return ( getEnergy() >> 16 ) & 0xffff;
 			}
 
 			@Override
@@ -83,7 +83,7 @@ public class FirstBlockContainer extends Container
 				tileEntity.getCapability(CapabilityEnergy.ENERGY).ifPresent(h ->
 				{
 					int energyStored = h.getEnergyStored() & 0x0000ffff;
-					((CustomEnergyStorage)h).setEnergy(energyStored | (value << 16));
+					( (CustomEnergyStorage) h ).setEnergy(energyStored | ( value << 16 ));
 				});
 			}
 		});

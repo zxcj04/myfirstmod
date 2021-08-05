@@ -1,23 +1,23 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "group": "myfirstmod",
-  "pattern": [
-    "x#x",
-    "#d#",
-    "x#x"
-  ],
-  "key": {
-    "x": {
-      "tag": "forge:obsidian"
-    },
-    "#": {
-      "tag": "forge:gems/emerald"
-    },
-    "d": {
-      "item": "minecraft:diamond"
-    }
-  },
-  "result": {
-    "item": "myfirstmod:complexmultipartblock"
-  }
+	"type": "minecraft:crafting_shaped",
+	"group": "myfirstmod",
+	"pattern": [
+		"x#x",
+		"#d#",
+		"x#x"
+	],
+	"key": {
+		"x": {
+			"tag": "forge:obsidian"
+		},
+		"#": {
+			"tag": "forge:gems/emerald"
+		},
+		"d": {
+			"item": "minecraft:diamond"
+		}
+	},
+	"result": {
+		"item": "myfirstmod:complexmultipartblock"
+	}
 }

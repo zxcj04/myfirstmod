@@ -1,6 +1,5 @@
 package com.fanrende.myfirstmod.blocks;
 
-import com.fanrende.myfirstmod.Config;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -16,6 +15,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.util.text.ITextComponent;
@@ -32,6 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MagicBlock extends Block
 {
+	private static final VoxelShape SHAPE = VoxelShapes.create(0.0, 0.0, 0.0, 1.0, 0.15, 1.0);
 	private static final VoxelShape RENDER_SHAPE = VoxelShapes.empty();
 
 	public MagicBlock()
@@ -44,7 +45,6 @@ public class MagicBlock extends Block
 	{
 		return true;
 	}
-
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
@@ -99,7 +99,7 @@ public class MagicBlock extends Block
 			itemIn.set(!h.getStackInSlot(0).isEmpty());
 		});
 
-		return itemIn.get()? 15: 0;
+		return itemIn.get() ? 15 : 0;
 	}
 
 	@Nullable
@@ -109,6 +109,14 @@ public class MagicBlock extends Block
 	)
 	{
 		return new MagicBlockTile();
+	}
+
+	@Override
+	public VoxelShape getShape(
+			BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context
+	)
+	{
+		return SHAPE;
 	}
 
 	@Override
@@ -139,7 +147,7 @@ public class MagicBlock extends Block
 
 				if (stack.isEmpty())
 					stack = h.extractItem(0, h.getStackInSlot(0).getCount(), false);
-				else if(h.getStackInSlot(0).isEmpty())
+				else if (h.getStackInSlot(0).isEmpty())
 					stack = h.insertItem(0, stack, false);
 				else
 				{

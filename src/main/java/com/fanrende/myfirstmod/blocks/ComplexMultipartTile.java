@@ -12,7 +12,14 @@ import static com.fanrende.myfirstmod.blocks.ComplexMultipartBlock.*;
 
 public class ComplexMultipartTile extends TileEntity
 {
-	private Mode modes[] = new Mode[]{Mode.MODE_NONE, Mode.MODE_NONE, Mode.MODE_NONE, Mode.MODE_NONE, Mode.MODE_NONE, Mode.MODE_NONE};
+	private Mode modes[] = new Mode[]{
+			Mode.MODE_NONE,
+			Mode.MODE_NONE,
+			Mode.MODE_NONE,
+			Mode.MODE_NONE,
+			Mode.MODE_NONE,
+			Mode.MODE_NONE
+	};
 
 	public ComplexMultipartTile()
 	{
@@ -21,7 +28,7 @@ public class ComplexMultipartTile extends TileEntity
 
 	public void toggleMode(Direction side)
 	{
-		switch(modes[side.ordinal()])
+		switch (modes[side.ordinal()])
 		{
 			case MODE_NONE:
 				modes[side.ordinal()] = Mode.MODE_INPUT;
@@ -41,14 +48,21 @@ public class ComplexMultipartTile extends TileEntity
 	{
 		Mode north = getMode(Direction.NORTH);
 		Mode south = getMode(Direction.SOUTH);
-		Mode  west = getMode(Direction.WEST);
-		Mode  east = getMode(Direction.EAST);
-		Mode    up = getMode(Direction.UP);
-		Mode  down = getMode(Direction.DOWN);
+		Mode west = getMode(Direction.WEST);
+		Mode east = getMode(Direction.EAST);
+		Mode up = getMode(Direction.UP);
+		Mode down = getMode(Direction.DOWN);
 
 		BlockState state = world.getBlockState(pos);
-		world.setBlockState(pos, state.with(NORTH, north).with(SOUTH, south).with(WEST, west).with(EAST, east).with(UP, up).with(DOWN, down),
-				Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+		world.setBlockState(pos,
+				state.with(NORTH, north)
+						.with(SOUTH, south)
+						.with(WEST, west)
+						.with(EAST, east)
+						.with(UP, up)
+						.with(DOWN, down),
+				Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS
+		);
 
 		markDirty();
 	}
@@ -86,9 +100,7 @@ public class ComplexMultipartTile extends TileEntity
 
 	public enum Mode implements IStringSerializable
 	{
-		MODE_NONE("none"),
-		MODE_INPUT("input"),
-		MODE_OUTPUT("output");
+		MODE_NONE("none"), MODE_INPUT("input"), MODE_OUTPUT("output");
 
 		private final String name;
 

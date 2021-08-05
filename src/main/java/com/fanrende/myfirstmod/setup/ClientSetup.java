@@ -25,6 +25,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import static com.fanrende.myfirstmod.blocks.MagicTileRenderer.MAGICBLOCK_TEXTURE;
+import static com.fanrende.myfirstmod.blocks.MagicTileRenderer.MAGICBLOCK_TOP_TEXTURE;
 import static com.fanrende.myfirstmod.setup.Registration.*;
 
 @Mod.EventBusSubscriber(modid = MyFirstMod.MODID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -62,5 +63,6 @@ public class ClientSetup
 			return;
 
 		event.addSprite(MAGICBLOCK_TEXTURE);
+		event.addSprite(MAGICBLOCK_TOP_TEXTURE);
 	}
 }

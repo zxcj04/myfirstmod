@@ -19,9 +19,13 @@ public class MyRenderType extends RenderType
 
 	private static final LineState THICK_LINES = new LineState(OptionalDouble.of(3.0D));
 
-	public static final RenderType OVERLAY_LINES = makeType("overlay_lines",
-			DefaultVertexFormats.POSITION_COLOR, GL11.GL_LINES, 256,
-			RenderType.State.getBuilder().line(THICK_LINES)
+	public static final RenderType OVERLAY_LINES = makeType(
+			"overlay_lines",
+			DefaultVertexFormats.POSITION_COLOR,
+			GL11.GL_LINES,
+			256,
+			RenderType.State.getBuilder()
+					.line(THICK_LINES)
 					.layer(PROJECTION_LAYERING)
 					.transparency(TRANSLUCENT_TRANSPARENCY)
 					.texture(NO_TEXTURE)
@@ -29,5 +33,6 @@ public class MyRenderType extends RenderType
 					.cull(CULL_DISABLED)
 					.lightmap(LIGHTMAP_DISABLED)
 					.writeMask(COLOR_WRITE)
-					.build(false));
+					.build(false)
+	);
 }

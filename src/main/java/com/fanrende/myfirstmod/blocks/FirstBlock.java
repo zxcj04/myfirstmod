@@ -4,17 +4,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
@@ -54,9 +51,10 @@ public class FirstBlock extends Block
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context)
 	{
-		BlockState state = getDefaultState()
-				.with(BlockStateProperties.FACING, context.getNearestLookingDirection().getOpposite())
-				.with(BlockStateProperties.POWERED, false);
+		BlockState state = getDefaultState().with(
+				BlockStateProperties.FACING,
+				context.getNearestLookingDirection().getOpposite()
+		).with(BlockStateProperties.POWERED, false);
 		return state;
 	}
 

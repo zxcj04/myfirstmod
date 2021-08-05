@@ -1,15 +1,15 @@
 {
-  "type": "minecraft:block",
-  "pools": [
-    {
-      "name": "bakedblock",
-      "rolls": 1,
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "name": "myfirstmod:bakedblock"
-        }
-      ]
-    }
-  ]
+	"type": "minecraft:block",
+	"pools": [
+		{
+			"name": "bakedblock",
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "myfirstmod:bakedblock"
+				}
+			]
+		}
+	]
 }

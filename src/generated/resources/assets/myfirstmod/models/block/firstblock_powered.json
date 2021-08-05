@@ -1,11 +1,12 @@
 {
-  "parent": "block/cube",
-  "textures": {
-    "down": "myfirstmod:block/firstblock",
-    "up": "myfirstmod:block/firstblock",
-    "north": "myfirstmod:block/firstblock_front_powered",
-    "south": "myfirstmod:block/firstblock",
-    "east": "myfirstmod:block/firstblock",
-    "west": "myfirstmod:block/firstblock"
-  }
+	"parent": "block/cube",
+	"textures": {
+		"down": "myfirstmod:block/firstblock",
+		"up": "myfirstmod:block/firstblock",
+		"north": "myfirstmod:block/firstblock_front_powered",
+		"south": "myfirstmod:block/firstblock",
+		"east": "myfirstmod:block/firstblock",
+		"west": "myfirstmod:block/firstblock",
+		"particle": "myfirstmod:block/firstblock_front_powered"
+	}
 }
