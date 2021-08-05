@@ -21,7 +21,8 @@ import javax.annotation.Nullable;
 
 public class MagicBlockTile extends TileEntity
 {
-	private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(this::createItemHandler);
+	private final ItemStackHandler item = this.createItemHandler();
+	private final LazyOptional<IItemHandler> itemLazy = LazyOptional.of(() -> item);
 
 	public MagicBlockTile()
 	{
@@ -66,7 +67,7 @@ public class MagicBlockTile extends TileEntity
 	public void read(CompoundNBT tag)
 	{
 		CompoundNBT invTag = tag.getCompound("inv");
-		itemHandler.ifPresent(h -> ( (INBTSerializable<CompoundNBT>) h ).deserializeNBT(invTag));
+		item.deserializeNBT(invTag);
 
 		super.read(tag);
 	}
@@ -74,11 +75,7 @@ public class MagicBlockTile extends TileEntity
 	@Override
 	public CompoundNBT write(CompoundNBT tag)
 	{
-		itemHandler.ifPresent(h ->
-		{
-			CompoundNBT compound = ( (INBTSerializable<CompoundNBT>) h ).serializeNBT();
-			tag.put("inv", compound);
-		});
+		tag.put("inv", item.serializeNBT());
 
 		return super.write(tag);
 	}
@@ -106,7 +103,7 @@ public class MagicBlockTile extends TileEntity
 	)
 	{
 		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return itemHandler.cast();
+			return itemLazy.cast();
 
 		return super.getCapability(cap, side);
 	}

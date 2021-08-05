@@ -34,8 +34,11 @@ import static com.fanrende.myfirstmod.setup.Registration.FIRSTBLOCK_TILE;
 
 public class FirstBlockTile extends TileEntity implements ITickableTileEntity, INamedContainerProvider
 {
-	private final LazyOptional<IItemHandler> itemHandler = LazyOptional.of(this::createItemHandler);
-	private final LazyOptional<IEnergyStorage> energyHandler = LazyOptional.of(this::createEnergyHandler);
+	private final ItemStackHandler item = this.createItemHandler();
+	private final CustomEnergyStorage energy = this.createEnergyHandler();
+
+	private final LazyOptional<IItemHandler> itemLazy = LazyOptional.of(() -> item);
+	private final LazyOptional<IEnergyStorage> energyLazy = LazyOptional.of(() -> energy);
 
 	private int generatorCounter = 0;
 
@@ -50,33 +53,27 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 		if (world.isRemote)
 			return;
 
-		energyHandler.ifPresent(energyStorage ->
+		if (generatorCounter > 0)
 		{
-			if (generatorCounter > 0)
-			{
-				generatorCounter--;
+			generatorCounter--;
 
-				( (CustomEnergyStorage) energyStorage ).addEnergy(Config.FIRSTBLOCK_GENERATE.get());
+			energy.addEnergy(Config.FIRSTBLOCK_GENERATE.get());
+
+			markDirty();
+		}
+
+		if (generatorCounter <= 0 && energy.getEnergyStored() < energy.getMaxEnergyStored())
+		{
+			ItemStack stack = item.getStackInSlot(0);
+
+			if (stack.getItem() == Items.COBBLESTONE)
+			{
+				item.extractItem(0, 1, false);
+				generatorCounter = Config.FIRSTBLOCK_TICKS.get();
 
 				markDirty();
 			}
-
-			if (generatorCounter <= 0 && energyStorage.getEnergyStored() < energyStorage.getMaxEnergyStored())
-			{
-				itemHandler.ifPresent(itemHandler ->
-				{
-					ItemStack stack = itemHandler.getStackInSlot(0);
-
-					if (stack.getItem() == Items.COBBLESTONE)
-					{
-						itemHandler.extractItem(0, 1, false);
-						generatorCounter = Config.FIRSTBLOCK_TICKS.get();
-
-						markDirty();
-					}
-				});
-			}
-		});
+		}
 
 		BlockState state = world.getBlockState(pos);
 
@@ -89,55 +86,52 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 
 	private void sendOutEnergy()
 	{
-		energyHandler.ifPresent(energy ->
+		AtomicInteger energyStored = new AtomicInteger(energy.getEnergyStored());
+
+		if (energyStored.get() > 0)
 		{
-			AtomicInteger energyStored = new AtomicInteger(energy.getEnergyStored());
-
-			if (energyStored.get() > 0)
+			for (Direction direction : Direction.values())
 			{
-				for (Direction direction : Direction.values())
+				TileEntity tileEntity = world.getTileEntity(pos.offset(direction));
+
+				if (tileEntity != null)
 				{
-					TileEntity tileEntity = world.getTileEntity(pos.offset(direction));
-
-					if (tileEntity != null)
+					boolean doContinue = tileEntity.getCapability(CapabilityEnergy.ENERGY, direction).map(h ->
 					{
-						boolean doContinue = tileEntity.getCapability(CapabilityEnergy.ENERGY, direction).map(h ->
+						if (h.canReceive())
 						{
-							if (h.canReceive())
-							{
-								int received = h.receiveEnergy(Math.min(energyStored.get(),
-										Config.FIRSTBLOCK_SEND.get()
-								), false);
+							int received = h.receiveEnergy(Math.min(energyStored.get(),
+									Config.FIRSTBLOCK_SEND.get()
+							), false);
 
-								energyStored.addAndGet(-received);
+							energyStored.addAndGet(-received);
 
-								( (CustomEnergyStorage) energy ).consumeEnergy(received);
+							( (CustomEnergyStorage) energy ).consumeEnergy(received);
 
-								markDirty();
+							markDirty();
 
-								return energyStored.get() > 0;
-							}
-							else
-								return true;
+							return energyStored.get() > 0;
+						}
+						else
+							return true;
 
-						}).orElse(true);
+					}).orElse(true);
 
-						if (!doContinue)
-							return;
-					}
+					if (!doContinue)
+						return;
 				}
 			}
-		});
+		}
 	}
 
 	@Override
 	public void read(CompoundNBT tag)
 	{
 		CompoundNBT invTag = tag.getCompound("inv");
-		itemHandler.ifPresent(h -> ( (INBTSerializable<CompoundNBT>) h ).deserializeNBT(invTag));
+		item.deserializeNBT(invTag);
 
 		CompoundNBT energyTag = tag.getCompound("energy");
-		energyHandler.ifPresent(h -> ( (INBTSerializable<CompoundNBT>) h ).deserializeNBT(energyTag));
+		energy.deserializeNBT(energyTag);
 
 		super.read(tag);
 	}
@@ -145,17 +139,8 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 	@Override
 	public CompoundNBT write(CompoundNBT tag)
 	{
-		itemHandler.ifPresent(h ->
-		{
-			CompoundNBT compound = ( (INBTSerializable<CompoundNBT>) h ).serializeNBT();
-			tag.put("inv", compound);
-		});
-
-		energyHandler.ifPresent(h ->
-		{
-			CompoundNBT compound = ( (INBTSerializable<CompoundNBT>) h ).serializeNBT();
-			tag.put("energy", compound);
-		});
+		tag.put("inv", item.serializeNBT());
+		tag.put("energy", energy.serializeNBT());
 
 		return super.write(tag);
 	}
@@ -207,9 +192,9 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 	)
 	{
 		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return itemHandler.cast();
+			return itemLazy.cast();
 		else if (cap == CapabilityEnergy.ENERGY)
-			return energyHandler.cast();
+			return energyLazy.cast();
 
 		return super.getCapability(cap, side);
 	}
