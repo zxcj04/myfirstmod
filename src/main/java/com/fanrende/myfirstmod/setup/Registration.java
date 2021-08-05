@@ -51,7 +51,6 @@ public class Registration
 	public static final RegistryObject<TileEntityType<FirstBlockTile>> FIRSTBLOCK_TILE = TILES.register("firstblock",
 			() -> TileEntityType.Builder.create(FirstBlockTile::new, FIRSTBLOCK.get()).build(null)
 	);
-
 	public static final RegistryObject<ContainerType<FirstBlockContainer>> FIRSTBLOCK_CONTAINER = CONTAINERS.register("firstblock",
 			() -> IForgeContainerType.create((windowId, inv, data) ->
 			{

@@ -15,6 +15,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.spawner.AbstractSpawner;
+import net.minecraftforge.common.util.Constants;
 
 import java.util.Objects;
 
@@ -54,7 +55,8 @@ public class WeirdMobEggItem extends Item
 					AbstractSpawner abstractspawner = ( (MobSpawnerTileEntity) tileentity ).getSpawnerBaseLogic();
 					abstractspawner.setEntityType(WEIRDMOB.get());
 					tileentity.markDirty();
-					world.notifyBlockUpdate(blockpos, blockstate, blockstate, 3);
+					world.notifyBlockUpdate(blockpos, blockstate, blockstate,
+							Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
 					itemstack.shrink(1);
 					return ActionResultType.SUCCESS;
 				}

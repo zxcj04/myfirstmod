@@ -42,19 +42,49 @@ public class FirstBlockContainer extends Container
 
 		layoutPlayerInventorySlots(10, 70);
 
+		trackPower();
+	}
+
+	private void trackPower()
+	{
+		// because of 64 bits and 32 bits difference between server and client on dedicated server
+		// we need two "int" to store and transfer
+
 		trackInt(new IntReferenceHolder()
 		{
 			@Override
 			public int get()
 			{
-				return getEnergy();
+				return getEnergy() & 0xffff;
 			}
 
 			@Override
 			public void set(int value)
 			{
-				tileEntity.getCapability(CapabilityEnergy.ENERGY)
-						.ifPresent(h -> ( (CustomEnergyStorage) h ).setEnergy(value));
+				tileEntity.getCapability(CapabilityEnergy.ENERGY).ifPresent(h ->
+				{
+					int energyStored = h.getEnergyStored() & 0xffff0000;
+					((CustomEnergyStorage)h).setEnergy(energyStored + (value & 0xffff));
+				});
+			}
+		});
+
+		trackInt(new IntReferenceHolder()
+		{
+			@Override
+			public int get()
+			{
+				return (getEnergy() >> 16) & 0xffff;
+			}
+
+			@Override
+			public void set(int value)
+			{
+				tileEntity.getCapability(CapabilityEnergy.ENERGY).ifPresent(h ->
+				{
+					int energyStored = h.getEnergyStored() & 0x0000ffff;
+					((CustomEnergyStorage)h).setEnergy(energyStored | (value << 16));
+				});
 			}
 		});
 	}

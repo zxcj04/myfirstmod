@@ -8,7 +8,7 @@
   ],
   "key": {
     "x": {
-      "item": "minecraft:obsidian"
+      "tag": "forge:obsidian"
     },
     "#": {
       "tag": "forge:gems/emerald"

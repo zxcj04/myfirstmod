@@ -37,7 +37,7 @@ public class ComplexMultipartTile extends TileEntity
 		updateState();
 	}
 
-	private void updateState()
+	public void updateState()
 	{
 		Mode north = getMode(Direction.NORTH);
 		Mode south = getMode(Direction.SOUTH);

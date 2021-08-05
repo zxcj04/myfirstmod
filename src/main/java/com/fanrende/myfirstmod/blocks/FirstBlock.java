@@ -8,6 +8,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
@@ -49,28 +50,14 @@ public class FirstBlock extends Block
 		return new FirstBlockTile();
 	}
 
+	@Nullable
 	@Override
-	public void onBlockPlacedBy(
-			World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack
-	)
+	public BlockState getStateForPlacement(BlockItemUseContext context)
 	{
-		if (placer != null)
-		{
-			state = state.with(BlockStateProperties.FACING, getFacingFromEntity(pos, placer));
-			state = state.with(BlockStateProperties.POWERED, false);
-
-			world.setBlockState(pos, state, 2);
-		}
-	}
-
-	private static Direction getFacingFromEntity(BlockPos clickedPos, LivingEntity entity)
-	{
-		BlockPos position = entity.getPosition();
-
-		return Direction.getFacingFromVector((float) ( position.getX() - clickedPos.getX() ),
-				(float) ( position.getY() - clickedPos.getY() ),
-				(float) ( position.getZ() - clickedPos.getZ() )
-		);
+		BlockState state = getDefaultState()
+				.with(BlockStateProperties.FACING, context.getNearestLookingDirection().getOpposite())
+				.with(BlockStateProperties.POWERED, false);
+		return state;
 	}
 
 	@Override

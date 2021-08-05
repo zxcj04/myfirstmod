@@ -8,6 +8,7 @@ import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -34,7 +35,8 @@ public class MagicBlockTile extends TileEntity
 			@Override
 			protected void onContentsChanged(int slot)
 			{
-				world.notifyBlockUpdate(pos, getBlockState(), getBlockState(), 3);
+				world.notifyBlockUpdate(pos, getBlockState(), getBlockState(),
+						Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
 				markDirty();
 			}
 
