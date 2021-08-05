@@ -71,13 +71,13 @@ public class FirstBlockItem extends BlockItem
 		tooltip.add(new StringTextComponent("\u00A75" + "energy: \u00A77" + getEnergyStored(stack) + "\u00A75/\u00A77" + Config.FIRSTBLOCK_MAXPOWER.get()));
 		if (Screen.hasShiftDown())
 		{
-			tooltip.add(new TranslationTextComponent("tooltip.myfirstmod.firstblock",
+			tooltip.add(new TranslationTextComponent("message.firstblock",
 					Config.FIRSTBLOCK_GENERATE.get()
 			));
 		}
 		else
 		{
-			tooltip.add(new StringTextComponent("\u00A77press \u00A76shift\u00A77 for more info"));
+			tooltip.add(new TranslationTextComponent("message.pressshift"));
 		}
 	}
 }

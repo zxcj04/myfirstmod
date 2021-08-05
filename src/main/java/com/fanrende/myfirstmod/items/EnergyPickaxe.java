@@ -78,13 +78,13 @@ public class EnergyPickaxe extends Item
 		tooltip.add(new StringTextComponent("\u00A75" + "energy: \u00A77" + getEnergyStored(stack) + "\u00A75/\u00A77" + Config.ENERGYPICKAXE_MAXPOWER.get()));
 		if (Screen.hasShiftDown())
 		{
-			tooltip.add(new TranslationTextComponent("tooltip.myfirstmod.energypickaxe",
+			tooltip.add(new TranslationTextComponent("message.energypickaxe",
 					Config.ENERGYPICKAXE_MINECOST.get()
 			));
 		}
 		else
 		{
-			tooltip.add(new StringTextComponent("\u00A77press \u00A76shift\u00A77 for more info"));
+			tooltip.add(new TranslationTextComponent("message.pressshift"));
 		}
 	}
 

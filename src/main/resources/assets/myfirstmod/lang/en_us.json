@@ -1,6 +1,5 @@
 {
 	"block.myfirstmod.firstblock": "First Block",
-	"tooltip.myfirstmod.firstblock": "Generate rf power from cobblestone (%d rf/t)",
 	"item.myfirstmod.firstitem": "First Item",
 	"block.myfirstmod.bakedblock": "Baked Block",
 	"block.myfirstmod.magicblock": "Magic Block",
@@ -10,7 +9,18 @@
 	"item.myfirstmod.infinityeye": "Infinity Eye",
 	"item.myfirstmod.spawntool": "Spawn Tool",
 	"item.myfirstmod.energypickaxe": "Energy Pickaxe",
-	"tooltip.myfirstmod.energypickaxe": "Break blocks using rf power (%d per block)",
 	"_comment": "Creative Tabs",
-	"itemGroup.myfirstmod": "My First Mod"
+	"itemGroup.myfirstmod": "My First Mod",
+	
+	"message.pressshift": "\u00A77press \u00A76shift\u00A77 for more info",
+
+	"message.firstblock": "Generate rf power from cobblestone (%d rf/t)",
+	"message.energypickaxe": "Break blocks using rf power (%d per block)",
+	"message.firstitem": "Show overlay line on entities",
+	"message.bakedblock": "Block with not full shape",
+	"message.magicblock": "Block that can put thing on",
+	"message.complexmultipartblock": "Block which can change mode by shift click",
+	"message.infinitypearl": "Similar to ender pearl, but can use \"many\" times",
+	"message.infinityeye": "Similar to eye of ender, but can use \"many\" times",
+	"message.spawntool": "Spawn specific mob with gui"
 }
