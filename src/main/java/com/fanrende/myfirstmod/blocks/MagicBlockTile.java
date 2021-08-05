@@ -85,7 +85,8 @@ public class MagicBlockTile extends TileEntity
 	@Override
 	public CompoundNBT getUpdateTag()
 	{
-		return this.write(new CompoundNBT());
+		CompoundNBT tag = super.getUpdateTag();
+		return this.write(tag);
 	}
 
 	@Nullable
