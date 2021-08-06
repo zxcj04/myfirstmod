@@ -8,24 +8,10 @@ import java.util.function.Supplier;
 
 public class PacketOpenGui
 {
-	public PacketOpenGui(PacketBuffer buffer)
-	{
-
-	}
-
-	public PacketOpenGui()
-	{
-
-	}
-
-	public void toBytes(PacketBuffer buffer)
-	{
-
-	}
-
-	public void handle(Supplier<NetworkEvent.Context> ctx)
+	public boolean handle(Supplier<NetworkEvent.Context> ctx)
 	{
 		ctx.get().enqueueWork(SpawnScreen::open);
-		ctx.get().setPacketHandled(true);
+
+		return true;
 	}
 }

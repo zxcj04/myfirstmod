@@ -25,7 +25,7 @@ public class CommandSpawn implements Command<CommandSource>
 	public int run(CommandContext<CommandSource> context) throws CommandSyntaxException
 	{
 		ServerPlayerEntity player = context.getSource().asPlayer();
-		Networking.INSTANCE.sendTo(new PacketOpenGui(), player.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+		Networking.sendToClient(new PacketOpenGui(), player);
 		return 0;
 	}
 }
