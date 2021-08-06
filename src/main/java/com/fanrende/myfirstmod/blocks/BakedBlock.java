@@ -58,7 +58,9 @@ public class BakedBlock extends Block
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace)
+	public ActionResultType onBlockActivated(
+			BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace
+	)
 	{
 		ItemStack item = player.getHeldItem(hand);
 		if (!item.isEmpty() && item.getItem() instanceof BlockItem)
@@ -68,8 +70,8 @@ public class BakedBlock extends Block
 				TileEntity te = world.getTileEntity(pos);
 				if (te instanceof BakedBlockTile)
 				{
-					BlockState mimicState = ((BlockItem) item.getItem()).getBlock().getDefaultState();
-					((BakedBlockTile) te).setMimic(mimicState);
+					BlockState mimicState = ( (BlockItem) item.getItem() ).getBlock().getDefaultState();
+					( (BakedBlockTile) te ).setMimic(mimicState);
 				}
 			}
 			return ActionResultType.SUCCESS;

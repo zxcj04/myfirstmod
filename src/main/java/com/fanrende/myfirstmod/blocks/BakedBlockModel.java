@@ -115,11 +115,14 @@ public class BakedBlockModel implements IDynamicBakedModel
 		RenderType layer = MinecraftForgeClient.getRenderLayer();
 		BlockState mimic = extraData.getData(BakedBlockTile.MIMIC);
 
-		if(mimic != null && !(mimic.getBlock() instanceof BakedBlock))
+		if (mimic != null && !( mimic.getBlock() instanceof BakedBlock ))
 		{
-			if(layer == null || RenderTypeLookup.canRenderInLayer(mimic, layer))
+			if (layer == null || RenderTypeLookup.canRenderInLayer(mimic, layer))
 			{
-				IBakedModel model = Minecraft.getInstance().getBlockRendererDispatcher().getBlockModelShapes().getModel(mimic);
+				IBakedModel model = Minecraft.getInstance()
+						.getBlockRendererDispatcher()
+						.getBlockModelShapes()
+						.getModel(mimic);
 				try
 				{
 					return model.getQuads(mimic, side, rand, EmptyModelData.INSTANCE);
@@ -133,7 +136,7 @@ public class BakedBlockModel implements IDynamicBakedModel
 			return Collections.emptyList();
 		}
 
-		if (side != null || (layer != null && !layer.equals(RenderType.getSolid())))
+		if (side != null || ( layer != null && !layer.equals(RenderType.getSolid()) ))
 			return Collections.emptyList();
 
 		TextureAtlasSprite texture = getTexture();

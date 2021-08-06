@@ -101,8 +101,7 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 					{
 						if (h.canReceive())
 						{
-							int received = h.receiveEnergy(
-									Math.min(energyStored.get(), Config.FIRSTBLOCK_SEND.get()),
+							int received = h.receiveEnergy(Math.min(energyStored.get(), Config.FIRSTBLOCK_SEND.get()),
 									false
 							);
 

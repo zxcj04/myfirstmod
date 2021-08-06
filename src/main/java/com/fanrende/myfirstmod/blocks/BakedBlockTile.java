@@ -6,7 +6,6 @@ import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
@@ -15,7 +14,6 @@ import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-
 import java.util.Objects;
 
 import static com.fanrende.myfirstmod.setup.Registration.BAKEDBLOCK;
@@ -34,13 +32,16 @@ public class BakedBlockTile extends TileEntity
 
 	public void setMimic(BlockState mimic)
 	{
-		if(mimic.getBlock() == BAKEDBLOCK.get())
+		if (mimic.getBlock() == BAKEDBLOCK.get())
 			return;
 
 		this.mimic = mimic;
 		markDirty();
-		world.notifyBlockUpdate(pos, getBlockState(), getBlockState(),
-				Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+		world.notifyBlockUpdate(pos,
+				getBlockState(),
+				getBlockState(),
+				Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS
+		);
 	}
 
 	public BlockState getMimic()
@@ -83,8 +84,11 @@ public class BakedBlockTile extends TileEntity
 		if (!Objects.equals(oldMimic, mimic))
 		{
 			ModelDataManager.requestModelDataRefresh(this);
-			world.notifyBlockUpdate(pos, getBlockState(), getBlockState(),
-					Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS);
+			world.notifyBlockUpdate(pos,
+					getBlockState(),
+					getBlockState(),
+					Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS
+			);
 		}
 	}
 
@@ -92,9 +96,7 @@ public class BakedBlockTile extends TileEntity
 	@Override
 	public IModelData getModelData()
 	{
-		return new ModelDataMap.Builder()
-				.withInitial(MIMIC, mimic)
-				.build();
+		return new ModelDataMap.Builder().withInitial(MIMIC, mimic).build();
 	}
 
 	@Override

@@ -30,28 +30,22 @@ import java.util.List;
 
 public class ComplexMultipartBlock extends Block
 {
-	public static final EnumProperty<ComplexMultipartTile.Mode> NORTH = EnumProperty.create(
-			"north",
+	public static final EnumProperty<ComplexMultipartTile.Mode> NORTH = EnumProperty.create("north",
 			ComplexMultipartTile.Mode.class
 	);
-	public static final EnumProperty<ComplexMultipartTile.Mode> SOUTH = EnumProperty.create(
-			"south",
+	public static final EnumProperty<ComplexMultipartTile.Mode> SOUTH = EnumProperty.create("south",
 			ComplexMultipartTile.Mode.class
 	);
-	public static final EnumProperty<ComplexMultipartTile.Mode> WEST = EnumProperty.create(
-			"west",
+	public static final EnumProperty<ComplexMultipartTile.Mode> WEST = EnumProperty.create("west",
 			ComplexMultipartTile.Mode.class
 	);
-	public static final EnumProperty<ComplexMultipartTile.Mode> EAST = EnumProperty.create(
-			"east",
+	public static final EnumProperty<ComplexMultipartTile.Mode> EAST = EnumProperty.create("east",
 			ComplexMultipartTile.Mode.class
 	);
-	public static final EnumProperty<ComplexMultipartTile.Mode> UP = EnumProperty.create(
-			"up",
+	public static final EnumProperty<ComplexMultipartTile.Mode> UP = EnumProperty.create("up",
 			ComplexMultipartTile.Mode.class
 	);
-	public static final EnumProperty<ComplexMultipartTile.Mode> DOWN = EnumProperty.create(
-			"down",
+	public static final EnumProperty<ComplexMultipartTile.Mode> DOWN = EnumProperty.create("down",
 			ComplexMultipartTile.Mode.class
 	);
 

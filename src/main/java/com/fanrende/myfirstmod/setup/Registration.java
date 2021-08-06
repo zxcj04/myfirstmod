@@ -75,8 +75,7 @@ public class Registration
 			() -> TileEntityType.Builder.create(MagicBlockTile::new, MAGICBLOCK.get()).build(null)
 	);
 
-	public static final RegistryObject<ComplexMultipartBlock> COMPLEX_MULTIPART_BLOCK = BLOCKS.register(
-			"complexmultipartblock",
+	public static final RegistryObject<ComplexMultipartBlock> COMPLEX_MULTIPART_BLOCK = BLOCKS.register("complexmultipartblock",
 			ComplexMultipartBlock::new
 	);
 	public static final RegistryObject<Item> COMPLEX_MULTIPART_ITEM = ITEMS.register("complexmultipartblock",

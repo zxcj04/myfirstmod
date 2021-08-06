@@ -51,10 +51,10 @@ public class FirstBlock extends Block
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context)
 	{
-		BlockState state = getDefaultState().with(
-				BlockStateProperties.FACING,
-				context.getNearestLookingDirection().getOpposite()
-		).with(BlockStateProperties.POWERED, false);
+		BlockState state = getDefaultState().with(BlockStateProperties.FACING,
+						context.getNearestLookingDirection().getOpposite()
+				)
+				.with(BlockStateProperties.POWERED, false);
 		return state;
 	}
 
