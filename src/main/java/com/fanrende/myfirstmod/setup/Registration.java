@@ -115,7 +115,7 @@ public class Registration
 
 	public static final RegistryObject<EntityType<WeirdMobEntity>> WEIRDMOB = ENTITIES.register("weirdmob",
 			() -> EntityType.Builder.create(WeirdMobEntity::new, EntityClassification.CREATURE)
-					.size(1, 1)
+					.size(.5f, .5f)
 					.setShouldReceiveVelocityUpdates(false)
 					.build("weirdmob")
 	);
