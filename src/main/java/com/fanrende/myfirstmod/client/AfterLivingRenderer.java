@@ -21,7 +21,7 @@ public class AfterLivingRenderer
 
 		if (player.getHeldItemMainhand().getItem() == FIRSTITEM.get())
 		{
-			showMobs(event.getMatrixStack(), event.getEntity());
+			showMobs(event.getMatrixStack(), event.getBuffers(), event.getEntity());
 		}
 	}
 
@@ -37,9 +37,8 @@ public class AfterLivingRenderer
 				.endVertex();
 	}
 
-	private static void showMobs(MatrixStack matrixStack, LivingEntity entity)
+	private static void showMobs(MatrixStack matrixStack, IRenderTypeBuffer buffer, LivingEntity entity)
 	{
-		IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
 		IVertexBuilder builder = buffer.getBuffer(MyRenderType.OVERLAY_LINES);
 
 		Matrix4f positionMatrix = matrixStack.getLast().getMatrix();
