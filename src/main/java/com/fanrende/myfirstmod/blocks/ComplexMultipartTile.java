@@ -13,12 +13,7 @@ import static com.fanrende.myfirstmod.blocks.ComplexMultipartBlock.*;
 public class ComplexMultipartTile extends TileEntity
 {
 	private Mode modes[] = new Mode[]{
-			Mode.MODE_NONE,
-			Mode.MODE_NONE,
-			Mode.MODE_NONE,
-			Mode.MODE_NONE,
-			Mode.MODE_NONE,
-			Mode.MODE_NONE
+			Mode.MODE_NONE, Mode.MODE_NONE, Mode.MODE_NONE, Mode.MODE_NONE, Mode.MODE_NONE, Mode.MODE_NONE
 	};
 
 	public ComplexMultipartTile()
@@ -54,7 +49,8 @@ public class ComplexMultipartTile extends TileEntity
 		Mode down = getMode(Direction.DOWN);
 
 		BlockState state = world.getBlockState(pos);
-		world.setBlockState(pos,
+		world.setBlockState(
+				pos,
 				state.with(NORTH, north)
 						.with(SOUTH, south)
 						.with(WEST, west)
@@ -77,23 +73,29 @@ public class ComplexMultipartTile extends TileEntity
 	{
 		super.read(compound);
 
-		modes[0] = Mode.values()[compound.getByte("m0")];
-		modes[1] = Mode.values()[compound.getByte("m1")];
-		modes[2] = Mode.values()[compound.getByte("m2")];
-		modes[3] = Mode.values()[compound.getByte("m3")];
-		modes[4] = Mode.values()[compound.getByte("m4")];
-		modes[5] = Mode.values()[compound.getByte("m5")];
+		CompoundNBT modeTag = compound.getCompound("mode");
+
+		modes[0] = Mode.values()[modeTag.getByte("m0")];
+		modes[1] = Mode.values()[modeTag.getByte("m1")];
+		modes[2] = Mode.values()[modeTag.getByte("m2")];
+		modes[3] = Mode.values()[modeTag.getByte("m3")];
+		modes[4] = Mode.values()[modeTag.getByte("m4")];
+		modes[5] = Mode.values()[modeTag.getByte("m5")];
 	}
 
 	@Override
 	public CompoundNBT write(CompoundNBT compound)
 	{
-		compound.putByte("m0", (byte) modes[0].ordinal());
-		compound.putByte("m1", (byte) modes[1].ordinal());
-		compound.putByte("m2", (byte) modes[2].ordinal());
-		compound.putByte("m3", (byte) modes[3].ordinal());
-		compound.putByte("m4", (byte) modes[4].ordinal());
-		compound.putByte("m5", (byte) modes[5].ordinal());
+		CompoundNBT modeTag = new CompoundNBT();
+
+		modeTag.putByte("m0", (byte) modes[0].ordinal());
+		modeTag.putByte("m1", (byte) modes[1].ordinal());
+		modeTag.putByte("m2", (byte) modes[2].ordinal());
+		modeTag.putByte("m3", (byte) modes[3].ordinal());
+		modeTag.putByte("m4", (byte) modes[4].ordinal());
+		modeTag.putByte("m5", (byte) modes[5].ordinal());
+
+		compound.put("mode", modeTag);
 
 		return super.write(compound);
 	}

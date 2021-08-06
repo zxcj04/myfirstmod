@@ -36,7 +36,8 @@ public class MagicBlockTile extends TileEntity
 			@Override
 			protected void onContentsChanged(int slot)
 			{
-				world.notifyBlockUpdate(pos,
+				world.notifyBlockUpdate(
+						pos,
 						getBlockState(),
 						getBlockState(),
 						Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS
@@ -90,11 +91,17 @@ public class MagicBlockTile extends TileEntity
 		return this.write(tag);
 	}
 
+	@Override
+	public void handleUpdateTag(CompoundNBT tag)
+	{
+		read(tag);
+	}
+
 	@Nullable
 	@Override
 	public SUpdateTileEntityPacket getUpdatePacket()
 	{
-		SUpdateTileEntityPacket packet = new SUpdateTileEntityPacket(pos, 0, this.write(new CompoundNBT()));
+		SUpdateTileEntityPacket packet = new SUpdateTileEntityPacket(pos, 0, getUpdateTag());
 		return packet;
 	}
 
@@ -103,7 +110,7 @@ public class MagicBlockTile extends TileEntity
 			NetworkManager net, SUpdateTileEntityPacket pkt
 	)
 	{
-		this.read(pkt.getNbtCompound());
+		handleUpdateTag(pkt.getNbtCompound());
 	}
 
 	@Nonnull

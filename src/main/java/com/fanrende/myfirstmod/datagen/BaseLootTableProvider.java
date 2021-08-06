@@ -37,16 +37,19 @@ public abstract class BaseLootTableProvider extends LootTableProvider
 
 	protected abstract void addTables();
 
-	protected LootTable.Builder createStandardTable(String name, Block block)
+	protected LootTable.Builder createTagsTable(String name, Block block, String... tags)
 	{
+		CopyNbt.Builder nbtBuilder = CopyNbt.builder(CopyNbt.Source.BLOCK_ENTITY);
+
+		for (String tag : tags)
+			nbtBuilder.addOperation(tag, "BlockEntityTag." + tag, CopyNbt.Action.REPLACE);
+
 		LootPool.Builder builder = LootPool.builder()
 				.name(name)
 				.rolls(ConstantRange.of(1))
 				.addEntry(ItemLootEntry.builder(block)
 						.acceptFunction(CopyName.builder(CopyName.Source.BLOCK_ENTITY))
-						.acceptFunction(CopyNbt.builder(CopyNbt.Source.BLOCK_ENTITY)
-								.addOperation("inv", "BlockEntityTag.inv", CopyNbt.Action.REPLACE)
-								.addOperation("energy", "BlockEntityTag.energy", CopyNbt.Action.REPLACE))
+						.acceptFunction(nbtBuilder)
 						.acceptFunction(SetContents.builder()
 								.addLootEntry(DynamicLootEntry.func_216162_a(new ResourceLocation("minecraft",
 										"contents"
