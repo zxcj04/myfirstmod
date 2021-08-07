@@ -49,7 +49,7 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 	@Override
 	public void tick()
 	{
-		if (world.isRemote)
+		if (level.isClientSide)
 			return;
 
 		if (generatorCounter > 0)
@@ -58,7 +58,7 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 
 			energy.addEnergy(Config.FIRSTBLOCK_GENERATE.get());
 
-			markDirty();
+			setChanged();
 		}
 
 		if (generatorCounter <= 0 && energy.getEnergyStored() < energy.getMaxEnergyStored())
@@ -70,15 +70,15 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 				item.extractItem(0, 1, false);
 				generatorCounter = Config.FIRSTBLOCK_TICKS.get();
 
-				markDirty();
+				setChanged();
 			}
 		}
 
-		BlockState state = world.getBlockState(pos);
+		BlockState state = level.getBlockState(worldPosition);
 
-		if (state.get(BlockStateProperties.POWERED) != generatorCounter > 0)
-			world.setBlockState(pos,
-					state.with(BlockStateProperties.POWERED, generatorCounter > 0),
+		if (state.getValue(BlockStateProperties.POWERED) != generatorCounter > 0)
+			level.setBlock(worldPosition,
+					state.setValue(BlockStateProperties.POWERED, generatorCounter > 0),
 					Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS
 			);
 
@@ -93,7 +93,7 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 		{
 			for (Direction direction : Direction.values())
 			{
-				TileEntity tileEntity = world.getTileEntity(pos.offset(direction));
+				TileEntity tileEntity = level.getBlockEntity(worldPosition.relative(direction));
 
 				if (tileEntity != null)
 				{
@@ -109,7 +109,7 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 
 							( (CustomEnergyStorage) energy ).consumeEnergy(received);
 
-							markDirty();
+							setChanged();
 
 							return energyStored.get() > 0;
 						}
@@ -126,7 +126,7 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT tag)
+	public void load(BlockState state, CompoundNBT tag)
 	{
 		CompoundNBT invTag = tag.getCompound("inv");
 		item.deserializeNBT(invTag);
@@ -134,16 +134,16 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 		CompoundNBT energyTag = tag.getCompound("energy");
 		energy.deserializeNBT(energyTag);
 
-		super.read(state, tag);
+		super.load(state, tag);
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT tag)
+	public CompoundNBT save(CompoundNBT tag)
 	{
 		tag.put("inv", item.serializeNBT());
 		tag.put("energy", energy.serializeNBT());
 
-		return super.write(tag);
+		return super.save(tag);
 	}
 
 	private ItemStackHandler createItemHandler()
@@ -153,7 +153,7 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 			@Override
 			protected void onContentsChanged(int slot)
 			{
-				markDirty();
+				setChanged();
 			}
 
 			@Override
@@ -181,7 +181,7 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 			@Override
 			protected void onEnergyChanged()
 			{
-				markDirty();
+				setChanged();
 			}
 		};
 	}
@@ -212,6 +212,6 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 			int windowId, PlayerInventory playerInventory, PlayerEntity playerEntity
 	)
 	{
-		return new FirstBlockContainer(windowId, world, pos, playerInventory);
+		return new FirstBlockContainer(windowId, level, worldPosition, playerInventory);
 	}
 }

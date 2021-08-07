@@ -27,13 +27,15 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class BakedBlock extends Block
 {
-	private final VoxelShape shape = VoxelShapes.create(.2, .2, .2, .8, .8, .8);
+	private final VoxelShape shape = VoxelShapes.box(.2, .2, .2, .8, .8, .8);
 
 	public BakedBlock()
 	{
-		super(Properties.create(Material.WOOD).sound(SoundType.WOOD).hardnessAndResistance(1.0f));
+		super(Properties.of(Material.WOOD).sound(SoundType.WOOD).strength(1.0f));
 	}
 
 	@Override
@@ -58,31 +60,31 @@ public class BakedBlock extends Block
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(
+	public ActionResultType use(
 			BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace
 	)
 	{
-		ItemStack item = player.getHeldItem(hand);
+		ItemStack item = player.getItemInHand(hand);
 		if (!item.isEmpty() && item.getItem() instanceof BlockItem)
 		{
-			if (!world.isRemote)
+			if (!world.isClientSide)
 			{
-				TileEntity te = world.getTileEntity(pos);
+				TileEntity te = world.getBlockEntity(pos);
 				if (te instanceof BakedBlockTile)
 				{
-					BlockState mimicState = ( (BlockItem) item.getItem() ).getBlock().getDefaultState();
+					BlockState mimicState = ( (BlockItem) item.getItem() ).getBlock().defaultBlockState();
 					( (BakedBlockTile) te ).setMimic(mimicState);
 				}
 			}
 			return ActionResultType.SUCCESS;
 		}
 
-		return super.onBlockActivated(state, world, pos, player, hand, trace);
+		return super.use(state, world, pos, player, hand, trace);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(
+	public void appendHoverText(
 			ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn
 	)
 	{

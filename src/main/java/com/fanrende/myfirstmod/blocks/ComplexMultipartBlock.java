@@ -28,6 +28,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class ComplexMultipartBlock extends Block
 {
 	public static final EnumProperty<ComplexMultipartTile.Mode> NORTH = EnumProperty.create("north",
@@ -49,11 +51,11 @@ public class ComplexMultipartBlock extends Block
 			ComplexMultipartTile.Mode.class
 	);
 
-	private static final VoxelShape RENDER_SHAPE = VoxelShapes.create(.1, .1, .1, .9, .9, .9);
+	private static final VoxelShape RENDER_SHAPE = VoxelShapes.box(.1, .1, .1, .9, .9, .9);
 
 	public ComplexMultipartBlock()
 	{
-		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(2.0f));
+		super(Properties.of(Material.METAL).sound(SoundType.METAL).strength(2.0f));
 	}
 
 	@Override
@@ -71,7 +73,7 @@ public class ComplexMultipartBlock extends Block
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(
+	public void appendHoverText(
 			ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn
 	)
 	{
@@ -86,24 +88,24 @@ public class ComplexMultipartBlock extends Block
 	}
 
 	@Override
-	public VoxelShape getRenderShape(BlockState state, IBlockReader worldIn, BlockPos pos)
+	public VoxelShape getOcclusionShape(BlockState state, IBlockReader worldIn, BlockPos pos)
 	{
 		return RENDER_SHAPE;
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(
+	public ActionResultType use(
 			BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit
 	)
 	{
-		if (!worldIn.isRemote)
+		if (!worldIn.isClientSide)
 		{
-			TileEntity tileEntity = worldIn.getTileEntity(pos);
+			TileEntity tileEntity = worldIn.getBlockEntity(pos);
 
 			if (tileEntity instanceof ComplexMultipartTile && Screen.hasShiftDown())
 			{
 				ComplexMultipartTile dimentionalCellEntity = (ComplexMultipartTile) tileEntity;
-				dimentionalCellEntity.toggleMode(hit.getFace());
+				dimentionalCellEntity.toggleMode(hit.getDirection());
 			}
 		}
 
@@ -111,23 +113,23 @@ public class ComplexMultipartBlock extends Block
 	}
 
 	@Override
-	public void onBlockPlacedBy(
+	public void setPlacedBy(
 			World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack
 	)
 	{
-		TileEntity tileEntity = worldIn.getTileEntity(pos);
+		TileEntity tileEntity = worldIn.getBlockEntity(pos);
 		if (tileEntity instanceof ComplexMultipartTile)
 			( (ComplexMultipartTile) tileEntity ).updateState();
 
-		super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+		super.setPlacedBy(worldIn, pos, state, placer, stack);
 	}
 
 	@Override
-	protected void fillStateContainer(
+	protected void createBlockStateDefinition(
 			StateContainer.Builder<Block, BlockState> builder
 	)
 	{
-		super.fillStateContainer(builder);
+		super.createBlockStateDefinition(builder);
 
 		builder.add(NORTH, SOUTH, WEST, EAST, UP, DOWN);
 	}

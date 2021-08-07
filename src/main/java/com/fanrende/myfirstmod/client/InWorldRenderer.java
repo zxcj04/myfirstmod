@@ -24,7 +24,7 @@ public class InWorldRenderer
 	{
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 
-		if (player.getHeldItemMainhand().getItem() == ENERGYPICKAXE.get())
+		if (player.getMainHandItem().getItem() == ENERGYPICKAXE.get())
 		{
 			if(Screen.hasShiftDown())
 				showTileEntities(player, event.getMatrixStack());
@@ -38,14 +38,14 @@ public class InWorldRenderer
 			int dz2, Vector4f color
 	)
 	{
-		BlockPos start = pos.add(dx1, dy1, dz1);
-		BlockPos end = pos.add(dx2, dy2, dz2);
+		BlockPos start = pos.offset(dx1, dy1, dz1);
+		BlockPos end = pos.offset(dx2, dy2, dz2);
 
-		builder.pos(positionMatrix, start.getX(), start.getY(), start.getZ())
-				.color(color.getX(), color.getY(), color.getZ(), color.getW())
+		builder.vertex(positionMatrix, start.getX(), start.getY(), start.getZ())
+				.color(color.x(), color.y(), color.z(), color.w())
 				.endVertex();
-		builder.pos(positionMatrix, end.getX(), end.getY(), end.getZ())
-				.color(color.getX(), color.getY(), color.getZ(), color.getW())
+		builder.vertex(positionMatrix, end.getX(), end.getY(), end.getZ())
+				.color(color.x(), color.y(), color.z(), color.w())
 				.endVertex();
 	}
 
@@ -69,22 +69,22 @@ public class InWorldRenderer
 
 	private static void showTileEntities(ClientPlayerEntity player, MatrixStack matrixStack)
 	{
-		IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
+		IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 		IVertexBuilder builder = buffer.getBuffer(MyRenderType.OVERLAY_LINES);
 
-		BlockPos playerPos = player.getPosition();
-		World world = player.getEntityWorld();
+		BlockPos playerPos = player.blockPosition();
+		World world = player.getCommandSenderWorld();
 
-		matrixStack.push();
+		matrixStack.pushPose();
 
-		Vector3d projectrdView = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
+		Vector3d projectrdView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
 		matrixStack.translate(
 				playerPos.getX() - projectrdView.x,
 				playerPos.getY() - projectrdView.y,
 				playerPos.getZ() - projectrdView.z
 		);
 
-		Matrix4f positionMatrix = matrixStack.getLast().getMatrix();
+		Matrix4f positionMatrix = matrixStack.last().pose();
 
 		BlockPos.Mutable pos = new BlockPos.Mutable();
 
@@ -94,38 +94,38 @@ public class InWorldRenderer
 			for (int y = -10; y <= 10; y++)
 				for (int z = -10; z <= 10; z++)
 				{
-					pos.setPos(x, y, z);
+					pos.set(x, y, z);
 
-					if (world.getTileEntity(playerPos.add(pos)) != null)
+					if (world.getBlockEntity(playerPos.offset(pos)) != null)
 					{
 						drawCube(builder, positionMatrix, pos, colorBlue);
 					}
 				}
 
-		matrixStack.pop();
+		matrixStack.popPose();
 
 		RenderSystem.disableDepthTest();
-		buffer.finish(MyRenderType.OVERLAY_LINES);
+		buffer.endBatch(MyRenderType.OVERLAY_LINES);
 	}
 
 	private static void showOres(ClientPlayerEntity player, MatrixStack matrixStack)
 	{
-		IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
+		IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 		IVertexBuilder builder = buffer.getBuffer(MyRenderType.OVERLAY_LINES);
 
-		BlockPos playerPos = player.getPosition();
-		World world = player.getEntityWorld();
+		BlockPos playerPos = player.blockPosition();
+		World world = player.getCommandSenderWorld();
 
-		matrixStack.push();
+		matrixStack.pushPose();
 
-		Vector3d projectrdView = Minecraft.getInstance().gameRenderer.getActiveRenderInfo().getProjectedView();
+		Vector3d projectrdView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
 		matrixStack.translate(
 				playerPos.getX() - projectrdView.x,
 				playerPos.getY() - projectrdView.y,
 				playerPos.getZ() - projectrdView.z
 		);
 
-		Matrix4f positionMatrix = matrixStack.getLast().getMatrix();
+		Matrix4f positionMatrix = matrixStack.last().pose();
 
 		BlockPos.Mutable pos = new BlockPos.Mutable();
 
@@ -142,9 +142,9 @@ public class InWorldRenderer
 			for (int y = -10; y <= 10; y++)
 				for (int z = -10; z <= 10; z++)
 				{
-					pos.setPos(x, y, z);
+					pos.set(x, y, z);
 
-					Block targetBlock = world.getBlockState(playerPos.add(pos)).getBlock();
+					Block targetBlock = world.getBlockState(playerPos.offset(pos)).getBlock();
 
 					if (Tags.Blocks.ORES_COAL.contains(targetBlock))
 						drawCube(builder, positionMatrix, pos, colorBlack);
@@ -164,9 +164,9 @@ public class InWorldRenderer
 						drawCube(builder, positionMatrix, pos, colorGray);
 				}
 
-		matrixStack.pop();
+		matrixStack.popPose();
 
 		RenderSystem.disableDepthTest();
-		buffer.finish(MyRenderType.OVERLAY_LINES);
+		buffer.endBatch(MyRenderType.OVERLAY_LINES);
 	}
 }

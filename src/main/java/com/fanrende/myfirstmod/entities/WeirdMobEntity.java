@@ -21,16 +21,16 @@ public class WeirdMobEntity extends AnimalEntity
 
 	@Nullable
 	@Override
-	public AgeableEntity createChild(ServerWorld world, AgeableEntity mate)
+	public AgeableEntity getBreedOffspring(ServerWorld world, AgeableEntity mate)
 	{
 		return null;
 	}
 
 	public static AttributeModifierMap.MutableAttribute prepareAttributes()
 	{
-		return LivingEntity.registerAttributes()
-				.createMutableAttribute(Attributes.ATTACK_DAMAGE, 2.0D)
-				.createMutableAttribute(Attributes.MAX_HEALTH, 20.0D)
-				.createMutableAttribute(Attributes.FOLLOW_RANGE, 40.D);
+		return LivingEntity.createLivingAttributes()
+				.add(Attributes.ATTACK_DAMAGE, 2.0D)
+				.add(Attributes.MAX_HEALTH, 20.0D)
+				.add(Attributes.FOLLOW_RANGE, 40.D);
 	}
 }

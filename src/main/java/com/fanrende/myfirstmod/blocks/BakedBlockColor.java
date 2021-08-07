@@ -18,7 +18,7 @@ public class BakedBlockColor implements IBlockColor
 	{
 		if (world != null)
 		{
-			TileEntity tileEntity = world.getTileEntity(pos);
+			TileEntity tileEntity = world.getBlockEntity(pos);
 			if (tileEntity instanceof BakedBlockTile)
 			{
 				BakedBlockTile baked = (BakedBlockTile) tileEntity;

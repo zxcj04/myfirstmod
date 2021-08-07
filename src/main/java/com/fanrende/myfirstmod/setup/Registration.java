@@ -46,44 +46,44 @@ public class Registration
 
 	public static final RegistryObject<FirstBlock> FIRSTBLOCK = BLOCKS.register("firstblock", FirstBlock::new);
 	public static final RegistryObject<Item> FIRSTBLOCK_ITEM = ITEMS.register("firstblock",
-			() -> new FirstBlockItem(FIRSTBLOCK.get(), new Item.Properties().group(ModSetup.ITEM_GROUP))
+			() -> new FirstBlockItem(FIRSTBLOCK.get(), new Item.Properties().tab(ModSetup.ITEM_GROUP))
 	);
 	public static final RegistryObject<TileEntityType<FirstBlockTile>> FIRSTBLOCK_TILE = TILES.register("firstblock",
-			() -> TileEntityType.Builder.create(FirstBlockTile::new, FIRSTBLOCK.get()).build(null)
+			() -> TileEntityType.Builder.of(FirstBlockTile::new, FIRSTBLOCK.get()).build(null)
 	);
 	public static final RegistryObject<ContainerType<FirstBlockContainer>> FIRSTBLOCK_CONTAINER = CONTAINERS.register("firstblock",
 			() -> IForgeContainerType.create((windowId, inv, data) ->
 			{
 				BlockPos pos = data.readBlockPos();
-				return new FirstBlockContainer(windowId, inv.player.getEntityWorld(), pos, inv);
+				return new FirstBlockContainer(windowId, inv.player.getCommandSenderWorld(), pos, inv);
 			})
 	);
 
 	public static final RegistryObject<BakedBlock> BAKEDBLOCK = BLOCKS.register("bakedblock", BakedBlock::new);
 	public static final RegistryObject<Item> BAKEDBLOCK_ITEM = ITEMS.register("bakedblock",
-			() -> new BlockItem(BAKEDBLOCK.get(), new Item.Properties().group(ModSetup.ITEM_GROUP))
+			() -> new BlockItem(BAKEDBLOCK.get(), new Item.Properties().tab(ModSetup.ITEM_GROUP))
 	);
 	public static final RegistryObject<TileEntityType<BakedBlockTile>> BAKEDBLOCK_TILE = TILES.register("bakedblock",
-			() -> TileEntityType.Builder.create(BakedBlockTile::new, BAKEDBLOCK.get()).build(null)
+			() -> TileEntityType.Builder.of(BakedBlockTile::new, BAKEDBLOCK.get()).build(null)
 	);
 
 	public static final RegistryObject<MagicBlock> MAGICBLOCK = BLOCKS.register("magicblock", MagicBlock::new);
 	public static final RegistryObject<Item> MAGICBLOCK_ITEM = ITEMS.register("magicblock",
-			() -> new BlockItem(MAGICBLOCK.get(), new Item.Properties().group(ModSetup.ITEM_GROUP))
+			() -> new BlockItem(MAGICBLOCK.get(), new Item.Properties().tab(ModSetup.ITEM_GROUP))
 	);
 	public static final RegistryObject<TileEntityType<MagicBlockTile>> MAGICBLOCK_TILE = TILES.register("magicblock",
-			() -> TileEntityType.Builder.create(MagicBlockTile::new, MAGICBLOCK.get()).build(null)
+			() -> TileEntityType.Builder.of(MagicBlockTile::new, MAGICBLOCK.get()).build(null)
 	);
 
 	public static final RegistryObject<ComplexMultipartBlock> COMPLEX_MULTIPART_BLOCK = BLOCKS.register("complexmultipartblock",
 			ComplexMultipartBlock::new
 	);
 	public static final RegistryObject<Item> COMPLEX_MULTIPART_ITEM = ITEMS.register("complexmultipartblock",
-			() -> new BlockItem(COMPLEX_MULTIPART_BLOCK.get(), new Item.Properties().group(ModSetup.ITEM_GROUP))
+			() -> new BlockItem(COMPLEX_MULTIPART_BLOCK.get(), new Item.Properties().tab(ModSetup.ITEM_GROUP))
 	);
 	public static final RegistryObject<TileEntityType<ComplexMultipartTile>> COMPLEX_MULTIPART_TILE = TILES.register(
 			"complexmultipartblock",
-			() -> TileEntityType.Builder.create(ComplexMultipartTile::new, COMPLEX_MULTIPART_BLOCK.get()).build(null)
+			() -> TileEntityType.Builder.of(ComplexMultipartTile::new, COMPLEX_MULTIPART_BLOCK.get()).build(null)
 	);
 
 	public static final RegistryObject<FirstItem> FIRSTITEM = ITEMS.register("firstitem", FirstItem::new);
@@ -101,21 +101,21 @@ public class Registration
 
 	public static final RegistryObject<EntityType<InfinityPearlEntity>> INFINITYPEARL_ENTITY = ENTITIES.register(
 			"infinitypearl_entity",
-			() -> EntityType.Builder.<InfinityPearlEntity>create(InfinityPearlEntity::new, EntityClassification.MISC)
-					.size(0.25F, 0.25F)
+			() -> EntityType.Builder.<InfinityPearlEntity>of(InfinityPearlEntity::new, EntityClassification.MISC)
+					.sized(0.25F, 0.25F)
 					.build("infinitypearl_entity")
 	);
 
 	public static final RegistryObject<EntityType<InfinityEyeEntity>> INFINITYEYE_ENTITY = ENTITIES.register(
 			"infinityeye_entity",
-			() -> EntityType.Builder.<InfinityEyeEntity>create(InfinityEyeEntity::new, EntityClassification.MISC)
-					.size(0.25F, 0.25F)
+			() -> EntityType.Builder.<InfinityEyeEntity>of(InfinityEyeEntity::new, EntityClassification.MISC)
+					.sized(0.25F, 0.25F)
 					.build("infinityeye_entity")
 	);
 
 	public static final RegistryObject<EntityType<WeirdMobEntity>> WEIRDMOB = ENTITIES.register("weirdmob",
-			() -> EntityType.Builder.create(WeirdMobEntity::new, EntityClassification.CREATURE)
-					.size(.5f, .5f)
+			() -> EntityType.Builder.of(WeirdMobEntity::new, EntityClassification.CREATURE)
+					.sized(.5f, .5f)
 					.setShouldReceiveVelocityUpdates(false)
 					.build("weirdmob")
 	);

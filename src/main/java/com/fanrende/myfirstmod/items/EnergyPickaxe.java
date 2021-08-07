@@ -36,7 +36,7 @@ public class EnergyPickaxe extends Item
 {
 	public EnergyPickaxe()
 	{
-		super(new Item.Properties().maxStackSize(1).group(ModSetup.ITEM_GROUP));
+		super(new Item.Properties().stacksTo(1).tab(ModSetup.ITEM_GROUP));
 	}
 
 	@Nullable
@@ -58,20 +58,20 @@ public class EnergyPickaxe extends Item
 	}
 
 	@Override
-	public int getItemEnchantability()
+	public int getEnchantmentValue()
 	{
 		return 30;
 	}
 
 	@Override
-	public boolean getIsRepairable(ItemStack toRepair, ItemStack repair)
+	public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair)
 	{
 		return false;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(
+	public void appendHoverText(
 			ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn
 	)
 	{
@@ -87,16 +87,16 @@ public class EnergyPickaxe extends Item
 	}
 
 	@Override
-	public boolean canHarvestBlock(BlockState blockIn)
+	public boolean isCorrectToolForDrops(BlockState blockIn)
 	{
 		if (blockIn.getHarvestTool() == ToolType.PICKAXE)
 			return true;
 
 		Material material = blockIn.getMaterial();
-		if (material == Material.ROCK || material == Material.IRON || material == Material.ANVIL)
+		if (material == Material.STONE || material == Material.METAL || material == Material.HEAVY_METAL)
 			return true;
 
-		return super.canHarvestBlock(blockIn);
+		return super.isCorrectToolForDrops(blockIn);
 	}
 
 	@Override
@@ -114,7 +114,7 @@ public class EnergyPickaxe extends Item
 	@Override
 	public int getRGBDurabilityForDisplay(ItemStack stack)
 	{
-		return MathHelper.hsvToRGB(0.72F, 0.66F, 1.0F);
+		return MathHelper.hsvToRgb(0.72F, 0.66F, 1.0F);
 	}
 
 	private int getEnergyStored(ItemStack stack)
@@ -127,24 +127,24 @@ public class EnergyPickaxe extends Item
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(
+	public ActionResult<ItemStack> use(
 			World worldIn, PlayerEntity playerIn, Hand handIn
 	)
 	{
-		ItemStack stack = playerIn.getHeldItem(handIn);
+		ItemStack stack = playerIn.getItemInHand(handIn);
 
 		stack.getCapability(CapabilityEnergy.ENERGY)
 				.ifPresent(h -> ( (CustomEnergyStorage.Item) h ).setEnergy(Config.ENERGYPICKAXE_MAXPOWER.get()));
 
 		worldIn.playSound((PlayerEntity) null,
-				playerIn.getPosition(),
-				SoundEvents.ITEM_CROSSBOW_LOADING_MIDDLE,
+				playerIn.blockPosition(),
+				SoundEvents.CROSSBOW_LOADING_MIDDLE,
 				SoundCategory.NEUTRAL,
 				0.65F,
 				0.4F / ( random.nextFloat() * 0.4F + 0.8F )
 		);
 
-		return super.onItemRightClick(worldIn, playerIn, handIn);
+		return super.use(worldIn, playerIn, handIn);
 	}
 
 	@Override
@@ -159,12 +159,12 @@ public class EnergyPickaxe extends Item
 	}
 
 	@Override
-	public boolean onBlockDestroyed(
+	public boolean mineBlock(
 			ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving
 	)
 	{
 		stack.getCapability(CapabilityEnergy.ENERGY)
 				.ifPresent(h -> h.extractEnergy(Config.ENERGYPICKAXE_MINECOST.get(), false));
-		return super.onBlockDestroyed(stack, worldIn, state, pos, entityLiving);
+		return super.mineBlock(stack, worldIn, state, pos, entityLiving);
 	}
 }

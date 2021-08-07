@@ -48,19 +48,19 @@ public class ComplexMultipartTile extends TileEntity
 		Mode up = getMode(Direction.UP);
 		Mode down = getMode(Direction.DOWN);
 
-		BlockState state = world.getBlockState(pos);
-		world.setBlockState(
-				pos,
-				state.with(NORTH, north)
-						.with(SOUTH, south)
-						.with(WEST, west)
-						.with(EAST, east)
-						.with(UP, up)
-						.with(DOWN, down),
+		BlockState state = level.getBlockState(worldPosition);
+		level.setBlock(
+				worldPosition,
+				state.setValue(NORTH, north)
+						.setValue(SOUTH, south)
+						.setValue(WEST, west)
+						.setValue(EAST, east)
+						.setValue(UP, up)
+						.setValue(DOWN, down),
 				Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS
 		);
 
-		markDirty();
+		setChanged();
 	}
 
 	public Mode getMode(Direction side)
@@ -69,9 +69,9 @@ public class ComplexMultipartTile extends TileEntity
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT compound)
+	public void load(BlockState state, CompoundNBT compound)
 	{
-		super.read(state, compound);
+		super.load(state, compound);
 
 		CompoundNBT modeTag = compound.getCompound("mode");
 
@@ -84,7 +84,7 @@ public class ComplexMultipartTile extends TileEntity
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound)
+	public CompoundNBT save(CompoundNBT compound)
 	{
 		CompoundNBT modeTag = new CompoundNBT();
 
@@ -97,7 +97,7 @@ public class ComplexMultipartTile extends TileEntity
 
 		compound.put("mode", modeTag);
 
-		return super.write(compound);
+		return super.save(compound);
 	}
 
 	public enum Mode implements IStringSerializable
@@ -112,7 +112,7 @@ public class ComplexMultipartTile extends TileEntity
 		}
 
 		@Override
-		public String getString()
+		public String getSerializedName()
 		{
 			return this.name;
 		}
@@ -120,7 +120,7 @@ public class ComplexMultipartTile extends TileEntity
 		@Override
 		public String toString()
 		{
-			return getString();
+			return getSerializedName();
 		}
 	}
 }

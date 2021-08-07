@@ -18,13 +18,13 @@ public class CommandSpawn implements Command<CommandSource>
 
 	public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher)
 	{
-		return Commands.literal("spawn").requires(cs -> cs.hasPermissionLevel(0)).executes(CMD);
+		return Commands.literal("spawn").requires(cs -> cs.hasPermission(0)).executes(CMD);
 	}
 
 	@Override
 	public int run(CommandContext<CommandSource> context) throws CommandSyntaxException
 	{
-		ServerPlayerEntity player = context.getSource().asPlayer();
+		ServerPlayerEntity player = context.getSource().getPlayerOrException();
 		Networking.sendToClient(new PacketOpenGui(), player);
 		return 0;
 	}

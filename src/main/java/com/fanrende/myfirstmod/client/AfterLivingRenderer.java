@@ -19,7 +19,7 @@ public class AfterLivingRenderer
 	{
 		ClientPlayerEntity player = Minecraft.getInstance().player;
 
-		if (player.getHeldItemMainhand().getItem() == FIRSTITEM.get())
+		if (player.getMainHandItem().getItem() == FIRSTITEM.get())
 		{
 			showMobs(event.getMatrixStack(), event.getBuffers(), event.getEntity());
 		}
@@ -29,11 +29,11 @@ public class AfterLivingRenderer
 			IVertexBuilder builder, Matrix4f positionMatrix, Vector3f line, Vector3f color, float alpha
 	)
 	{
-		builder.pos(positionMatrix, 0.0f, 0.0f, 0.0f)
-				.color(color.getX(), color.getY(), color.getZ(), alpha)
+		builder.vertex(positionMatrix, 0.0f, 0.0f, 0.0f)
+				.color(color.x(), color.y(), color.z(), alpha)
 				.endVertex();
-		builder.pos(positionMatrix, line.getX(), line.getY(), line.getZ())
-				.color(color.getX(), color.getY(), color.getZ(), alpha)
+		builder.vertex(positionMatrix, line.x(), line.y(), line.z())
+				.color(color.x(), color.y(), color.z(), alpha)
 				.endVertex();
 	}
 
@@ -41,7 +41,7 @@ public class AfterLivingRenderer
 	{
 		IVertexBuilder builder = buffer.getBuffer(MyRenderType.OVERLAY_LINES);
 
-		Matrix4f positionMatrix = matrixStack.getLast().getMatrix();
+		Matrix4f positionMatrix = matrixStack.last().pose();
 
 		Vector3f line = new Vector3f(0.0f, 6.0f, 0.0f);
 

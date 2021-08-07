@@ -21,14 +21,16 @@ import net.minecraftforge.fml.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class FirstBlock extends Block
 {
 	public FirstBlock()
 	{
-		super(Properties.create(Material.IRON)
+		super(Properties.of(Material.METAL)
 				.sound(SoundType.METAL)
-				.hardnessAndResistance(2.0f)
-				.setLightLevel(state -> state.get(BlockStateProperties.POWERED)? 14: 0));
+				.strength(2.0f)
+				.lightLevel(state -> state.getValue(BlockStateProperties.POWERED)? 14: 0));
 	}
 
 	@Override
@@ -48,27 +50,27 @@ public class FirstBlock extends Block
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context)
 	{
-		BlockState state = getDefaultState().with(BlockStateProperties.FACING,
+		BlockState state = defaultBlockState().setValue(BlockStateProperties.FACING,
 						context.getNearestLookingDirection().getOpposite()
 				)
-				.with(BlockStateProperties.POWERED, false);
+				.setValue(BlockStateProperties.POWERED, false);
 		return state;
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(
+	public ActionResultType use(
 			BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit
 	)
 	{
-		if (!world.isRemote)
+		if (!world.isClientSide)
 		{
-			TileEntity tileEntity = world.getTileEntity(pos);
+			TileEntity tileEntity = world.getBlockEntity(pos);
 
 			if (tileEntity instanceof INamedContainerProvider)
 			{
 				NetworkHooks.openGui((ServerPlayerEntity) player,
 						(INamedContainerProvider) tileEntity,
-						tileEntity.getPos()
+						tileEntity.getBlockPos()
 				);
 			}
 			else
@@ -81,7 +83,7 @@ public class FirstBlock extends Block
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder)
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder)
 	{
 		builder.add(BlockStateProperties.FACING, BlockStateProperties.POWERED);
 	}

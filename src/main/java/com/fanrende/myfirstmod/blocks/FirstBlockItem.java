@@ -21,6 +21,8 @@ import net.minecraftforge.energy.CapabilityEnergy;
 import javax.annotation.Nullable;
 import java.util.List;
 
+import net.minecraft.item.Item.Properties;
+
 public class FirstBlockItem extends BlockItem
 {
 	public FirstBlockItem(Block blockIn, Properties builder)
@@ -59,12 +61,12 @@ public class FirstBlockItem extends BlockItem
 	@Override
 	public int getRGBDurabilityForDisplay(ItemStack stack)
 	{
-		return MathHelper.hsvToRGB(0.72F, 0.66F, 1.0F);
+		return MathHelper.hsvToRgb(0.72F, 0.66F, 1.0F);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(
+	public void appendHoverText(
 			ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn
 	)
 	{

@@ -23,7 +23,7 @@ public class PacketSpawn
 	public PacketSpawn(PacketBuffer buffer)
 	{
 		id = buffer.readResourceLocation();
-		type = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, buffer.readResourceLocation());
+		type = RegistryKey.create(Registry.DIMENSION_REGISTRY, buffer.readResourceLocation());
 		pos = buffer.readBlockPos();
 	}
 
@@ -37,7 +37,7 @@ public class PacketSpawn
 	public void toBytes(PacketBuffer buffer)
 	{
 		buffer.writeResourceLocation(id);
-		buffer.writeResourceLocation(type.getLocation());
+		buffer.writeResourceLocation(type.location());
 		buffer.writeBlockPos(pos);
 	}
 
@@ -45,7 +45,7 @@ public class PacketSpawn
 	{
 		ctx.get().enqueueWork(() ->
 		{
-			ServerWorld spawnWorld = ctx.get().getSender().world.getServer().getWorld(type);
+			ServerWorld spawnWorld = ctx.get().getSender().level.getServer().getLevel(type);
 			EntityType<?> entityType = ForgeRegistries.ENTITIES.getValue(id);
 
 			if (entityType == null)

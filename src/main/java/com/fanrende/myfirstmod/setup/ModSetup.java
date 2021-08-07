@@ -24,7 +24,7 @@ public class ModSetup
 	public static final ItemGroup ITEM_GROUP = new ItemGroup("myfirstmod")
 	{
 		@Override
-		public ItemStack createIcon()
+		public ItemStack makeIcon()
 		{
 			return new ItemStack(Registration.FIRSTBLOCK.get());
 		}
@@ -42,7 +42,7 @@ public class ModSetup
 
 		event.enqueueWork(() ->
 		{
-			GlobalEntityTypeAttributes.put(WEIRDMOB.get(), WeirdMobEntity.prepareAttributes().create());
+			GlobalEntityTypeAttributes.put(WEIRDMOB.get(), WeirdMobEntity.prepareAttributes().build());
 		});
 	}
 

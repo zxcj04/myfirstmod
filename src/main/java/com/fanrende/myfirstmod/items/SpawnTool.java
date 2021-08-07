@@ -22,22 +22,22 @@ public class SpawnTool extends Item
 {
 	public SpawnTool()
 	{
-		super(new Item.Properties().maxStackSize(1).group(ModSetup.ITEM_GROUP));
+		super(new Item.Properties().stacksTo(1).tab(ModSetup.ITEM_GROUP));
 	}
 
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(
+	public ActionResult<ItemStack> use(
 			World worldIn, PlayerEntity playerIn, Hand handIn
 	)
 	{
 		SpawnScreen.open();
 
-		return super.onItemRightClick(worldIn, playerIn, handIn);
+		return super.use(worldIn, playerIn, handIn);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(
+	public void appendHoverText(
 			ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn
 	)
 	{

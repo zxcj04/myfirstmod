@@ -39,35 +39,35 @@ public abstract class BaseLootTableProvider extends LootTableProvider
 
 	protected LootTable.Builder createTagsTable(String name, Block block, String... tags)
 	{
-		CopyNbt.Builder nbtBuilder = CopyNbt.builder(CopyNbt.Source.BLOCK_ENTITY);
+		CopyNbt.Builder nbtBuilder = CopyNbt.copyData(CopyNbt.Source.BLOCK_ENTITY);
 
 		for (String tag : tags)
-			nbtBuilder.addOperation(tag, "BlockEntityTag." + tag, CopyNbt.Action.REPLACE);
+			nbtBuilder.copy(tag, "BlockEntityTag." + tag, CopyNbt.Action.REPLACE);
 
-		LootPool.Builder builder = LootPool.builder()
+		LootPool.Builder builder = LootPool.lootPool()
 				.name(name)
-				.rolls(ConstantRange.of(1))
-				.addEntry(ItemLootEntry.builder(block)
-						.acceptFunction(CopyName.builder(CopyName.Source.BLOCK_ENTITY))
-						.acceptFunction(nbtBuilder)
-						.acceptFunction(SetContents.builderIn()
-								.addLootEntry(DynamicLootEntry.func_216162_a(new ResourceLocation("minecraft",
+				.setRolls(ConstantRange.exactly(1))
+				.add(ItemLootEntry.lootTableItem(block)
+						.apply(CopyName.copyName(CopyName.Source.BLOCK_ENTITY))
+						.apply(nbtBuilder)
+						.apply(SetContents.setContents()
+								.withEntry(DynamicLootEntry.dynamicEntry(new ResourceLocation("minecraft",
 										"contents"
 								)))));
-		return LootTable.builder().addLootPool(builder);
+		return LootTable.lootTable().withPool(builder);
 	}
 
 	protected LootTable.Builder createSelfDropTable(String name, Block block)
 	{
-		LootPool.Builder builder = LootPool.builder()
+		LootPool.Builder builder = LootPool.lootPool()
 				.name(name)
-				.rolls(ConstantRange.of(1))
-				.addEntry(ItemLootEntry.builder(block));
-		return LootTable.builder().addLootPool(builder);
+				.setRolls(ConstantRange.exactly(1))
+				.add(ItemLootEntry.lootTableItem(block));
+		return LootTable.lootTable().withPool(builder);
 	}
 
 	@Override
-	public void act(DirectoryCache cache)
+	public void run(DirectoryCache cache)
 	{
 		addTables();
 
@@ -75,7 +75,7 @@ public abstract class BaseLootTableProvider extends LootTableProvider
 		for (Map.Entry<Block, LootTable.Builder> entry : lootTables.entrySet())
 		{
 			tables.put(entry.getKey().getLootTable(),
-					entry.getValue().setParameterSet(LootParameterSets.BLOCK).build()
+					entry.getValue().setParamSet(LootParameterSets.BLOCK).build()
 			);
 		}
 		writeTables(cache, tables);
@@ -89,7 +89,7 @@ public abstract class BaseLootTableProvider extends LootTableProvider
 			Path path = outputFolder.resolve("data/" + key.getNamespace() + "/loot_tables/" + key.getPath() + ".json");
 			try
 			{
-				IDataProvider.save(GSON, cache, LootTableManager.toJson(lootTable), path);
+				IDataProvider.save(GSON, cache, LootTableManager.serialize(lootTable), path);
 			}
 			catch (IOException e)
 			{

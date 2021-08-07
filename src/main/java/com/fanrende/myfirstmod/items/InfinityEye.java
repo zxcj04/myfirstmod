@@ -34,65 +34,65 @@ public class InfinityEye extends Item
 {
 	public InfinityEye()
 	{
-		super(new Item.Properties().maxStackSize(1).group(ModSetup.ITEM_GROUP));
+		super(new Item.Properties().stacksTo(1).tab(ModSetup.ITEM_GROUP));
 	}
 
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn)
+	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn)
 	{
-		ItemStack itemstack = playerIn.getHeldItem(handIn);
-		RayTraceResult raytraceresult = rayTrace(worldIn, playerIn, RayTraceContext.FluidMode.NONE);
-		if (raytraceresult.getType() == RayTraceResult.Type.BLOCK && worldIn.getBlockState(( (BlockRayTraceResult) raytraceresult ).getPos())
+		ItemStack itemstack = playerIn.getItemInHand(handIn);
+		RayTraceResult raytraceresult = getPlayerPOVHitResult(worldIn, playerIn, RayTraceContext.FluidMode.NONE);
+		if (raytraceresult.getType() == RayTraceResult.Type.BLOCK && worldIn.getBlockState(( (BlockRayTraceResult) raytraceresult ).getBlockPos())
 				.getBlock() == Blocks.END_PORTAL_FRAME)
 		{
-			return ActionResult.resultPass(itemstack);
+			return ActionResult.pass(itemstack);
 		}
 		else
 		{
-			playerIn.setActiveHand(handIn);
+			playerIn.startUsingItem(handIn);
 			if (worldIn instanceof ServerWorld)
 			{
-				BlockPos blockpos = ( (ServerWorld) worldIn ).getChunkProvider()
-						.getChunkGenerator()
-						.func_235956_a_((ServerWorld)worldIn, Structure.STRONGHOLD, playerIn.getPosition(), 100, false);
+				BlockPos blockpos = ( (ServerWorld) worldIn ).getChunkSource()
+						.getGenerator()
+						.findNearestMapFeature((ServerWorld)worldIn, Structure.STRONGHOLD, playerIn.blockPosition(), 100, false);
 				if (blockpos != null)
 				{
 					InfinityEyeEntity infinityEyeEntity = new InfinityEyeEntity(worldIn,
-							playerIn.getPosX(),
-							playerIn.getPosYHeight(0.5D),
-							playerIn.getPosZ()
+							playerIn.getX(),
+							playerIn.getY(0.5D),
+							playerIn.getZ()
 					);
-					infinityEyeEntity.func_213863_b(itemstack);
-					infinityEyeEntity.moveTowards(blockpos);
-					worldIn.addEntity(infinityEyeEntity);
+					infinityEyeEntity.setItem(itemstack);
+					infinityEyeEntity.signalTo(blockpos);
+					worldIn.addFreshEntity(infinityEyeEntity);
 					if (playerIn instanceof ServerPlayerEntity)
 					{
 						CriteriaTriggers.USED_ENDER_EYE.trigger((ServerPlayerEntity) playerIn, blockpos);
 					}
 
 					worldIn.playSound((PlayerEntity) null,
-							playerIn.getPosX(),
-							playerIn.getPosY(),
-							playerIn.getPosZ(),
-							SoundEvents.ENTITY_ENDER_EYE_LAUNCH,
+							playerIn.getX(),
+							playerIn.getY(),
+							playerIn.getZ(),
+							SoundEvents.ENDER_EYE_LAUNCH,
 							SoundCategory.NEUTRAL,
 							0.5F,
 							0.4F / ( random.nextFloat() * 0.4F + 0.8F )
 					);
-					worldIn.playEvent((PlayerEntity) null, 1003, playerIn.getPosition(), 0);
+					worldIn.levelEvent((PlayerEntity) null, 1003, playerIn.blockPosition(), 0);
 
-					playerIn.addStat(Stats.ITEM_USED.get(this));
+					playerIn.awardStat(Stats.ITEM_USED.get(this));
 					playerIn.swing(handIn, true);
-					return ActionResult.resultSuccess(itemstack);
+					return ActionResult.success(itemstack);
 				}
 			}
 
-			return ActionResult.resultConsume(itemstack);
+			return ActionResult.consume(itemstack);
 		}
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(
+	public void appendHoverText(
 			ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn
 	)
 	{

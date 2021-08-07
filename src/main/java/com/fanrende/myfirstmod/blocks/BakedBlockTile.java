@@ -36,8 +36,8 @@ public class BakedBlockTile extends TileEntity
 			return;
 
 		this.mimic = mimic;
-		markDirty();
-		world.notifyBlockUpdate(pos,
+		setChanged();
+		level.sendBlockUpdated(worldPosition,
 				getBlockState(),
 				getBlockState(),
 				Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS
@@ -64,27 +64,27 @@ public class BakedBlockTile extends TileEntity
 		// This is actually the default but placed here so you
 		// know this is the place to potentially have a lighter read() that only
 		// considers things needed client-side
-		read(state, tag);
+		load(state, tag);
 	}
 
 	@Nullable
 	@Override
 	public SUpdateTileEntityPacket getUpdatePacket()
 	{
-		return new SUpdateTileEntityPacket(pos, 1, getUpdateTag());
+		return new SUpdateTileEntityPacket(worldPosition, 1, getUpdateTag());
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt)
 	{
 		BlockState oldMimic = mimic;
-		CompoundNBT tag = pkt.getNbtCompound();
+		CompoundNBT tag = pkt.getTag();
 		handleUpdateTag(mimic, tag);
 
 		if (!Objects.equals(oldMimic, mimic))
 		{
 			ModelDataManager.requestModelDataRefresh(this);
-			world.notifyBlockUpdate(pos,
+			level.sendBlockUpdated(worldPosition,
 					getBlockState(),
 					getBlockState(),
 					Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS
@@ -100,9 +100,9 @@ public class BakedBlockTile extends TileEntity
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT compound)
+	public void load(BlockState state, CompoundNBT compound)
 	{
-		super.read(state, compound);
+		super.load(state, compound);
 		readMimic(compound);
 	}
 
@@ -113,10 +113,10 @@ public class BakedBlockTile extends TileEntity
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT compound)
+	public CompoundNBT save(CompoundNBT compound)
 	{
 		writeMimic(compound);
-		return super.write(compound);
+		return super.save(compound);
 	}
 
 	private void writeMimic(CompoundNBT tag)

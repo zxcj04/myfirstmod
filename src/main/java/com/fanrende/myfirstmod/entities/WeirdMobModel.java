@@ -17,7 +17,7 @@ public class WeirdMobModel extends EntityModel<WeirdMobEntity>
 	}
 
 	@Override
-	public void setRotationAngles(
+	public void setupAnim(
 			WeirdMobEntity entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw,
 			float headPitch
 	)
@@ -26,7 +26,7 @@ public class WeirdMobModel extends EntityModel<WeirdMobEntity>
 	}
 
 	@Override
-	public void render(
+	public void renderToBuffer(
 			MatrixStack matrixStack, IVertexBuilder iVertexBuilder, int packedLightIn, int packedOverlayIn, float red,
 			float green, float blue, float alpha
 	)

@@ -26,6 +26,6 @@ public class BakedModelGeometry implements IModelGeometry<BakedModelGeometry>
 			Set<Pair<String, String>> missingTextureErrors
 	)
 	{
-		return Collections.singletonList(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS_TEXTURE, BakedBlockModel.TEXTURE));
+		return Collections.singletonList(new RenderMaterial(AtlasTexture.LOCATION_BLOCKS, BakedBlockModel.TEXTURE));
 	}
 }

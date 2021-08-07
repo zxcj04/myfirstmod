@@ -30,14 +30,16 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import net.minecraft.block.AbstractBlock.Properties;
+
 public class MagicBlock extends Block
 {
-	private static final VoxelShape SHAPE = VoxelShapes.create(0.0, 0.0, 0.0, 1.0, 0.15, 1.0);
+	private static final VoxelShape SHAPE = VoxelShapes.box(0.0, 0.0, 0.0, 1.0, 0.15, 1.0);
 	private static final VoxelShape RENDER_SHAPE = VoxelShapes.empty();
 
 	public MagicBlock()
 	{
-		super(Properties.create(Material.ROCK).sound(SoundType.STONE).hardnessAndResistance(2.0f));
+		super(Properties.of(Material.STONE).sound(SoundType.STONE).strength(2.0f));
 	}
 
 	@Override
@@ -48,7 +50,7 @@ public class MagicBlock extends Block
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(
+	public void appendHoverText(
 			ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn
 	)
 	{
@@ -63,38 +65,38 @@ public class MagicBlock extends Block
 	}
 
 	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
+	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
 	{
 		if (state.hasTileEntity() && state.getBlock() != newState.getBlock())
 		{
-			TileEntity tileEntity = worldIn.getTileEntity(pos);
+			TileEntity tileEntity = worldIn.getBlockEntity(pos);
 			// drops everything in the inventory
 			tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h ->
 			{
 				for (int i = 0; i < h.getSlots(); i++)
-					spawnAsEntity(worldIn, pos, h.getStackInSlot(i));
+					popResource(worldIn, pos, h.getStackInSlot(i));
 			});
 
-			worldIn.updateComparatorOutputLevel(pos, this);
+			worldIn.updateNeighbourForOutputSignal(pos, this);
 
-			tileEntity.write(new CompoundNBT());
+			tileEntity.save(new CompoundNBT());
 		}
 
-		super.onReplaced(state, worldIn, pos, newState, isMoving);
+		super.onRemove(state, worldIn, pos, newState, isMoving);
 	}
 
 	@Override
-	public boolean hasComparatorInputOverride(BlockState state)
+	public boolean hasAnalogOutputSignal(BlockState state)
 	{
 		return true;
 	}
 
 	@Override
-	public int getComparatorInputOverride(BlockState blockState, World worldIn, BlockPos pos)
+	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos)
 	{
 		AtomicBoolean itemIn = new AtomicBoolean(false);
 
-		worldIn.getTileEntity(pos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h ->
+		worldIn.getBlockEntity(pos).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h ->
 		{
 			itemIn.set(!h.getStackInSlot(0).isEmpty());
 		});
@@ -120,7 +122,7 @@ public class MagicBlock extends Block
 	}
 
 	@Override
-	public VoxelShape getRenderShape(
+	public VoxelShape getOcclusionShape(
 			BlockState state, IBlockReader worldIn, BlockPos pos
 	)
 	{
@@ -128,22 +130,22 @@ public class MagicBlock extends Block
 	}
 
 	@Override
-	public BlockRenderType getRenderType(BlockState state)
+	public BlockRenderType getRenderShape(BlockState state)
 	{
 		return BlockRenderType.INVISIBLE;
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(
+	public ActionResultType use(
 			BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit
 	)
 	{
-		if (!world.isRemote)
+		if (!world.isClientSide)
 		{
-			TileEntity tileEntity = world.getTileEntity(pos);
+			TileEntity tileEntity = world.getBlockEntity(pos);
 			tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h ->
 			{
-				ItemStack stack = player.getHeldItem(hand);
+				ItemStack stack = player.getItemInHand(hand);
 
 				if (stack.isEmpty())
 					stack = h.extractItem(0, h.getStackInSlot(0).getCount(), false);
@@ -151,11 +153,11 @@ public class MagicBlock extends Block
 					stack = h.insertItem(0, stack, false);
 				else
 				{
-					spawnAsEntity(world, pos, h.getStackInSlot(0));
+					popResource(world, pos, h.getStackInSlot(0));
 					h.extractItem(0, h.getStackInSlot(0).getCount(), false);
 				}
 
-				player.setHeldItem(hand, stack);
+				player.setItemInHand(hand, stack);
 			});
 		}
 

@@ -15,13 +15,13 @@ public class CommandHello implements Command<CommandSource>
 
 	public static ArgumentBuilder<CommandSource, ?> register(CommandDispatcher<CommandSource> dispatcher)
 	{
-		return Commands.literal("hello").requires(cs -> cs.hasPermissionLevel(0)).executes(CMD);
+		return Commands.literal("hello").requires(cs -> cs.hasPermission(0)).executes(CMD);
 	}
 
 	@Override
 	public int run(CommandContext<CommandSource> context) throws CommandSyntaxException
 	{
-		context.getSource().sendFeedback(new StringTextComponent("Hello World"), false);
+		context.getSource().sendSuccess(new StringTextComponent("Hello World"), false);
 		return 0;
 	}
 }

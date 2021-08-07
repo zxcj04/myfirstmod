@@ -35,7 +35,7 @@ public class ClientSetup
 {
 	public static void init(final FMLClientSetupEvent event)
 	{
-		ScreenManager.registerFactory(FIRSTBLOCK_CONTAINER.get(), FirstBlockScreen::new);
+		ScreenManager.register(FIRSTBLOCK_CONTAINER.get(), FirstBlockScreen::new);
 		RenderingRegistry.registerEntityRenderingHandler(WEIRDMOB.get(), WeirdMobRenderer::new);
 		RenderingRegistry.registerEntityRenderingHandler(INFINITYEYE_ENTITY.get(),
 				manager -> new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer())
@@ -49,7 +49,7 @@ public class ClientSetup
 		MinecraftForge.EVENT_BUS.addListener(AfterLivingRenderer::render);
 		MinecraftForge.EVENT_BUS.addListener(InWorldRenderer::render);
 
-		RenderTypeLookup.setRenderLayer(COMPLEX_MULTIPART_BLOCK.get(), RenderType.getTranslucent());
+		RenderTypeLookup.setRenderLayer(COMPLEX_MULTIPART_BLOCK.get(), RenderType.translucent());
 		RenderTypeLookup.setRenderLayer(BAKEDBLOCK.get(), (RenderType) -> true);
 
 		Minecraft.getInstance().getBlockColors().register(new BakedBlockColor(), BAKEDBLOCK.get());
@@ -72,7 +72,7 @@ public class ClientSetup
 	@SubscribeEvent
 	public static void onTextureStitch(TextureStitchEvent.Pre event)
 	{
-		if (!event.getMap().getTextureLocation().equals(AtlasTexture.LOCATION_BLOCKS_TEXTURE))
+		if (!event.getMap().location().equals(AtlasTexture.LOCATION_BLOCKS))
 			return;
 
 		event.addSprite(MAGICBLOCK_TEXTURE);

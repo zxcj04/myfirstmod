@@ -27,36 +27,36 @@ public class WeirdMobEggItem extends Item
 
 	public WeirdMobEggItem()
 	{
-		super(new Item.Properties().maxStackSize(1).group(ModSetup.ITEM_GROUP));
+		super(new Item.Properties().stacksTo(1).tab(ModSetup.ITEM_GROUP));
 	}
 
 	/**
 	 * Called when this item is used when targetting a Block
 	 */
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context)
+	public ActionResultType useOn(ItemUseContext context)
 	{
-		World world = context.getWorld();
-		if (world.isRemote)
+		World world = context.getLevel();
+		if (world.isClientSide)
 		{
 			return ActionResultType.SUCCESS;
 		}
 		else
 		{
-			ItemStack itemstack = context.getItem();
-			BlockPos blockpos = context.getPos();
-			Direction direction = context.getFace();
+			ItemStack itemstack = context.getItemInHand();
+			BlockPos blockpos = context.getClickedPos();
+			Direction direction = context.getClickedFace();
 			BlockState blockstate = world.getBlockState(blockpos);
 			Block block = blockstate.getBlock();
 			if (block == Blocks.SPAWNER)
 			{
-				TileEntity tileentity = world.getTileEntity(blockpos);
+				TileEntity tileentity = world.getBlockEntity(blockpos);
 				if (tileentity instanceof MobSpawnerTileEntity)
 				{
-					AbstractSpawner abstractspawner = ( (MobSpawnerTileEntity) tileentity ).getSpawnerBaseLogic();
-					abstractspawner.setEntityType(WEIRDMOB.get());
-					tileentity.markDirty();
-					world.notifyBlockUpdate(
+					AbstractSpawner abstractspawner = ( (MobSpawnerTileEntity) tileentity ).getSpawner();
+					abstractspawner.setEntityId(WEIRDMOB.get());
+					tileentity.setChanged();
+					world.sendBlockUpdated(
 							blockpos,
 							blockstate,
 							blockstate,
@@ -68,13 +68,13 @@ public class WeirdMobEggItem extends Item
 			}
 
 			BlockPos blockpos1;
-			if (blockstate.getCollisionShape(world, blockpos).isEmpty())
+			if (blockstate.getBlockSupportShape(world, blockpos).isEmpty())
 			{
 				blockpos1 = blockpos;
 			}
 			else
 			{
-				blockpos1 = blockpos.offset(direction);
+				blockpos1 = blockpos.relative(direction);
 			}
 
 			if (WEIRDMOB.get().spawn(

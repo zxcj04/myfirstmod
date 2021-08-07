@@ -25,8 +25,8 @@ public class SpawnScreen extends Screen
 
 	private void spawn(String id)
 	{
-		Networking.sendToServer(new PacketSpawn(new ResourceLocation(id), minecraft.player.getEntityWorld().getDimensionKey(), minecraft.player.getPosition()));
-		minecraft.displayGuiScreen(null);
+		Networking.sendToServer(new PacketSpawn(new ResourceLocation(id), minecraft.player.getCommandSenderWorld().dimension(), minecraft.player.blockPosition()));
+		minecraft.setScreen(null);
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class SpawnScreen extends Screen
 	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks)
 	{
 		RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-		this.minecraft.getTextureManager().bindTexture(GUI);
+		this.minecraft.getTextureManager().bind(GUI);
 		int relX = ( this.width - WIDTH ) / 2;
 		int relY = ( this.height - HEIGHT ) / 2;
 		this.blit(matrixStack, relX, relY, 0, 0, WIDTH, HEIGHT);
@@ -61,6 +61,6 @@ public class SpawnScreen extends Screen
 
 	public static void open()
 	{
-		Minecraft.getInstance().displayGuiScreen(new SpawnScreen());
+		Minecraft.getInstance().setScreen(new SpawnScreen());
 	}
 }

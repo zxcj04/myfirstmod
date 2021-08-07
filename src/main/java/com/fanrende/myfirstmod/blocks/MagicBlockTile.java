@@ -37,13 +37,13 @@ public class MagicBlockTile extends TileEntity
 			@Override
 			protected void onContentsChanged(int slot)
 			{
-				world.notifyBlockUpdate(
-						pos,
+				level.sendBlockUpdated(
+						worldPosition,
 						getBlockState(),
 						getBlockState(),
 						Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS
 				);
-				markDirty();
+				setChanged();
 			}
 
 			@Nonnull
@@ -69,40 +69,40 @@ public class MagicBlockTile extends TileEntity
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT tag)
+	public void load(BlockState state, CompoundNBT tag)
 	{
 		CompoundNBT invTag = tag.getCompound("inv");
 		item.deserializeNBT(invTag);
 
-		super.read(state, tag);
+		super.load(state, tag);
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT tag)
+	public CompoundNBT save(CompoundNBT tag)
 	{
 		tag.put("inv", item.serializeNBT());
 
-		return super.write(tag);
+		return super.save(tag);
 	}
 
 	@Override
 	public CompoundNBT getUpdateTag()
 	{
 		CompoundNBT tag = super.getUpdateTag();
-		return this.write(tag);
+		return this.save(tag);
 	}
 
 	@Override
 	public void handleUpdateTag(BlockState state, CompoundNBT tag)
 	{
-		read(state, tag);
+		load(state, tag);
 	}
 
 	@Nullable
 	@Override
 	public SUpdateTileEntityPacket getUpdatePacket()
 	{
-		SUpdateTileEntityPacket packet = new SUpdateTileEntityPacket(pos, 0, getUpdateTag());
+		SUpdateTileEntityPacket packet = new SUpdateTileEntityPacket(worldPosition, 0, getUpdateTag());
 		return packet;
 	}
 
@@ -111,7 +111,7 @@ public class MagicBlockTile extends TileEntity
 			NetworkManager net, SUpdateTileEntityPacket pkt
 	)
 	{
-		handleUpdateTag(getBlockState(), pkt.getNbtCompound());
+		handleUpdateTag(getBlockState(), pkt.getTag());
 	}
 
 	@Nonnull
@@ -129,6 +129,6 @@ public class MagicBlockTile extends TileEntity
 	@Override
 	public AxisAlignedBB getRenderBoundingBox()
 	{
-		return new AxisAlignedBB(getPos(), getPos().add(1, 3, 1));
+		return new AxisAlignedBB(getBlockPos(), getBlockPos().offset(1, 3, 1));
 	}
 }

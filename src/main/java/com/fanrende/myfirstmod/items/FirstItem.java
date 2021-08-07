@@ -18,12 +18,12 @@ public class FirstItem extends Item
 {
 	public FirstItem()
 	{
-		super(new Item.Properties().maxStackSize(1).group(ModSetup.ITEM_GROUP));
+		super(new Item.Properties().stacksTo(1).tab(ModSetup.ITEM_GROUP));
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(
+	public void appendHoverText(
 			ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn
 	)
 	{

@@ -26,46 +26,46 @@ public class InfinityPearl extends Item
 {
 	public InfinityPearl()
 	{
-		super(new Item.Properties().maxStackSize(1).group(ModSetup.ITEM_GROUP));
+		super(new Item.Properties().stacksTo(1).tab(ModSetup.ITEM_GROUP));
 	}
 
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn)
+	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn)
 	{
-		ItemStack itemstack = playerIn.getHeldItem(handIn);
+		ItemStack itemstack = playerIn.getItemInHand(handIn);
 		worldIn.playSound(
 				(PlayerEntity) null,
-				playerIn.getPosX(),
-				playerIn.getPosY(),
-				playerIn.getPosZ(),
-				SoundEvents.ENTITY_ENDER_PEARL_THROW,
+				playerIn.getX(),
+				playerIn.getY(),
+				playerIn.getZ(),
+				SoundEvents.ENDER_PEARL_THROW,
 				SoundCategory.NEUTRAL,
 				0.5F,
 				0.4F / ( random.nextFloat() * 0.4F + 0.8F )
 		);
-		playerIn.getCooldownTracker().setCooldown(this, 20);
-		if (!worldIn.isRemote)
+		playerIn.getCooldowns().addCooldown(this, 20);
+		if (!worldIn.isClientSide)
 		{
 			EnderPearlEntity enderpearlentity = new EnderPearlEntity(worldIn, playerIn);
 			enderpearlentity.setItem(itemstack);
-			enderpearlentity.setDirectionAndMovement(
+			enderpearlentity.shootFromRotation(
 					playerIn,
-					playerIn.rotationPitch,
-					playerIn.rotationYaw,
+					playerIn.xRot,
+					playerIn.yRot,
 					0.0F,
 					1.5F,
 					1.0F
 			);
-			worldIn.addEntity(enderpearlentity);
+			worldIn.addFreshEntity(enderpearlentity);
 		}
 
-		playerIn.addStat(Stats.ITEM_USED.get(this));
+		playerIn.awardStat(Stats.ITEM_USED.get(this));
 
-		return ActionResult.func_233538_a_(itemstack, worldIn.isRemote());
+		return ActionResult.sidedSuccess(itemstack, worldIn.isClientSide());
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void addInformation(
+	public void appendHoverText(
 			ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn
 	)
 	{

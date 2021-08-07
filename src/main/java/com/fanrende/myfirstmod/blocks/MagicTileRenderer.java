@@ -36,10 +36,10 @@ public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 
 	private void addVertex(IVertexBuilder builder, MatrixStack matrixStack, float x, float y, float z, float u, float v)
 	{
-		builder.pos(matrixStack.getLast().getMatrix(), x, y, z)
+		builder.vertex(matrixStack.last().pose(), x, y, z)
 				.color(1.0f, 1.0f, 1.0f, 1.0f)
-				.tex(u, v)
-				.lightmap(0, 240)
+				.uv(u, v)
+				.uv2(0, 240)
 				.normal(1, 0, 0)
 				.endVertex();
 	}
@@ -61,13 +61,13 @@ public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 	)
 	{
 		TextureAtlasSprite spriteBase = Minecraft.getInstance()
-				.getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE)
+				.getTextureAtlas(AtlasTexture.LOCATION_BLOCKS)
 				.apply(MAGICBLOCK_TEXTURE);
 		TextureAtlasSprite spriteTop = Minecraft.getInstance()
-				.getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE)
+				.getTextureAtlas(AtlasTexture.LOCATION_BLOCKS)
 				.apply(MAGICBLOCK_TOP_TEXTURE);
 
-		IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
+		IVertexBuilder builder = buffer.getBuffer(RenderType.translucent());
 
 		long time = System.currentTimeMillis();
 
@@ -92,23 +92,23 @@ public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 			MatrixStack matrixStack, IVertexBuilder builder, Quaternion rotationBase, TextureAtlasSprite spriteBase
 	)
 	{
-		matrixStack.push();
+		matrixStack.pushPose();
 
 		matrixStack.translate(.5, .5, .5);
 		//		matrixStack.scale(size + 0.5f, size + 0.5f, size + 0.5f);
 		matrixStack.translate(-.5, -.5, -.5);
 
-		addVertex(builder, matrixStack, 0.0f, 0.1f, 0.0f, spriteBase.getMinU(), spriteBase.getMinV());
-		addVertex(builder, matrixStack, 1.0f, 0.1f, 0.0f, spriteBase.getMaxU(), spriteBase.getMinV());
-		addVertex(builder, matrixStack, 1.0f, 0.1f, 1.0f, spriteBase.getMaxU(), spriteBase.getMaxV());
-		addVertex(builder, matrixStack, 0.0f, 0.1f, 1.0f, spriteBase.getMinU(), spriteBase.getMaxV());
+		addVertex(builder, matrixStack, 0.0f, 0.1f, 0.0f, spriteBase.getU0(), spriteBase.getV0());
+		addVertex(builder, matrixStack, 1.0f, 0.1f, 0.0f, spriteBase.getU1(), spriteBase.getV0());
+		addVertex(builder, matrixStack, 1.0f, 0.1f, 1.0f, spriteBase.getU1(), spriteBase.getV1());
+		addVertex(builder, matrixStack, 0.0f, 0.1f, 1.0f, spriteBase.getU0(), spriteBase.getV1());
 
-		addVertex(builder, matrixStack, 0.0f, 0.1f, 1.0f, spriteBase.getMinU(), spriteBase.getMaxV());
-		addVertex(builder, matrixStack, 1.0f, 0.1f, 1.0f, spriteBase.getMaxU(), spriteBase.getMaxV());
-		addVertex(builder, matrixStack, 1.0f, 0.1f, 0.0f, spriteBase.getMaxU(), spriteBase.getMinV());
-		addVertex(builder, matrixStack, 0.0f, 0.1f, 0.0f, spriteBase.getMinU(), spriteBase.getMinV());
+		addVertex(builder, matrixStack, 0.0f, 0.1f, 1.0f, spriteBase.getU0(), spriteBase.getV1());
+		addVertex(builder, matrixStack, 1.0f, 0.1f, 1.0f, spriteBase.getU1(), spriteBase.getV1());
+		addVertex(builder, matrixStack, 1.0f, 0.1f, 0.0f, spriteBase.getU1(), spriteBase.getV0());
+		addVertex(builder, matrixStack, 0.0f, 0.1f, 0.0f, spriteBase.getU0(), spriteBase.getV0());
 
-		matrixStack.pop();
+		matrixStack.popPose();
 	}
 
 	private void renderTop(
@@ -116,26 +116,26 @@ public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 			float topMove
 	)
 	{
-		matrixStack.push();
+		matrixStack.pushPose();
 
 		matrixStack.translate(0.0f, 0.15f + topMove, 0.0f);
 
 		matrixStack.translate(.5, .5, .5);
-		matrixStack.rotate(rotationTop);
+		matrixStack.mulPose(rotationTop);
 		matrixStack.scale(0.5f, 1.0f, 0.5f);
 		matrixStack.translate(-.5, -.5, -.5);
 
-		addVertex(builder, matrixStack, 0.0f, 0.0f, 0.0f, spriteTop.getMinU(), spriteTop.getMinV());
-		addVertex(builder, matrixStack, 1.0f, 0.0f, 0.0f, spriteTop.getMaxU(), spriteTop.getMinV());
-		addVertex(builder, matrixStack, 1.0f, 0.0f, 1.0f, spriteTop.getMaxU(), spriteTop.getMaxV());
-		addVertex(builder, matrixStack, 0.0f, 0.0f, 1.0f, spriteTop.getMinU(), spriteTop.getMaxV());
+		addVertex(builder, matrixStack, 0.0f, 0.0f, 0.0f, spriteTop.getU0(), spriteTop.getV0());
+		addVertex(builder, matrixStack, 1.0f, 0.0f, 0.0f, spriteTop.getU1(), spriteTop.getV0());
+		addVertex(builder, matrixStack, 1.0f, 0.0f, 1.0f, spriteTop.getU1(), spriteTop.getV1());
+		addVertex(builder, matrixStack, 0.0f, 0.0f, 1.0f, spriteTop.getU0(), spriteTop.getV1());
 
-		addVertex(builder, matrixStack, 0.0f, 0.0f, 1.0f, spriteTop.getMinU(), spriteTop.getMaxV());
-		addVertex(builder, matrixStack, 1.0f, 0.0f, 1.0f, spriteTop.getMaxU(), spriteTop.getMaxV());
-		addVertex(builder, matrixStack, 1.0f, 0.0f, 0.0f, spriteTop.getMaxU(), spriteTop.getMinV());
-		addVertex(builder, matrixStack, 0.0f, 0.0f, 0.0f, spriteTop.getMinU(), spriteTop.getMinV());
+		addVertex(builder, matrixStack, 0.0f, 0.0f, 1.0f, spriteTop.getU0(), spriteTop.getV1());
+		addVertex(builder, matrixStack, 1.0f, 0.0f, 1.0f, spriteTop.getU1(), spriteTop.getV1());
+		addVertex(builder, matrixStack, 1.0f, 0.0f, 0.0f, spriteTop.getU1(), spriteTop.getV0());
+		addVertex(builder, matrixStack, 0.0f, 0.0f, 0.0f, spriteTop.getU0(), spriteTop.getV0());
 
-		matrixStack.pop();
+		matrixStack.popPose();
 	}
 
 	private void renderItem(
@@ -143,7 +143,7 @@ public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 			IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay
 	)
 	{
-		matrixStack.push();
+		matrixStack.pushPose();
 
 		tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h ->
 		{
@@ -152,16 +152,16 @@ public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 			if (stackInSlot.getCount() > 0)
 			{
 				matrixStack.translate(.5, .5, .5);
-				matrixStack.rotate(rotationItem);
+				matrixStack.mulPose(rotationItem);
 				matrixStack.translate(-.5, -.5, -.5);
 
 				matrixStack.translate(0.5, 0.75 + itemMove, 0.5);
 				ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-				IBakedModel ibakedmodel = itemRenderer.getItemModelWithOverrides(stackInSlot,
-						tileEntity.getWorld(),
+				IBakedModel ibakedmodel = itemRenderer.getModel(stackInSlot,
+						tileEntity.getLevel(),
 						null
 				);
-				itemRenderer.renderItem(stackInSlot,
+				itemRenderer.render(stackInSlot,
 						ItemCameraTransforms.TransformType.FIXED,
 						true,
 						matrixStack,
@@ -173,7 +173,7 @@ public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 			}
 		});
 
-		matrixStack.pop();
+		matrixStack.popPose();
 	}
 
 	public static void register()

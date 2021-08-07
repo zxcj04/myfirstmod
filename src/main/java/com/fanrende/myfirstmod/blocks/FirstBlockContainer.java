@@ -31,7 +31,7 @@ public class FirstBlockContainer extends Container
 	{
 		super(FIRSTBLOCK_CONTAINER.get(), windowId);
 
-		this.tileEntity = world.getTileEntity(pos);
+		this.tileEntity = world.getBlockEntity(pos);
 
 		this.playerInventory = new InvWrapper(playerInventory);
 
@@ -50,7 +50,7 @@ public class FirstBlockContainer extends Container
 		// because of 64 bits and 32 bits difference between server and client on dedicated server
 		// we need two "int" to store and transfer
 
-		trackInt(new IntReferenceHolder()
+		addDataSlot(new IntReferenceHolder()
 		{
 			@Override
 			public int get()
@@ -69,7 +69,7 @@ public class FirstBlockContainer extends Container
 			}
 		});
 
-		trackInt(new IntReferenceHolder()
+		addDataSlot(new IntReferenceHolder()
 		{
 			@Override
 			public int get()
@@ -95,48 +95,48 @@ public class FirstBlockContainer extends Container
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity playerEntity)
+	public boolean stillValid(PlayerEntity playerEntity)
 	{
-		return isWithinUsableDistance(IWorldPosCallable.of(tileEntity.getWorld(), tileEntity.getPos()),
+		return stillValid(IWorldPosCallable.create(tileEntity.getLevel(), tileEntity.getBlockPos()),
 				playerEntity,
 				FIRSTBLOCK.get()
 		);
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(PlayerEntity playerIn, int index)
+	public ItemStack quickMoveStack(PlayerEntity playerIn, int index)
 	{
 		ItemStack itemstack = ItemStack.EMPTY;
-		Slot slot = this.inventorySlots.get(index);
-		if (slot != null && slot.getHasStack())
+		Slot slot = this.slots.get(index);
+		if (slot != null && slot.hasItem())
 		{
-			ItemStack stack = slot.getStack();
+			ItemStack stack = slot.getItem();
 			itemstack = stack.copy();
 			if (index == 0)
 			{
-				if (!this.mergeItemStack(stack, 1, 37, true))
+				if (!this.moveItemStackTo(stack, 1, 37, true))
 				{
 					return ItemStack.EMPTY;
 				}
-				slot.onSlotChange(stack, itemstack);
+				slot.onQuickCraft(stack, itemstack);
 			}
 			else
 			{
 				if (stack.getItem() == Items.COBBLESTONE)
 				{
-					if (!this.mergeItemStack(stack, 0, 1, false))
+					if (!this.moveItemStackTo(stack, 0, 1, false))
 					{
 						return ItemStack.EMPTY;
 					}
 				}
 				else if (index < 28)
 				{
-					if (!this.mergeItemStack(stack, 28, 37, false))
+					if (!this.moveItemStackTo(stack, 28, 37, false))
 					{
 						return ItemStack.EMPTY;
 					}
 				}
-				else if (index < 37 && !this.mergeItemStack(stack, 1, 28, false))
+				else if (index < 37 && !this.moveItemStackTo(stack, 1, 28, false))
 				{
 					return ItemStack.EMPTY;
 				}
@@ -144,11 +144,11 @@ public class FirstBlockContainer extends Container
 
 			if (stack.isEmpty())
 			{
-				slot.putStack(ItemStack.EMPTY);
+				slot.set(ItemStack.EMPTY);
 			}
 			else
 			{
-				slot.onSlotChanged();
+				slot.setChanged();
 			}
 
 			if (stack.getCount() == itemstack.getCount())

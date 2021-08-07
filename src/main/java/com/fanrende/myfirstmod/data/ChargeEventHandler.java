@@ -47,10 +47,10 @@ public class ChargeEventHandler
 
 				h.setCharge(charge);
 
-				if(damageSource.getTrueSource() instanceof PlayerEntity)
+				if(damageSource.getEntity() instanceof PlayerEntity)
 				{
-					PlayerEntity player = (PlayerEntity) damageSource.getTrueSource();
-					player.sendStatusMessage(new TranslationTextComponent("message.prevent_kill", Integer.toString(charge)), true);
+					PlayerEntity player = (PlayerEntity) damageSource.getEntity();
+					player.displayClientMessage(new TranslationTextComponent("message.prevent_kill", Integer.toString(charge)), true);
 				}
 			}
 		});
@@ -62,7 +62,7 @@ public class ChargeEventHandler
 		if(attacker instanceof PlayerEntity)
 		{
 			PlayerEntity player = (PlayerEntity) attacker;
-			ItemStack stack = player.getHeldItemMainhand();
+			ItemStack stack = player.getMainHandItem();
 
 			if(stack.getItem() == Items.BEETROOT)
 			{
@@ -73,12 +73,12 @@ public class ChargeEventHandler
 					int charge = h.getCharge() + 1;
 					h.setCharge(charge);
 
-					player.sendStatusMessage(new TranslationTextComponent("message.increase_charge", Integer.toString(charge)), true);
+					player.displayClientMessage(new TranslationTextComponent("message.increase_charge", Integer.toString(charge)), true);
 					stack.shrink(1);
-					player.setHeldItem(Hand.MAIN_HAND, stack);
+					player.setItemInHand(Hand.MAIN_HAND, stack);
 
 					event.setCanceled(true);
-					target.getEntityWorld().addParticle(ParticleTypes.HEART, target.getPosX(), target.getPosY()+1, target.getPosZ(), 0.0, 0.0, 0.0);
+					target.getCommandSenderWorld().addParticle(ParticleTypes.HEART, target.getX(), target.getY()+1, target.getZ(), 0.0, 0.0, 0.0);
 				});
 			}
 		}

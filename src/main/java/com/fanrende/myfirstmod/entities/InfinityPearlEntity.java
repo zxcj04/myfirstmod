@@ -45,57 +45,57 @@ public class InfinityPearlEntity extends EnderPearlEntity
 	}
 
 	@Override
-	protected void onImpact(RayTraceResult result)
+	protected void onHit(RayTraceResult result)
 	{
 		RayTraceResult.Type raytraceresult$type = result.getType();
 		if (raytraceresult$type == RayTraceResult.Type.ENTITY)
-			this.onEntityHit((EntityRayTraceResult) result);
+			this.onHitEntity((EntityRayTraceResult) result);
 		else if (raytraceresult$type == RayTraceResult.Type.BLOCK)
-			this.func_230299_a_((BlockRayTraceResult) result);
+			this.onHitBlock((BlockRayTraceResult) result);
 
-		Entity entity = this.getShooter();
+		Entity entity = this.getOwner();
 
 		for (int i = 0; i < 32; ++i)
 		{
-			this.world.addParticle(ParticleTypes.PORTAL,
-					this.getPosX(),
-					this.getPosY() + this.rand.nextDouble() * 2.0D,
-					this.getPosZ(),
-					this.rand.nextGaussian(),
+			this.level.addParticle(ParticleTypes.PORTAL,
+					this.getX(),
+					this.getY() + this.random.nextDouble() * 2.0D,
+					this.getZ(),
+					this.random.nextGaussian(),
 					0.0D,
-					this.rand.nextGaussian()
+					this.random.nextGaussian()
 			);
 		}
 
-		if (!this.world.isRemote && !this.removed)
+		if (!this.level.isClientSide && !this.removed)
 		{
 			if (entity instanceof ServerPlayerEntity)
 			{
 				ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) entity;
-				if (serverplayerentity.connection.getNetworkManager()
-						.isChannelOpen() && serverplayerentity.world == this.world && !serverplayerentity.isSleeping())
+				if (serverplayerentity.connection.getConnection()
+						.isConnected() && serverplayerentity.level == this.level && !serverplayerentity.isSleeping())
 				{
 					EntityTeleportEvent.EnderPearl event = ForgeEventFactory.onEnderPearlLand(serverplayerentity,
-							this.getPosX(),
-							this.getPosY(),
-							this.getPosZ(),
+							this.getX(),
+							this.getY(),
+							this.getZ(),
 							this,
 							5.0F
 					);
 					if (!event.isCanceled())
 					{ // Don't indent to lower patch size
-						if (this.rand.nextFloat() < 0.05F && this.world.getGameRules()
-								.getBoolean(GameRules.DO_MOB_SPAWNING))
+						if (this.random.nextFloat() < 0.05F && this.level.getGameRules()
+								.getBoolean(GameRules.RULE_DOMOBSPAWNING))
 						{
-							EndermiteEntity endermiteentity = EntityType.ENDERMITE.create(this.world);
-							endermiteentity.setSpawnedByPlayer(true);
-							endermiteentity.setLocationAndAngles(entity.getPosX(),
-									entity.getPosY(),
-									entity.getPosZ(),
-									entity.rotationYaw,
-									entity.rotationPitch
+							EndermiteEntity endermiteentity = EntityType.ENDERMITE.create(this.level);
+							endermiteentity.setPlayerSpawned(true);
+							endermiteentity.moveTo(entity.getX(),
+									entity.getY(),
+									entity.getZ(),
+									entity.yRot,
+									entity.xRot
 							);
-							this.world.addEntity(endermiteentity);
+							this.level.addFreshEntity(endermiteentity);
 						}
 
 						if (entity.isPassenger())
@@ -103,14 +103,14 @@ public class InfinityPearlEntity extends EnderPearlEntity
 							entity.stopRiding();
 						}
 
-						entity.setPositionAndUpdate(event.getTargetX(), event.getTargetY(), event.getTargetZ());
+						entity.teleportTo(event.getTargetX(), event.getTargetY(), event.getTargetZ());
 						entity.fallDistance = 0.0F;
 					} //Forge: End
 				}
 			}
 			else if (entity != null)
 			{
-				entity.setPositionAndUpdate(this.getPosX(), this.getPosY(), this.getPosZ());
+				entity.teleportTo(this.getX(), this.getY(), this.getZ());
 				entity.fallDistance = 0.0F;
 			}
 
