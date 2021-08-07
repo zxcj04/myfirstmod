@@ -20,5 +20,7 @@
 	"message.complexmultipartblock": "Block which can change mode by shift click",
 	"message.infinitypearl": "Similar to ender pearl, but can use \"many\" times",
 	"message.infinityeye": "Similar to eye of ender, but can use \"many\" times",
-	"message.spawntool": "Spawn specific mob with gui"
+	"message.spawntool": "Spawn specific mob with gui",
+	"message.increase_charge": "Mob has been charged to %s",
+	"message.prevent_kill": "Mob's charge decreased to %s"
 }

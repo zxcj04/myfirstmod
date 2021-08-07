@@ -2,9 +2,12 @@ package com.fanrende.myfirstmod.setup;
 
 import com.fanrende.myfirstmod.MyFirstMod;
 import com.fanrende.myfirstmod.commands.ModCommands;
+import com.fanrende.myfirstmod.data.CapabilityEntityCharge;
+import com.fanrende.myfirstmod.data.ChargeEventHandler;
 import com.fanrende.myfirstmod.network.Networking;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.RegisterDimensionsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -26,6 +29,12 @@ public class ModSetup
 	public static void init(final FMLCommonSetupEvent event)
 	{
 		Networking.registerMessages();
+
+		CapabilityEntityCharge.register();
+
+		MinecraftForge.EVENT_BUS.addListener(ChargeEventHandler::onAttachCapabilitiesEvent);
+		MinecraftForge.EVENT_BUS.addListener(ChargeEventHandler::onDeathEvent);
+		MinecraftForge.EVENT_BUS.addListener(ChargeEventHandler::onAttackEvent);
 	}
 
 	@SubscribeEvent
