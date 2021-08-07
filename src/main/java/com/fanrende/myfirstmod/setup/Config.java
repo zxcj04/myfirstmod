@@ -1,4 +1,4 @@
-package com.fanrende.myfirstmod;
+package com.fanrende.myfirstmod.setup;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

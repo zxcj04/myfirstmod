@@ -1,6 +1,6 @@
 package com.fanrende.myfirstmod.blocks;
 
-import com.fanrende.myfirstmod.Config;
+import com.fanrende.myfirstmod.setup.Config;
 import com.fanrende.myfirstmod.tools.CustomEnergyStorage;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
@@ -126,7 +126,7 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 	}
 
 	@Override
-	public void read(CompoundNBT tag)
+	public void read(BlockState state, CompoundNBT tag)
 	{
 		CompoundNBT invTag = tag.getCompound("inv");
 		item.deserializeNBT(invTag);
@@ -134,7 +134,7 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 		CompoundNBT energyTag = tag.getCompound("energy");
 		energy.deserializeNBT(energyTag);
 
-		super.read(tag);
+		super.read(state, tag);
 	}
 
 	@Override

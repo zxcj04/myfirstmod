@@ -25,19 +25,16 @@ public class FirstBlock extends Block
 {
 	public FirstBlock()
 	{
-		super(Properties.create(Material.IRON).sound(SoundType.METAL).hardnessAndResistance(2.0f).lightValue(14));
+		super(Properties.create(Material.IRON)
+				.sound(SoundType.METAL)
+				.hardnessAndResistance(2.0f)
+				.setLightLevel(state -> state.get(BlockStateProperties.POWERED)? 14: 0));
 	}
 
 	@Override
 	public boolean hasTileEntity(BlockState state)
 	{
 		return true;
-	}
-
-	@Override
-	public int getLightValue(BlockState state)
-	{
-		return state.get(BlockStateProperties.POWERED) ? super.getLightValue(state) : 0;
 	}
 
 	@Nullable

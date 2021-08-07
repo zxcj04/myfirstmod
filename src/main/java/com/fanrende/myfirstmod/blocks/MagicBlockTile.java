@@ -1,6 +1,7 @@
 package com.fanrende.myfirstmod.blocks;
 
 import com.fanrende.myfirstmod.setup.Registration;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -68,12 +69,12 @@ public class MagicBlockTile extends TileEntity
 	}
 
 	@Override
-	public void read(CompoundNBT tag)
+	public void read(BlockState state, CompoundNBT tag)
 	{
 		CompoundNBT invTag = tag.getCompound("inv");
 		item.deserializeNBT(invTag);
 
-		super.read(tag);
+		super.read(state, tag);
 	}
 
 	@Override
@@ -92,9 +93,9 @@ public class MagicBlockTile extends TileEntity
 	}
 
 	@Override
-	public void handleUpdateTag(CompoundNBT tag)
+	public void handleUpdateTag(BlockState state, CompoundNBT tag)
 	{
-		read(tag);
+		read(state, tag);
 	}
 
 	@Nullable
@@ -110,7 +111,7 @@ public class MagicBlockTile extends TileEntity
 			NetworkManager net, SUpdateTileEntityPacket pkt
 	)
 	{
-		handleUpdateTag(pkt.getNbtCompound());
+		handleUpdateTag(getBlockState(), pkt.getNbtCompound());
 	}
 
 	@Nonnull

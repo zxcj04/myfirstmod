@@ -1,6 +1,6 @@
 package com.fanrende.myfirstmod.blocks;
 
-import com.fanrende.myfirstmod.Config;
+import com.fanrende.myfirstmod.setup.Config;
 import com.fanrende.myfirstmod.tools.CustomEnergyStorage;
 import net.minecraft.block.Block;
 import net.minecraft.client.gui.screen.Screen;

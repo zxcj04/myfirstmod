@@ -1,6 +1,6 @@
 package com.fanrende.myfirstmod.items;
 
-import com.fanrende.myfirstmod.Config;
+import com.fanrende.myfirstmod.setup.Config;
 import com.fanrende.myfirstmod.setup.ModSetup;
 import com.fanrende.myfirstmod.tools.CustomEnergyStorage;
 import net.minecraft.block.BlockState;

@@ -26,7 +26,7 @@ public class MyRenderType extends RenderType
 			256,
 			RenderType.State.getBuilder()
 					.line(THICK_LINES)
-					.layer(PROJECTION_LAYERING)
+					.layer(VIEW_OFFSET_Z_LAYERING)
 					.transparency(TRANSLUCENT_TRANSPARENCY)
 					.texture(NO_TEXTURE)
 					.depthTest(DEPTH_ALWAYS)

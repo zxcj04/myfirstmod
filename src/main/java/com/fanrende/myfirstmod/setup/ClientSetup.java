@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.common.MinecraftForge;
@@ -42,9 +43,6 @@ public class ClientSetup
 		RenderingRegistry.registerEntityRenderingHandler(INFINITYPEARL_ENTITY.get(),
 				manager -> new SpriteRenderer<>(manager, Minecraft.getInstance().getItemRenderer())
 		);
-		ModelLoaderRegistry.registerLoader(new ResourceLocation(MyFirstMod.MODID, "bakedloader"),
-				new BakedModelLoader()
-		);
 
 		MagicTileRenderer.register();
 
@@ -55,6 +53,14 @@ public class ClientSetup
 		RenderTypeLookup.setRenderLayer(BAKEDBLOCK.get(), (RenderType) -> true);
 
 		Minecraft.getInstance().getBlockColors().register(new BakedBlockColor(), BAKEDBLOCK.get());
+	}
+
+	@SubscribeEvent
+	public static void onModelRegistry(ModelRegistryEvent event)
+	{
+		ModelLoaderRegistry.registerLoader(new ResourceLocation(MyFirstMod.MODID, "bakedloader"),
+				new BakedModelLoader()
+		);
 	}
 
 	@SubscribeEvent

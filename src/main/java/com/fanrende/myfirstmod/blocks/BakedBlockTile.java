@@ -59,12 +59,12 @@ public class BakedBlockTile extends TileEntity
 	}
 
 	@Override
-	public void handleUpdateTag(CompoundNBT tag)
+	public void handleUpdateTag(BlockState state, CompoundNBT tag)
 	{
 		// This is actually the default but placed here so you
 		// know this is the place to potentially have a lighter read() that only
 		// considers things needed client-side
-		read(tag);
+		read(state, tag);
 	}
 
 	@Nullable
@@ -79,7 +79,7 @@ public class BakedBlockTile extends TileEntity
 	{
 		BlockState oldMimic = mimic;
 		CompoundNBT tag = pkt.getNbtCompound();
-		handleUpdateTag(tag);
+		handleUpdateTag(mimic, tag);
 
 		if (!Objects.equals(oldMimic, mimic))
 		{
@@ -100,9 +100,9 @@ public class BakedBlockTile extends TileEntity
 	}
 
 	@Override
-	public void read(CompoundNBT compound)
+	public void read(BlockState state, CompoundNBT compound)
 	{
-		super.read(compound);
+		super.read(state, compound);
 		readMimic(compound);
 	}
 

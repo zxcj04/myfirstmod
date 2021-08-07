@@ -1,7 +1,7 @@
 package com.fanrende.myfirstmod.entities;
 
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.item.EyeOfEnderEntity;
+import net.minecraft.entity.projectile.EyeOfEnderEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 

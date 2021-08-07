@@ -4,6 +4,7 @@ import com.fanrende.myfirstmod.entities.InfinityPearlEntity;
 import com.fanrende.myfirstmod.setup.ModSetup;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.entity.item.EnderPearlEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -41,18 +42,25 @@ public class InfinityPearl extends Item
 				0.5F,
 				0.4F / ( random.nextFloat() * 0.4F + 0.8F )
 		);
-		playerIn.getCooldownTracker().setCooldown(this, 5);
+		playerIn.getCooldownTracker().setCooldown(this, 20);
 		if (!worldIn.isRemote)
 		{
-			InfinityPearlEntity infinityPearlEntity = new InfinityPearlEntity(worldIn, playerIn);
-			infinityPearlEntity.setItem(itemstack);
-			infinityPearlEntity.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, 0.0F, 3.5F, 1.0F);
-			worldIn.addEntity(infinityPearlEntity);
+			EnderPearlEntity enderpearlentity = new EnderPearlEntity(worldIn, playerIn);
+			enderpearlentity.setItem(itemstack);
+			enderpearlentity.setDirectionAndMovement(
+					playerIn,
+					playerIn.rotationPitch,
+					playerIn.rotationYaw,
+					0.0F,
+					1.5F,
+					1.0F
+			);
+			worldIn.addEntity(enderpearlentity);
 		}
 
 		playerIn.addStat(Stats.ITEM_USED.get(this));
 
-		return ActionResult.resultSuccess(itemstack);
+		return ActionResult.func_233538_a_(itemstack, worldIn.isRemote());
 	}
 
 	@Override

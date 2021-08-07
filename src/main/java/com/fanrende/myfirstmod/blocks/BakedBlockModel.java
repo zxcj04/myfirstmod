@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
@@ -39,7 +39,7 @@ public class BakedBlockModel implements IDynamicBakedModel
 	}
 
 	private void putVertex(
-			BakedQuadBuilder builder, Vec3d normal, double x, double y, double z, float u, float v,
+			BakedQuadBuilder builder, Vector3d normal, double x, double y, double z, float u, float v,
 			TextureAtlasSprite sprite, float r, float g, float b
 	)
 	{
@@ -84,9 +84,10 @@ public class BakedBlockModel implements IDynamicBakedModel
 		}
 	}
 
-	private BakedQuad createQuad(Vec3d v1, Vec3d v2, Vec3d v3, Vec3d v4, TextureAtlasSprite sprite)
+	private BakedQuad createQuad(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite)
 	{
-		Vec3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
+		Vector3d normal = v3.subtract(v2).crossProduct(v1.subtract(v2)).normalize();
+
 		int tw = sprite.getWidth();
 		int th = sprite.getHeight();
 
@@ -101,9 +102,9 @@ public class BakedBlockModel implements IDynamicBakedModel
 		return builder.build();
 	}
 
-	private Vec3d v(double x, double y, double z)
+	private Vector3d v(double x, double y, double z)
 	{
-		return new Vec3d(x, y, z);
+		return new Vector3d(x, y, z);
 	}
 
 	@Nonnull
@@ -166,7 +167,7 @@ public class BakedBlockModel implements IDynamicBakedModel
 	}
 
 	@Override
-	public boolean func_230044_c_()
+	public boolean isSideLit()
 	{
 		return false;
 	}

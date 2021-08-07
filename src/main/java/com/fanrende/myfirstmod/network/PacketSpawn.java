@@ -3,9 +3,11 @@ package com.fanrende.myfirstmod.network;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.RegistryKey;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -14,18 +16,18 @@ import java.util.function.Supplier;
 
 public class PacketSpawn
 {
-	private final String id;
-	private final DimensionType type;
+	private final ResourceLocation id;
+	private final RegistryKey<World> type;
 	private final BlockPos pos;
 
 	public PacketSpawn(PacketBuffer buffer)
 	{
-		id = buffer.readString();
-		type = DimensionType.getById(buffer.readInt());
+		id = buffer.readResourceLocation();
+		type = RegistryKey.getOrCreateKey(Registry.WORLD_KEY, buffer.readResourceLocation());
 		pos = buffer.readBlockPos();
 	}
 
-	public PacketSpawn(String id, DimensionType type, BlockPos pos)
+	public PacketSpawn(ResourceLocation id, RegistryKey<World> type, BlockPos pos)
 	{
 		this.id = id;
 		this.type = type;
@@ -34,8 +36,8 @@ public class PacketSpawn
 
 	public void toBytes(PacketBuffer buffer)
 	{
-		buffer.writeString(id);
-		buffer.writeInt(type.getId());
+		buffer.writeResourceLocation(id);
+		buffer.writeResourceLocation(type.getLocation());
 		buffer.writeBlockPos(pos);
 	}
 
@@ -44,7 +46,7 @@ public class PacketSpawn
 		ctx.get().enqueueWork(() ->
 		{
 			ServerWorld spawnWorld = ctx.get().getSender().world.getServer().getWorld(type);
-			EntityType<?> entityType = ForgeRegistries.ENTITIES.getValue(new ResourceLocation(id));
+			EntityType<?> entityType = ForgeRegistries.ENTITIES.getValue(id);
 
 			if (entityType == null)
 			{

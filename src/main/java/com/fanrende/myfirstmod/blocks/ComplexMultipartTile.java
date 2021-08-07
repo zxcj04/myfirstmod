@@ -69,9 +69,9 @@ public class ComplexMultipartTile extends TileEntity
 	}
 
 	@Override
-	public void read(CompoundNBT compound)
+	public void read(BlockState state, CompoundNBT compound)
 	{
-		super.read(compound);
+		super.read(state, compound);
 
 		CompoundNBT modeTag = compound.getCompound("mode");
 
@@ -112,7 +112,7 @@ public class ComplexMultipartTile extends TileEntity
 		}
 
 		@Override
-		public String getName()
+		public String getString()
 		{
 			return this.name;
 		}
@@ -120,7 +120,7 @@ public class ComplexMultipartTile extends TileEntity
 		@Override
 		public String toString()
 		{
-			return getName();
+			return getString();
 		}
 	}
 }

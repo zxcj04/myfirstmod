@@ -22,6 +22,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.feature.structure.Structure;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -52,7 +53,7 @@ public class InfinityEye extends Item
 			{
 				BlockPos blockpos = ( (ServerWorld) worldIn ).getChunkProvider()
 						.getChunkGenerator()
-						.findNearestStructure(worldIn, "Stronghold", new BlockPos(playerIn), 100, false);
+						.func_235956_a_((ServerWorld)worldIn, Structure.STRONGHOLD, playerIn.getPosition(), 100, false);
 				if (blockpos != null)
 				{
 					InfinityEyeEntity infinityEyeEntity = new InfinityEyeEntity(worldIn,
@@ -77,7 +78,7 @@ public class InfinityEye extends Item
 							0.5F,
 							0.4F / ( random.nextFloat() * 0.4F + 0.8F )
 					);
-					worldIn.playEvent((PlayerEntity) null, 1003, new BlockPos(playerIn), 0);
+					worldIn.playEvent((PlayerEntity) null, 1003, playerIn.getPosition(), 0);
 
 					playerIn.addStat(Stats.ITEM_USED.get(this));
 					playerIn.swing(handIn, true);
