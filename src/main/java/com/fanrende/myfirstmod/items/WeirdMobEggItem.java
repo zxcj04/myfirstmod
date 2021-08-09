@@ -1,26 +1,25 @@
 package com.fanrende.myfirstmod.items;
 
 import com.fanrende.myfirstmod.setup.ModSetup;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.SpawnReason;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.tileentity.MobSpawnerTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.spawner.AbstractSpawner;
+import com.fanrende.myfirstmod.setup.Registration;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.BaseSpawner;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.SpawnerBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.Constants;
 
 import java.util.Objects;
-
-import static com.fanrende.myfirstmod.setup.Registration.WEIRDMOB;
 
 public class WeirdMobEggItem extends Item
 {
@@ -34,12 +33,12 @@ public class WeirdMobEggItem extends Item
 	 * Called when this item is used when targetting a Block
 	 */
 	@Override
-	public ActionResultType useOn(ItemUseContext context)
+	public InteractionResult useOn(UseOnContext context)
 	{
-		World world = context.getLevel();
+		Level world = context.getLevel();
 		if (world.isClientSide)
 		{
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 		else
 		{
@@ -50,11 +49,11 @@ public class WeirdMobEggItem extends Item
 			Block block = blockstate.getBlock();
 			if (block == Blocks.SPAWNER)
 			{
-				TileEntity tileentity = world.getBlockEntity(blockpos);
-				if (tileentity instanceof MobSpawnerTileEntity)
+				BlockEntity tileentity = world.getBlockEntity(blockpos);
+				if (tileentity instanceof SpawnerBlockEntity)
 				{
-					AbstractSpawner abstractspawner = ( (MobSpawnerTileEntity) tileentity ).getSpawner();
-					abstractspawner.setEntityId(WEIRDMOB.get());
+					BaseSpawner abstractspawner = ( (SpawnerBlockEntity) tileentity ).getSpawner();
+					abstractspawner.setEntityId(Registration.WEIRDMOB.get());
 					tileentity.setChanged();
 					world.sendBlockUpdated(
 							blockpos,
@@ -63,7 +62,7 @@ public class WeirdMobEggItem extends Item
 							Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS
 					);
 					itemstack.shrink(1);
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
 			}
 
@@ -77,12 +76,12 @@ public class WeirdMobEggItem extends Item
 				blockpos1 = blockpos.relative(direction);
 			}
 
-			if (WEIRDMOB.get().spawn(
-					(ServerWorld) world,
+			if (Registration.WEIRDMOB.get().spawn(
+					(ServerLevel) world,
 					itemstack,
 					context.getPlayer(),
 					blockpos1,
-					SpawnReason.SPAWN_EGG,
+					MobSpawnType.SPAWN_EGG,
 					true,
 					!Objects.equals(blockpos, blockpos1) && direction == Direction.UP
 			) != null)
@@ -90,7 +89,7 @@ public class WeirdMobEggItem extends Item
 				itemstack.shrink(1);
 			}
 
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 	}
 

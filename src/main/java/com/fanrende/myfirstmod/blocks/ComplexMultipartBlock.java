@@ -1,36 +1,35 @@
 package com.fanrende.myfirstmod.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
-public class ComplexMultipartBlock extends Block
+public class ComplexMultipartBlock extends Block implements EntityBlock
 {
 	public static final EnumProperty<ComplexMultipartTile.Mode> NORTH = EnumProperty.create("north",
 			ComplexMultipartTile.Mode.class
@@ -51,56 +50,50 @@ public class ComplexMultipartBlock extends Block
 			ComplexMultipartTile.Mode.class
 	);
 
-	private static final VoxelShape RENDER_SHAPE = VoxelShapes.box(.1, .1, .1, .9, .9, .9);
+	private static final VoxelShape RENDER_SHAPE = Shapes.box(.1, .1, .1, .9, .9, .9);
 
 	public ComplexMultipartBlock()
 	{
 		super(Properties.of(Material.METAL).sound(SoundType.METAL).strength(2.0f));
 	}
 
-	@Override
-	public boolean hasTileEntity(BlockState state)
-	{
-		return true;
-	}
-
 	@Nullable
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world)
+	public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState)
 	{
-		return new ComplexMultipartTile();
+		return new ComplexMultipartTile(blockPos, blockState);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(
-			ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn
+			ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn
 	)
 	{
 		if (Screen.hasShiftDown())
 		{
-			tooltip.add(new TranslationTextComponent("message.complexmultipartblock"));
+			tooltip.add(new TranslatableComponent("message.complexmultipartblock"));
 		}
 		else
 		{
-			tooltip.add(new TranslationTextComponent("message.pressshift"));
+			tooltip.add(new TranslatableComponent("message.pressshift"));
 		}
 	}
 
 	@Override
-	public VoxelShape getOcclusionShape(BlockState state, IBlockReader worldIn, BlockPos pos)
+	public VoxelShape getOcclusionShape(BlockState state, BlockGetter worldIn, BlockPos pos)
 	{
 		return RENDER_SHAPE;
 	}
 
 	@Override
-	public ActionResultType use(
-			BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit
+	public InteractionResult use(
+			BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit
 	)
 	{
 		if (!worldIn.isClientSide)
 		{
-			TileEntity tileEntity = worldIn.getBlockEntity(pos);
+			BlockEntity tileEntity = worldIn.getBlockEntity(pos);
 
 			if (tileEntity instanceof ComplexMultipartTile && Screen.hasShiftDown())
 			{
@@ -109,15 +102,15 @@ public class ComplexMultipartBlock extends Block
 			}
 		}
 
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
 	public void setPlacedBy(
-			World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack
+			Level worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack
 	)
 	{
-		TileEntity tileEntity = worldIn.getBlockEntity(pos);
+		BlockEntity tileEntity = worldIn.getBlockEntity(pos);
 		if (tileEntity instanceof ComplexMultipartTile)
 			( (ComplexMultipartTile) tileEntity ).updateState();
 
@@ -126,7 +119,7 @@ public class ComplexMultipartBlock extends Block
 
 	@Override
 	protected void createBlockStateDefinition(
-			StateContainer.Builder<Block, BlockState> builder
+			StateDefinition.Builder<Block, BlockState> builder
 	)
 	{
 		super.createBlockStateDefinition(builder);

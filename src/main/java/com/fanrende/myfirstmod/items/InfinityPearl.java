@@ -1,21 +1,20 @@
 package com.fanrende.myfirstmod.items;
 
-import com.fanrende.myfirstmod.entities.InfinityPearlEntity;
 import com.fanrende.myfirstmod.setup.ModSetup;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.item.EnderPearlEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.ThrownEnderpearl;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -29,53 +28,46 @@ public class InfinityPearl extends Item
 		super(new Item.Properties().stacksTo(1).tab(ModSetup.ITEM_GROUP));
 	}
 
-	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn)
+	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn)
 	{
 		ItemStack itemstack = playerIn.getItemInHand(handIn);
 		worldIn.playSound(
-				(PlayerEntity) null,
+				(Player) null,
 				playerIn.getX(),
 				playerIn.getY(),
 				playerIn.getZ(),
 				SoundEvents.ENDER_PEARL_THROW,
-				SoundCategory.NEUTRAL,
+				SoundSource.NEUTRAL,
 				0.5F,
-				0.4F / ( random.nextFloat() * 0.4F + 0.8F )
+				0.4F / ( worldIn.random.nextFloat() * 0.4F + 0.8F )
 		);
 		playerIn.getCooldowns().addCooldown(this, 20);
 		if (!worldIn.isClientSide)
 		{
-			EnderPearlEntity enderpearlentity = new EnderPearlEntity(worldIn, playerIn);
+			ThrownEnderpearl enderpearlentity = new ThrownEnderpearl(worldIn, playerIn);
 			enderpearlentity.setItem(itemstack);
-			enderpearlentity.shootFromRotation(
-					playerIn,
-					playerIn.xRot,
-					playerIn.yRot,
-					0.0F,
-					1.5F,
-					1.0F
-			);
+			enderpearlentity.shootFromRotation(playerIn, playerIn.getXRot(), playerIn.getYRot(), 0.0F, 1.5F, 1.0F);
 			worldIn.addFreshEntity(enderpearlentity);
 		}
 
 		playerIn.awardStat(Stats.ITEM_USED.get(this));
 
-		return ActionResult.sidedSuccess(itemstack, worldIn.isClientSide());
+		return InteractionResultHolder.sidedSuccess(itemstack, worldIn.isClientSide());
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(
-			ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn
+			ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn
 	)
 	{
 		if (Screen.hasShiftDown())
 		{
-			tooltip.add(new TranslationTextComponent("message.infinitypearl"));
+			tooltip.add(new TranslatableComponent("message.infinitypearl"));
 		}
 		else
 		{
-			tooltip.add(new TranslationTextComponent("message.pressshift"));
+			tooltip.add(new TranslatableComponent("message.pressshift"));
 		}
 	}
 }

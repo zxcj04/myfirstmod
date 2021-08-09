@@ -1,11 +1,9 @@
 package com.fanrende.myfirstmod.tools;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
@@ -13,7 +11,7 @@ import net.minecraftforge.energy.EnergyStorage;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class CustomEnergyStorage extends EnergyStorage implements INBTSerializable<CompoundNBT>
+public class CustomEnergyStorage extends EnergyStorage
 {
 	public CustomEnergyStorage(int capacity, int maxTransfer)
 	{
@@ -54,20 +52,6 @@ public class CustomEnergyStorage extends EnergyStorage implements INBTSerializab
 		}
 
 		onEnergyChanged();
-	}
-
-	@Override
-	public CompoundNBT serializeNBT()
-	{
-		CompoundNBT tag = new CompoundNBT();
-		tag.putInt("energy", getEnergyStored());
-		return tag;
-	}
-
-	@Override
-	public void deserializeNBT(CompoundNBT nbt)
-	{
-		setEnergy(nbt.getInt("energy"));
 	}
 
 	public static class Item extends CustomEnergyStorage
@@ -143,7 +127,7 @@ public class CustomEnergyStorage extends EnergyStorage implements INBTSerializab
 		{
 			super(capacity, transfer);
 			this.stack = stack;
-			setEnergy(this.stack.getOrCreateTagElement("BlockEntityTag").getCompound("energy").getInt("energy"));
+			setEnergy(this.stack.getOrCreateTagElement("BlockEntityTag").getInt("energy"));
 		}
 
 		@Override
@@ -151,7 +135,7 @@ public class CustomEnergyStorage extends EnergyStorage implements INBTSerializab
 		{
 			super.setEnergy(energy);
 
-			this.stack.getOrCreateTagElement("BlockEntityTag").getCompound("energy").putInt("energy", getEnergyStored());
+			this.stack.getOrCreateTagElement("BlockEntityTag").putInt("energy", getEnergyStored());
 		}
 
 		@Override
@@ -160,9 +144,7 @@ public class CustomEnergyStorage extends EnergyStorage implements INBTSerializab
 			int energy = super.receiveEnergy(maxReceive, simulate);
 			if (!simulate)
 			{
-				this.stack.getOrCreateTagElement("BlockEntityTag")
-						.getCompound("energy")
-						.putInt("energy", getEnergyStored());
+				this.stack.getOrCreateTagElement("BlockEntityTag").putInt("energy", getEnergyStored());
 			}
 			return energy;
 		}
@@ -173,9 +155,7 @@ public class CustomEnergyStorage extends EnergyStorage implements INBTSerializab
 			int energy = super.extractEnergy(maxExtract, simulate);
 			if (!simulate)
 			{
-				this.stack.getOrCreateTagElement("BlockEntityTag")
-						.getCompound("energy")
-						.putInt("energy", getEnergyStored());
+				this.stack.getOrCreateTagElement("BlockEntityTag").putInt("energy", getEnergyStored());
 			}
 			return energy;
 		}

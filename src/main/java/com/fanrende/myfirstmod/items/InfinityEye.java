@@ -3,27 +3,27 @@ package com.fanrende.myfirstmod.items;
 import com.fanrende.myfirstmod.entities.InfinityEyeEntity;
 import com.fanrende.myfirstmod.setup.ModSetup;
 import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.gen.feature.structure.Structure;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -37,23 +37,28 @@ public class InfinityEye extends Item
 		super(new Item.Properties().stacksTo(1).tab(ModSetup.ITEM_GROUP));
 	}
 
-	public ActionResult<ItemStack> use(World worldIn, PlayerEntity playerIn, Hand handIn)
+	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn)
 	{
 		ItemStack itemstack = playerIn.getItemInHand(handIn);
-		RayTraceResult raytraceresult = getPlayerPOVHitResult(worldIn, playerIn, RayTraceContext.FluidMode.NONE);
-		if (raytraceresult.getType() == RayTraceResult.Type.BLOCK && worldIn.getBlockState(( (BlockRayTraceResult) raytraceresult ).getBlockPos())
-				.getBlock() == Blocks.END_PORTAL_FRAME)
+		HitResult hitresult = getPlayerPOVHitResult(worldIn, playerIn, ClipContext.Fluid.NONE);
+		if (hitresult.getType() == HitResult.Type.BLOCK && worldIn.getBlockState(( (BlockHitResult) hitresult ).getBlockPos())
+				.is(Blocks.END_PORTAL_FRAME))
 		{
-			return ActionResult.pass(itemstack);
+			return InteractionResultHolder.pass(itemstack);
 		}
 		else
 		{
 			playerIn.startUsingItem(handIn);
-			if (worldIn instanceof ServerWorld)
+			if (worldIn instanceof ServerLevel)
 			{
-				BlockPos blockpos = ( (ServerWorld) worldIn ).getChunkSource()
+				BlockPos blockpos = ( (ServerLevel) worldIn ).getChunkSource()
 						.getGenerator()
-						.findNearestMapFeature((ServerWorld)worldIn, Structure.STRONGHOLD, playerIn.blockPosition(), 100, false);
+						.findNearestMapFeature((ServerLevel) worldIn,
+								StructureFeature.STRONGHOLD,
+								playerIn.blockPosition(),
+								100,
+								false
+						);
 				if (blockpos != null)
 				{
 					InfinityEyeEntity infinityEyeEntity = new InfinityEyeEntity(worldIn,
@@ -64,45 +69,49 @@ public class InfinityEye extends Item
 					infinityEyeEntity.setItem(itemstack);
 					infinityEyeEntity.signalTo(blockpos);
 					worldIn.addFreshEntity(infinityEyeEntity);
-					if (playerIn instanceof ServerPlayerEntity)
+					if (playerIn instanceof ServerPlayer)
 					{
-						CriteriaTriggers.USED_ENDER_EYE.trigger((ServerPlayerEntity) playerIn, blockpos);
+						CriteriaTriggers.USED_ENDER_EYE.trigger((ServerPlayer) playerIn, blockpos);
 					}
 
-					worldIn.playSound((PlayerEntity) null,
+					worldIn.playSound((Player) null,
 							playerIn.getX(),
 							playerIn.getY(),
 							playerIn.getZ(),
 							SoundEvents.ENDER_EYE_LAUNCH,
-							SoundCategory.NEUTRAL,
+							SoundSource.NEUTRAL,
 							0.5F,
-							0.4F / ( random.nextFloat() * 0.4F + 0.8F )
+							0.4F / ( worldIn.getRandom().nextFloat() * 0.4F + 0.8F )
 					);
-					worldIn.levelEvent((PlayerEntity) null, 1003, playerIn.blockPosition(), 0);
+					worldIn.levelEvent((Player) null, 1003, playerIn.blockPosition(), 0);
+					if (!playerIn.getAbilities().instabuild)
+					{
+						itemstack.shrink(1);
+					}
 
 					playerIn.awardStat(Stats.ITEM_USED.get(this));
 					playerIn.swing(handIn, true);
-					return ActionResult.success(itemstack);
+					return InteractionResultHolder.success(itemstack);
 				}
 			}
 
-			return ActionResult.consume(itemstack);
+			return InteractionResultHolder.consume(itemstack);
 		}
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(
-			ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn
+			ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn
 	)
 	{
 		if (Screen.hasShiftDown())
 		{
-			tooltip.add(new TranslationTextComponent("message.infinityeye"));
+			tooltip.add(new TranslatableComponent("message.infinityeye"));
 		}
 		else
 		{
-			tooltip.add(new TranslationTextComponent("message.pressshift"));
+			tooltip.add(new TranslatableComponent("message.pressshift"));
 		}
 	}
 }

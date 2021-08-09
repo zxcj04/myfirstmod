@@ -3,18 +3,17 @@ package com.fanrende.myfirstmod.datagen;
 import com.fanrende.myfirstmod.MyFirstMod;
 import com.fanrende.myfirstmod.blocks.ComplexMultipartBlock;
 import com.fanrende.myfirstmod.blocks.ComplexMultipartTile;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import com.fanrende.myfirstmod.setup.Registration;
+import net.minecraft.core.Direction;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.client.model.generators.*;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 import java.util.function.Function;
-
-import static com.fanrende.myfirstmod.setup.Registration.*;
 
 public class BlockStates extends BlockStateProvider
 {
@@ -26,7 +25,7 @@ public class BlockStates extends BlockStateProvider
 	@Override
 	protected void registerStatesAndModels()
 	{
-		simpleBlock(MAGICBLOCK.get());
+		simpleBlock(Registration.MAGICBLOCK.get());
 		registerFirstBlock();
 		registerComplexMultipart();
 	}
@@ -56,7 +55,7 @@ public class BlockStates extends BlockStateProvider
 		modelFirstblock.texture("particle", modLoc("block/firstblock_front"));
 		modelFirstblockPowered.texture("particle", modLoc("block/firstblock_front_powered"));
 
-		orientedBlock(FIRSTBLOCK.get(), state ->
+		orientedBlock(Registration.FIRSTBLOCK.get(), state ->
 		{
 			if (state.getValue(BlockStateProperties.POWERED))
 			{
@@ -93,7 +92,7 @@ public class BlockStates extends BlockStateProvider
 		cellFrame.texture("window", modLoc("block/complex_window"));
 		cellFrame.texture("particle", modLoc("block/complex"));
 
-		createDimensionalCellModel(COMPLEX_MULTIPART_BLOCK.get(), cellFrame);
+		createDimensionalCellModel(Registration.COMPLEX_MULTIPART_BLOCK.get(), cellFrame);
 	}
 
 	private void floatingCube(BlockModelBuilder builder, float fx, float fy, float fz, float tx, float ty, float tz)

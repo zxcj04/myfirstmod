@@ -3,25 +3,25 @@ package com.fanrende.myfirstmod.items;
 import com.fanrende.myfirstmod.setup.Config;
 import com.fanrende.myfirstmod.setup.ModSetup;
 import com.fanrende.myfirstmod.tools.CustomEnergyStorage;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
@@ -42,7 +42,7 @@ public class EnergyPickaxe extends Item
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(
-			ItemStack stack, @Nullable CompoundNBT nbt
+			ItemStack stack, @Nullable CompoundTag nbt
 	)
 	{
 		return new CustomEnergyStorage.Item.Provider(stack,
@@ -72,17 +72,17 @@ public class EnergyPickaxe extends Item
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(
-			ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn
+			ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, TooltipFlag flagIn
 	)
 	{
-		tooltip.add(new StringTextComponent("\u00A75" + "energy: \u00A77" + getEnergyStored(stack) + "\u00A75/\u00A77" + Config.ENERGYPICKAXE_MAXPOWER.get()));
+		tooltip.add(new TextComponent("\u00A75" + "energy: \u00A77" + getEnergyStored(stack) + "\u00A75/\u00A77" + Config.ENERGYPICKAXE_MAXPOWER.get()));
 		if (Screen.hasShiftDown())
 		{
-			tooltip.add(new TranslationTextComponent("message.energypickaxe", Config.ENERGYPICKAXE_MINECOST.get()));
+			tooltip.add(new TranslatableComponent("message.energypickaxe", Config.ENERGYPICKAXE_MINECOST.get()));
 		}
 		else
 		{
-			tooltip.add(new TranslationTextComponent("message.pressshift"));
+			tooltip.add(new TranslatableComponent("message.pressshift"));
 		}
 	}
 
@@ -114,7 +114,7 @@ public class EnergyPickaxe extends Item
 	@Override
 	public int getRGBDurabilityForDisplay(ItemStack stack)
 	{
-		return MathHelper.hsvToRgb(0.72F, 0.66F, 1.0F);
+		return Mth.hsvToRgb(0.72F, 0.66F, 1.0F);
 	}
 
 	private int getEnergyStored(ItemStack stack)
@@ -127,8 +127,8 @@ public class EnergyPickaxe extends Item
 	}
 
 	@Override
-	public ActionResult<ItemStack> use(
-			World worldIn, PlayerEntity playerIn, Hand handIn
+	public InteractionResultHolder<ItemStack> use(
+			Level worldIn, Player playerIn, InteractionHand handIn
 	)
 	{
 		ItemStack stack = playerIn.getItemInHand(handIn);
@@ -136,19 +136,19 @@ public class EnergyPickaxe extends Item
 		stack.getCapability(CapabilityEnergy.ENERGY)
 				.ifPresent(h -> ( (CustomEnergyStorage.Item) h ).setEnergy(Config.ENERGYPICKAXE_MAXPOWER.get()));
 
-		worldIn.playSound((PlayerEntity) null,
+		worldIn.playSound((Player) null,
 				playerIn.blockPosition(),
 				SoundEvents.CROSSBOW_LOADING_MIDDLE,
-				SoundCategory.NEUTRAL,
+				SoundSource.NEUTRAL,
 				0.65F,
-				0.4F / ( random.nextFloat() * 0.4F + 0.8F )
+				0.4F / ( worldIn.random.nextFloat() * 0.4F + 0.8F )
 		);
 
 		return super.use(worldIn, playerIn, handIn);
 	}
 
 	@Override
-	public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, PlayerEntity player)
+	public boolean onBlockStartBreak(ItemStack stack, BlockPos pos, Player player)
 	{
 		boolean stopBreaking = getEnergyStored(stack) < Config.ENERGYPICKAXE_MINECOST.get();
 
@@ -160,7 +160,7 @@ public class EnergyPickaxe extends Item
 
 	@Override
 	public boolean mineBlock(
-			ItemStack stack, World worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving
+			ItemStack stack, Level worldIn, BlockState state, BlockPos pos, LivingEntity entityLiving
 	)
 	{
 		stack.getCapability(CapabilityEnergy.ENERGY)

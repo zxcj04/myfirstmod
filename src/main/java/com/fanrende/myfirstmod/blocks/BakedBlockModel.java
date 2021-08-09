@@ -2,20 +2,20 @@ package com.fanrende.myfirstmod.blocks;
 
 import com.fanrende.myfirstmod.MyFirstMod;
 import com.google.common.collect.ImmutableList;
-import net.minecraft.block.BlockState;
+import com.mojang.blaze3d.vertex.VertexFormatElement;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ItemOverrideList;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.VertexFormatElement;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IDynamicBakedModel;
@@ -35,11 +35,11 @@ public class BakedBlockModel implements IDynamicBakedModel
 
 	private TextureAtlasSprite getTexture()
 	{
-		return Minecraft.getInstance().getTextureAtlas(AtlasTexture.LOCATION_BLOCKS).apply(TEXTURE);
+		return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(TEXTURE);
 	}
 
 	private void putVertex(
-			BakedQuadBuilder builder, Vector3d normal, double x, double y, double z, float u, float v,
+			BakedQuadBuilder builder, Vec3 normal, double x, double y, double z, float u, float v,
 			TextureAtlasSprite sprite, float r, float g, float b
 	)
 	{
@@ -84,9 +84,9 @@ public class BakedBlockModel implements IDynamicBakedModel
 		}
 	}
 
-	private BakedQuad createQuad(Vector3d v1, Vector3d v2, Vector3d v3, Vector3d v4, TextureAtlasSprite sprite)
+	private BakedQuad createQuad(Vec3 v1, Vec3 v2, Vec3 v3, Vec3 v4, TextureAtlasSprite sprite)
 	{
-		Vector3d normal = v3.subtract(v2).cross(v1.subtract(v2)).normalize();
+		Vec3 normal = v3.subtract(v2).cross(v1.subtract(v2)).normalize();
 
 		int tw = sprite.getWidth();
 		int th = sprite.getHeight();
@@ -102,9 +102,9 @@ public class BakedBlockModel implements IDynamicBakedModel
 		return builder.build();
 	}
 
-	private Vector3d v(double x, double y, double z)
+	private Vec3 v(double x, double y, double z)
 	{
-		return new Vector3d(x, y, z);
+		return new Vec3(x, y, z);
 	}
 
 	@Nonnull
@@ -118,9 +118,9 @@ public class BakedBlockModel implements IDynamicBakedModel
 
 		if (mimic != null && !( mimic.getBlock() instanceof BakedBlock ))
 		{
-			if (layer == null || RenderTypeLookup.canRenderInLayer(mimic, layer))
+			if (layer == null || ItemBlockRenderTypes.canRenderInLayer(mimic, layer))
 			{
-				IBakedModel model = Minecraft.getInstance()
+				BakedModel model = Minecraft.getInstance()
 						.getBlockRenderer()
 						.getBlockModelShaper()
 						.getBlockModel(mimic);
@@ -185,14 +185,14 @@ public class BakedBlockModel implements IDynamicBakedModel
 	}
 
 	@Override
-	public ItemOverrideList getOverrides()
+	public ItemOverrides getOverrides()
 	{
-		return ItemOverrideList.EMPTY;
+		return ItemOverrides.EMPTY;
 	}
 
 	@Override
-	public ItemCameraTransforms getTransforms()
+	public ItemTransforms getTransforms()
 	{
-		return ItemCameraTransforms.NO_TRANSFORMS;
+		return ItemTransforms.NO_TRANSFORMS;
 	}
 }

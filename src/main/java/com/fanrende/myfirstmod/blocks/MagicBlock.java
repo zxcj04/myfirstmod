@@ -1,27 +1,28 @@
 package com.fanrende.myfirstmod.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -30,46 +31,45 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
-public class MagicBlock extends Block
+public class MagicBlock extends Block implements EntityBlock
 {
-	private static final VoxelShape SHAPE = VoxelShapes.box(0.0, 0.0, 0.0, 1.0, 0.15, 1.0);
-	private static final VoxelShape RENDER_SHAPE = VoxelShapes.empty();
+	private static final VoxelShape SHAPE = Shapes.box(0.0, 0.0, 0.0, 1.0, 0.15, 1.0);
+	private static final VoxelShape RENDER_SHAPE = Shapes.empty();
 
 	public MagicBlock()
 	{
 		super(Properties.of(Material.STONE).sound(SoundType.STONE).strength(2.0f));
 	}
 
+	@Nullable
 	@Override
-	public boolean hasTileEntity(BlockState state)
+	public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState)
 	{
-		return true;
+		return new MagicBlockTile(blockPos, blockState);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(
-			ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn
+			ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn
 	)
 	{
 		if (Screen.hasShiftDown())
 		{
-			tooltip.add(new TranslationTextComponent("message.magicblock"));
+			tooltip.add(new TranslatableComponent("message.magicblock"));
 		}
 		else
 		{
-			tooltip.add(new TranslationTextComponent("message.pressshift"));
+			tooltip.add(new TranslatableComponent("message.pressshift"));
 		}
 	}
 
 	@Override
-	public void onRemove(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving)
+	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving)
 	{
-		if (state.hasTileEntity() && state.getBlock() != newState.getBlock())
+		if (state.hasBlockEntity() && state.getBlock() != newState.getBlock())
 		{
-			TileEntity tileEntity = worldIn.getBlockEntity(pos);
+			BlockEntity tileEntity = worldIn.getBlockEntity(pos);
 			// drops everything in the inventory
 			tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h ->
 			{
@@ -79,7 +79,7 @@ public class MagicBlock extends Block
 
 			worldIn.updateNeighbourForOutputSignal(pos, this);
 
-			tileEntity.save(new CompoundNBT());
+			tileEntity.save(new CompoundTag());
 		}
 
 		super.onRemove(state, worldIn, pos, newState, isMoving);
@@ -92,7 +92,7 @@ public class MagicBlock extends Block
 	}
 
 	@Override
-	public int getAnalogOutputSignal(BlockState blockState, World worldIn, BlockPos pos)
+	public int getAnalogOutputSignal(BlockState blockState, Level worldIn, BlockPos pos)
 	{
 		AtomicBoolean itemIn = new AtomicBoolean(false);
 
@@ -104,18 +104,9 @@ public class MagicBlock extends Block
 		return itemIn.get() ? 15 : 0;
 	}
 
-	@Nullable
-	@Override
-	public TileEntity createTileEntity(
-			BlockState state, IBlockReader world
-	)
-	{
-		return new MagicBlockTile();
-	}
-
 	@Override
 	public VoxelShape getShape(
-			BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context
+			BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context
 	)
 	{
 		return SHAPE;
@@ -123,26 +114,26 @@ public class MagicBlock extends Block
 
 	@Override
 	public VoxelShape getOcclusionShape(
-			BlockState state, IBlockReader worldIn, BlockPos pos
+			BlockState state, BlockGetter worldIn, BlockPos pos
 	)
 	{
 		return RENDER_SHAPE;
 	}
 
 	@Override
-	public BlockRenderType getRenderShape(BlockState state)
+	public RenderShape getRenderShape(BlockState state)
 	{
-		return BlockRenderType.INVISIBLE;
+		return RenderShape.INVISIBLE;
 	}
 
 	@Override
-	public ActionResultType use(
-			BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit
+	public InteractionResult use(
+			BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit
 	)
 	{
 		if (!world.isClientSide)
 		{
-			TileEntity tileEntity = world.getBlockEntity(pos);
+			BlockEntity tileEntity = world.getBlockEntity(pos);
 			tileEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(h ->
 			{
 				ItemStack stack = player.getItemInHand(hand);
@@ -161,6 +152,6 @@ public class MagicBlock extends Block
 			});
 		}
 
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 }

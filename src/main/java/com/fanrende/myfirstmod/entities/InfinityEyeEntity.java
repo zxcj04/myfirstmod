@@ -1,18 +1,18 @@
 package com.fanrende.myfirstmod.entities;
 
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.projectile.EyeOfEnderEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.projectile.EyeOfEnder;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
-public class InfinityEyeEntity extends EyeOfEnderEntity
+public class InfinityEyeEntity extends EyeOfEnder
 {
-	public InfinityEyeEntity(EntityType<? extends EyeOfEnderEntity> t, World w)
+	public InfinityEyeEntity(EntityType<? extends EyeOfEnder> t, Level w)
 	{
 		super(t, w);
 	}
 
-	public InfinityEyeEntity(World worldIn, double posX, double d, double posZ)
+	public InfinityEyeEntity(Level worldIn, double posX, double d, double posZ)
 	{
 		super(worldIn, posX, d, posZ);
 	}

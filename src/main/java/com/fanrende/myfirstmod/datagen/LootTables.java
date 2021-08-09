@@ -1,8 +1,7 @@
 package com.fanrende.myfirstmod.datagen;
 
+import com.fanrende.myfirstmod.setup.Registration;
 import net.minecraft.data.DataGenerator;
-
-import static com.fanrende.myfirstmod.setup.Registration.*;
 
 public class LootTables extends BaseLootTableProvider
 {
@@ -15,12 +14,15 @@ public class LootTables extends BaseLootTableProvider
 	@Override
 	protected void addTables()
 	{
-		lootTables.put(FIRSTBLOCK.get(), createTagsTable("firstblock", FIRSTBLOCK.get(), "inv", "energy"));
 		lootTables.put(
-				COMPLEX_MULTIPART_BLOCK.get(),
-				createTagsTable("complexmultipartblock", COMPLEX_MULTIPART_BLOCK.get(), "mode")
+				Registration.FIRSTBLOCK.get(),
+				createTagsTable("firstblock", Registration.FIRSTBLOCK.get(), "inv", "energy")
 		);
-		lootTables.put(MAGICBLOCK.get(), createSelfDropTable("magicblock", MAGICBLOCK.get()));
-		lootTables.put(BAKEDBLOCK.get(), createSelfDropTable("bakedblock", BAKEDBLOCK.get()));
+		lootTables.put(
+				Registration.COMPLEX_MULTIPART_BLOCK.get(),
+				createTagsTable("complexmultipartblock", Registration.COMPLEX_MULTIPART_BLOCK.get(), "mode")
+		);
+		lootTables.put(Registration.MAGICBLOCK.get(), createSelfDropTable("magicblock", Registration.MAGICBLOCK.get()));
+		lootTables.put(Registration.BAKEDBLOCK.get(), createSelfDropTable("bakedblock", Registration.BAKEDBLOCK.get()));
 	}
 }

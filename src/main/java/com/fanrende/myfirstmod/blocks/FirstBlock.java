@@ -1,54 +1,64 @@
 package com.fanrende.myfirstmod.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
-public class FirstBlock extends Block
+public class FirstBlock extends Block implements EntityBlock
 {
 	public FirstBlock()
 	{
 		super(Properties.of(Material.METAL)
 				.sound(SoundType.METAL)
 				.strength(2.0f)
-				.lightLevel(state -> state.getValue(BlockStateProperties.POWERED)? 14: 0));
-	}
-
-	@Override
-	public boolean hasTileEntity(BlockState state)
-	{
-		return true;
+				.lightLevel(state -> state.getValue(BlockStateProperties.POWERED) ? 14 : 0));
 	}
 
 	@Nullable
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world)
+	public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState)
 	{
-		return new FirstBlockTile();
+		return new FirstBlockTile(blockPos, blockState);
 	}
 
 	@Nullable
 	@Override
-	public BlockState getStateForPlacement(BlockItemUseContext context)
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
+			Level level, BlockState state, BlockEntityType<T> blockEntityType
+	)
+	{
+		if (level.isClientSide)
+			return null;
+
+		return (level1, blockPos, blockState, t) ->
+		{
+			if (t instanceof FirstBlockTile tile)
+				tile.tickServer();
+		};
+	}
+
+	@Nullable
+	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext context)
 	{
 		BlockState state = defaultBlockState().setValue(BlockStateProperties.FACING,
 						context.getNearestLookingDirection().getOpposite()
@@ -58,20 +68,17 @@ public class FirstBlock extends Block
 	}
 
 	@Override
-	public ActionResultType use(
-			BlockState state, World world, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit
+	public InteractionResult use(
+			BlockState state, Level world, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit
 	)
 	{
 		if (!world.isClientSide)
 		{
-			TileEntity tileEntity = world.getBlockEntity(pos);
+			BlockEntity tileEntity = world.getBlockEntity(pos);
 
-			if (tileEntity instanceof INamedContainerProvider)
+			if (tileEntity instanceof MenuProvider)
 			{
-				NetworkHooks.openGui((ServerPlayerEntity) player,
-						(INamedContainerProvider) tileEntity,
-						tileEntity.getBlockPos()
-				);
+				NetworkHooks.openGui((ServerPlayer) player, (MenuProvider) tileEntity, tileEntity.getBlockPos());
 			}
 			else
 			{
@@ -79,11 +86,11 @@ public class FirstBlock extends Block
 			}
 		}
 
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder)
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
 	{
 		builder.add(BlockStateProperties.FACING, BlockStateProperties.POWERED);
 	}

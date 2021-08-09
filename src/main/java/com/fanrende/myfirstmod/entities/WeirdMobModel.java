@@ -1,19 +1,43 @@
 package com.fanrende.myfirstmod.entities;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import net.minecraft.client.renderer.entity.model.EntityModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
+import com.fanrende.myfirstmod.MyFirstMod;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
+import net.minecraft.resources.ResourceLocation;
 
 public class WeirdMobModel extends EntityModel<WeirdMobEntity>
 {
+	public final ModelPart body;
 
-	public ModelRenderer body;
+	private static final String BODY = "body";
+	public static ModelLayerLocation CUBE_LAYER = new ModelLayerLocation(new ResourceLocation(MyFirstMod.MODID,
+			"weirdmob"
+	), BODY);
 
-	public WeirdMobModel()
+	public WeirdMobModel(ModelPart body)
 	{
-		body = new ModelRenderer(this, 0, 0);
-		body.addBox(-3, 16, -3, 6, 6, 6);
+		this.body = body;
+	}
+
+	public static LayerDefinition createBodyLayer()
+	{
+		MeshDefinition meshDefinition = new MeshDefinition();
+		PartDefinition partDefinition = meshDefinition.getRoot();
+
+		partDefinition.addOrReplaceChild(BODY,
+				CubeListBuilder.create().texOffs(0, 0).addBox(-3, 16, -3, 6, 6, 6),
+				PartPose.ZERO
+		);
+
+		return LayerDefinition.create(meshDefinition, 64, 32);
 	}
 
 	@Override
@@ -27,7 +51,7 @@ public class WeirdMobModel extends EntityModel<WeirdMobEntity>
 
 	@Override
 	public void renderToBuffer(
-			MatrixStack matrixStack, IVertexBuilder iVertexBuilder, int packedLightIn, int packedOverlayIn, float red,
+			PoseStack matrixStack, VertexConsumer iVertexBuilder, int packedLightIn, int packedOverlayIn, float red,
 			float green, float blue, float alpha
 	)
 	{

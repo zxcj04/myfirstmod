@@ -2,25 +2,27 @@ package com.fanrende.myfirstmod.blocks;
 
 import com.fanrende.myfirstmod.MyFirstMod;
 import com.fanrende.myfirstmod.setup.Registration;
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.*;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
+public class MagicTileRenderer implements BlockEntityRenderer<MagicBlockTile>
 {
 	public static final ResourceLocation MAGICBLOCK_TEXTURE = new ResourceLocation(MyFirstMod.MODID,
 			"block/magicblock"
@@ -29,12 +31,11 @@ public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 			"block/magicblock_top"
 	);
 
-	public MagicTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn)
+	public MagicTileRenderer(BlockEntityRendererProvider.Context context)
 	{
-		super(rendererDispatcherIn);
 	}
 
-	private void addVertex(IVertexBuilder builder, MatrixStack matrixStack, float x, float y, float z, float u, float v)
+	private void addVertex(VertexConsumer builder, PoseStack matrixStack, float x, float y, float z, float u, float v)
 	{
 		builder.vertex(matrixStack.last().pose(), x, y, z)
 				.color(1.0f, 1.0f, 1.0f, 1.0f)
@@ -56,18 +57,18 @@ public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 
 	@Override
 	public void render(
-			MagicBlockTile tileEntity, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer,
+			MagicBlockTile tileEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
 			int combinedLight, int combinedOverlay
 	)
 	{
 		TextureAtlasSprite spriteBase = Minecraft.getInstance()
-				.getTextureAtlas(AtlasTexture.LOCATION_BLOCKS)
+				.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS)
 				.apply(MAGICBLOCK_TEXTURE);
 		TextureAtlasSprite spriteTop = Minecraft.getInstance()
-				.getTextureAtlas(AtlasTexture.LOCATION_BLOCKS)
+				.getTextureAtlas(TextureAtlas.LOCATION_BLOCKS)
 				.apply(MAGICBLOCK_TOP_TEXTURE);
 
-		IVertexBuilder builder = buffer.getBuffer(RenderType.translucent());
+		VertexConsumer builder = buffer.getBuffer(RenderType.translucent());
 
 		long time = System.currentTimeMillis();
 
@@ -89,7 +90,7 @@ public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 	}
 
 	private void renderBase(
-			MatrixStack matrixStack, IVertexBuilder builder, Quaternion rotationBase, TextureAtlasSprite spriteBase
+			PoseStack matrixStack, VertexConsumer builder, Quaternion rotationBase, TextureAtlasSprite spriteBase
 	)
 	{
 		matrixStack.pushPose();
@@ -112,7 +113,7 @@ public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 	}
 
 	private void renderTop(
-			MatrixStack matrixStack, IVertexBuilder builder, Quaternion rotationTop, TextureAtlasSprite spriteTop,
+			PoseStack matrixStack, VertexConsumer builder, Quaternion rotationTop, TextureAtlasSprite spriteTop,
 			float topMove
 	)
 	{
@@ -139,8 +140,8 @@ public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 	}
 
 	private void renderItem(
-			MatrixStack matrixStack, TileEntity tileEntity, Quaternion rotationItem, float itemMove,
-			IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay
+			PoseStack matrixStack, BlockEntity tileEntity, Quaternion rotationItem, float itemMove,
+			MultiBufferSource buffer, int combinedLight, int combinedOverlay
 	)
 	{
 		matrixStack.pushPose();
@@ -157,12 +158,10 @@ public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 
 				matrixStack.translate(0.5, 0.75 + itemMove, 0.5);
 				ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-				IBakedModel ibakedmodel = itemRenderer.getModel(stackInSlot,
-						tileEntity.getLevel(),
-						null
-				);
+				// @todo check last int
+				BakedModel ibakedmodel = itemRenderer.getModel(stackInSlot, tileEntity.getLevel(), null, 0);
 				itemRenderer.render(stackInSlot,
-						ItemCameraTransforms.TransformType.FIXED,
+						ItemTransforms.TransformType.FIXED,
 						true,
 						matrixStack,
 						buffer,
@@ -178,6 +177,6 @@ public class MagicTileRenderer extends TileEntityRenderer<MagicBlockTile>
 
 	public static void register()
 	{
-		ClientRegistry.bindTileEntityRenderer(Registration.MAGICBLOCK_TILE.get(), MagicTileRenderer::new);
+		BlockEntityRenderers.register(Registration.MAGICBLOCK_TILE.get(), MagicTileRenderer::new);
 	}
 }

@@ -1,17 +1,18 @@
 package com.fanrende.myfirstmod.blocks;
 
+import com.fanrende.myfirstmod.setup.Registration;
 import com.fanrende.myfirstmod.tools.CustomEnergyStorage;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IWorldPosCallable;
-import net.minecraft.util.IntReferenceHolder;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.DataSlot;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -19,17 +20,14 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
-import static com.fanrende.myfirstmod.setup.Registration.FIRSTBLOCK;
-import static com.fanrende.myfirstmod.setup.Registration.FIRSTBLOCK_CONTAINER;
-
-public class FirstBlockContainer extends Container
+public class FirstBlockContainer extends AbstractContainerMenu
 {
-	private final TileEntity tileEntity;
+	private final BlockEntity tileEntity;
 	private final IItemHandler playerInventory;
 
-	public FirstBlockContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory)
+	public FirstBlockContainer(int windowId, Level world, BlockPos pos, Inventory playerInventory)
 	{
-		super(FIRSTBLOCK_CONTAINER.get(), windowId);
+		super(Registration.FIRSTBLOCK_CONTAINER.get(), windowId);
 
 		this.tileEntity = world.getBlockEntity(pos);
 
@@ -50,7 +48,7 @@ public class FirstBlockContainer extends Container
 		// because of 64 bits and 32 bits difference between server and client on dedicated server
 		// we need two "int" to store and transfer
 
-		addDataSlot(new IntReferenceHolder()
+		addDataSlot(new DataSlot()
 		{
 			@Override
 			public int get()
@@ -69,7 +67,7 @@ public class FirstBlockContainer extends Container
 			}
 		});
 
-		addDataSlot(new IntReferenceHolder()
+		addDataSlot(new DataSlot()
 		{
 			@Override
 			public int get()
@@ -95,16 +93,17 @@ public class FirstBlockContainer extends Container
 	}
 
 	@Override
-	public boolean stillValid(PlayerEntity playerEntity)
+	public boolean stillValid(Player playerEntity)
 	{
-		return stillValid(IWorldPosCallable.create(tileEntity.getLevel(), tileEntity.getBlockPos()),
+		return stillValid(
+				ContainerLevelAccess.create(tileEntity.getLevel(), tileEntity.getBlockPos()),
 				playerEntity,
-				FIRSTBLOCK.get()
+				Registration.FIRSTBLOCK.get()
 		);
 	}
 
 	@Override
-	public ItemStack quickMoveStack(PlayerEntity playerIn, int index)
+	public ItemStack quickMoveStack(Player playerIn, int index)
 	{
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = this.slots.get(index);

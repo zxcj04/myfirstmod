@@ -1,14 +1,15 @@
 package com.fanrende.myfirstmod.blocks;
 
 import com.fanrende.myfirstmod.setup.Registration;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -20,14 +21,14 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class MagicBlockTile extends TileEntity
+public class MagicBlockTile extends BlockEntity
 {
 	private final ItemStackHandler item = this.createItemHandler();
 	private final LazyOptional<IItemHandler> itemLazy = LazyOptional.of(() -> item);
 
-	public MagicBlockTile()
+	public MagicBlockTile(BlockPos pos, BlockState state)
 	{
-		super(Registration.MAGICBLOCK_TILE.get());
+		super(Registration.MAGICBLOCK_TILE.get(), pos, state);
 	}
 
 	private ItemStackHandler createItemHandler()
@@ -37,8 +38,7 @@ public class MagicBlockTile extends TileEntity
 			@Override
 			protected void onContentsChanged(int slot)
 			{
-				level.sendBlockUpdated(
-						worldPosition,
+				level.sendBlockUpdated(worldPosition,
 						getBlockState(),
 						getBlockState(),
 						Constants.BlockFlags.BLOCK_UPDATE + Constants.BlockFlags.NOTIFY_NEIGHBORS
@@ -69,16 +69,16 @@ public class MagicBlockTile extends TileEntity
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT tag)
+	public void load(CompoundTag tag)
 	{
-		CompoundNBT invTag = tag.getCompound("inv");
+		CompoundTag invTag = tag.getCompound("inv");
 		item.deserializeNBT(invTag);
 
-		super.load(state, tag);
+		super.load(tag);
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT tag)
+	public CompoundTag save(CompoundTag tag)
 	{
 		tag.put("inv", item.serializeNBT());
 
@@ -86,32 +86,35 @@ public class MagicBlockTile extends TileEntity
 	}
 
 	@Override
-	public CompoundNBT getUpdateTag()
+	public CompoundTag getUpdateTag()
 	{
-		CompoundNBT tag = super.getUpdateTag();
+		CompoundTag tag = super.getUpdateTag();
 		return this.save(tag);
 	}
 
 	@Override
-	public void handleUpdateTag(BlockState state, CompoundNBT tag)
+	public void handleUpdateTag(CompoundTag tag)
 	{
-		load(state, tag);
+		load(tag);
 	}
 
 	@Nullable
 	@Override
-	public SUpdateTileEntityPacket getUpdatePacket()
+	public ClientboundBlockEntityDataPacket getUpdatePacket()
 	{
-		SUpdateTileEntityPacket packet = new SUpdateTileEntityPacket(worldPosition, 0, getUpdateTag());
+		ClientboundBlockEntityDataPacket packet = new ClientboundBlockEntityDataPacket(worldPosition,
+				0,
+				getUpdateTag()
+		);
 		return packet;
 	}
 
 	@Override
 	public void onDataPacket(
-			NetworkManager net, SUpdateTileEntityPacket pkt
+			Connection net, ClientboundBlockEntityDataPacket pkt
 	)
 	{
-		handleUpdateTag(getBlockState(), pkt.getTag());
+		handleUpdateTag(pkt.getTag());
 	}
 
 	@Nonnull
@@ -127,8 +130,8 @@ public class MagicBlockTile extends TileEntity
 	}
 
 	@Override
-	public AxisAlignedBB getRenderBoundingBox()
+	public AABB getRenderBoundingBox()
 	{
-		return new AxisAlignedBB(getBlockPos(), getBlockPos().offset(1, 3, 1));
+		return new AABB(getBlockPos(), getBlockPos().offset(1, 3, 1));
 	}
 }

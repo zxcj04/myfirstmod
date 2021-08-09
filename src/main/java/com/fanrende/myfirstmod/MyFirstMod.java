@@ -1,6 +1,7 @@
 package com.fanrende.myfirstmod;
 
 import com.fanrende.myfirstmod.setup.*;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -29,7 +30,10 @@ public class MyFirstMod
 
 		Registration.init();
 
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(ModSetup::init);
-		FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientSetup::init);
+		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+
+		modBus.addListener(ModSetup::init);
+		modBus.addListener(ModSetup::onAttributeCreate);
+		modBus.addListener(ClientSetup::init);
 	}
 }

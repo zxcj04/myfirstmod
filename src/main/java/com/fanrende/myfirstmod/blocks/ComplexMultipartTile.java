@@ -1,24 +1,31 @@
 package com.fanrende.myfirstmod.blocks;
 
 import com.fanrende.myfirstmod.setup.Registration;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.Constants;
 
 import static com.fanrende.myfirstmod.blocks.ComplexMultipartBlock.*;
 
-public class ComplexMultipartTile extends TileEntity
+public class ComplexMultipartTile extends BlockEntity
 {
 	private Mode modes[] = new Mode[]{
 			Mode.MODE_NONE, Mode.MODE_NONE, Mode.MODE_NONE, Mode.MODE_NONE, Mode.MODE_NONE, Mode.MODE_NONE
 	};
 
-	public ComplexMultipartTile()
+	//	public ComplexMultipartTile()
+	//	{
+	//		super(Registration.COMPLEX_MULTIPART_TILE.get());
+	//	}
+	public ComplexMultipartTile(
+			BlockPos pos, BlockState state
+	)
 	{
-		super(Registration.COMPLEX_MULTIPART_TILE.get());
+		super(Registration.COMPLEX_MULTIPART_TILE.get(), pos, state);
 	}
 
 	public void toggleMode(Direction side)
@@ -69,11 +76,11 @@ public class ComplexMultipartTile extends TileEntity
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT compound)
+	public void load(CompoundTag compound)
 	{
-		super.load(state, compound);
+		super.load(compound);
 
-		CompoundNBT modeTag = compound.getCompound("mode");
+		CompoundTag modeTag = compound.getCompound("mode");
 
 		modes[0] = Mode.values()[modeTag.getByte("m0")];
 		modes[1] = Mode.values()[modeTag.getByte("m1")];
@@ -84,9 +91,9 @@ public class ComplexMultipartTile extends TileEntity
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT compound)
+	public CompoundTag save(CompoundTag compound)
 	{
-		CompoundNBT modeTag = new CompoundNBT();
+		CompoundTag modeTag = new CompoundTag();
 
 		modeTag.putByte("m0", (byte) modes[0].ordinal());
 		modeTag.putByte("m1", (byte) modes[1].ordinal());
@@ -100,7 +107,7 @@ public class ComplexMultipartTile extends TileEntity
 		return super.save(compound);
 	}
 
-	public enum Mode implements IStringSerializable
+	public enum Mode implements StringRepresentable
 	{
 		MODE_NONE("none"), MODE_INPUT("input"), MODE_OUTPUT("output");
 

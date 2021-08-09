@@ -1,37 +1,36 @@
 package com.fanrende.myfirstmod.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-import net.minecraft.block.AbstractBlock.Properties;
-
-public class BakedBlock extends Block
+public class BakedBlock extends Block implements EntityBlock
 {
-	private final VoxelShape shape = VoxelShapes.box(.2, .2, .2, .8, .8, .8);
+	private final VoxelShape shape = Shapes.box(.2, .2, .2, .8, .8, .8);
 
 	public BakedBlock()
 	{
@@ -40,28 +39,22 @@ public class BakedBlock extends Block
 
 	@Override
 	public VoxelShape getShape(
-			BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context
+			BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context
 	)
 	{
 		return shape;
 	}
 
-	@Override
-	public boolean hasTileEntity(BlockState state)
-	{
-		return true;
-	}
-
 	@Nullable
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world)
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state)
 	{
-		return new BakedBlockTile();
+		return new BakedBlockTile(pos, state);
 	}
 
 	@Override
-	public ActionResultType use(
-			BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult trace
+	public InteractionResult use(
+			BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult trace
 	)
 	{
 		ItemStack item = player.getItemInHand(hand);
@@ -69,14 +62,14 @@ public class BakedBlock extends Block
 		{
 			if (!world.isClientSide)
 			{
-				TileEntity te = world.getBlockEntity(pos);
+				BlockEntity te = world.getBlockEntity(pos);
 				if (te instanceof BakedBlockTile)
 				{
 					BlockState mimicState = ( (BlockItem) item.getItem() ).getBlock().defaultBlockState();
 					( (BakedBlockTile) te ).setMimic(mimicState);
 				}
 			}
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		}
 
 		return super.use(state, world, pos, player, hand, trace);
@@ -85,16 +78,30 @@ public class BakedBlock extends Block
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void appendHoverText(
-			ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn
+			ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn
 	)
 	{
 		if (Screen.hasShiftDown())
 		{
-			tooltip.add(new TranslationTextComponent("message.bakedblock"));
+			tooltip.add(new TranslatableComponent("message.bakedblock"));
 		}
 		else
 		{
-			tooltip.add(new TranslationTextComponent("message.pressshift"));
+			tooltip.add(new TranslatableComponent("message.pressshift"));
 		}
+	}
+
+	@Override
+	public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos)
+	{
+		BlockEntity blockEntity = world.getBlockEntity(pos);
+		if (blockEntity instanceof BakedBlockTile)
+		{
+			BlockState mimic = ( (BakedBlockTile) blockEntity ).getMimic();
+			if (mimic != null)
+				return mimic.getLightEmission(world, pos);
+		}
+
+		return super.getLightEmission(state, world, pos);
 	}
 }

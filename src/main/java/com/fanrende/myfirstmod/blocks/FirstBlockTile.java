@@ -1,21 +1,25 @@
 package com.fanrende.myfirstmod.blocks;
 
 import com.fanrende.myfirstmod.setup.Config;
+import com.fanrende.myfirstmod.setup.Registration;
 import com.fanrende.myfirstmod.tools.CustomEnergyStorage;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -29,9 +33,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.fanrende.myfirstmod.setup.Registration.FIRSTBLOCK_TILE;
-
-public class FirstBlockTile extends TileEntity implements ITickableTileEntity, INamedContainerProvider
+public class FirstBlockTile extends BlockEntity implements MenuProvider
 {
 	private final ItemStackHandler item = this.createItemHandler();
 	private final CustomEnergyStorage energy = this.createEnergyHandler();
@@ -41,17 +43,13 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 
 	private int generatorCounter = 0;
 
-	public FirstBlockTile()
+	public FirstBlockTile(BlockPos pos, BlockState state)
 	{
-		super(FIRSTBLOCK_TILE.get());
+		super(Registration.FIRSTBLOCK_TILE.get(), pos, state);
 	}
 
-	@Override
-	public void tick()
+	public void tickServer()
 	{
-		if (level.isClientSide)
-			return;
-
 		if (generatorCounter > 0)
 		{
 			generatorCounter--;
@@ -93,7 +91,7 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 		{
 			for (Direction direction : Direction.values())
 			{
-				TileEntity tileEntity = level.getBlockEntity(worldPosition.relative(direction));
+				BlockEntity tileEntity = level.getBlockEntity(worldPosition.relative(direction));
 
 				if (tileEntity != null)
 				{
@@ -126,24 +124,54 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 	}
 
 	@Override
-	public void load(BlockState state, CompoundNBT tag)
+	public void load(CompoundTag tag)
 	{
-		CompoundNBT invTag = tag.getCompound("inv");
+		CompoundTag invTag = tag.getCompound("inv");
 		item.deserializeNBT(invTag);
 
-		CompoundNBT energyTag = tag.getCompound("energy");
+		Tag energyTag = tag.get("energy");
 		energy.deserializeNBT(energyTag);
 
-		super.load(state, tag);
+		super.load(tag);
 	}
 
 	@Override
-	public CompoundNBT save(CompoundNBT tag)
+	public CompoundTag save(CompoundTag tag)
 	{
 		tag.put("inv", item.serializeNBT());
 		tag.put("energy", energy.serializeNBT());
 
 		return super.save(tag);
+	}
+
+	@Override
+	public CompoundTag getUpdateTag()
+	{
+		CompoundTag tag = super.getUpdateTag();
+		save(tag);
+
+		return tag;
+	}
+
+	@Override
+	public void handleUpdateTag(CompoundTag tag)
+	{
+		super.handleUpdateTag(tag);
+	}
+
+	@Nullable
+	@Override
+	public ClientboundBlockEntityDataPacket getUpdatePacket()
+	{
+		return new ClientboundBlockEntityDataPacket(worldPosition, 1, getUpdateTag());
+	}
+
+	@Override
+	public void onDataPacket(
+			Connection net, ClientboundBlockEntityDataPacket pkt
+	)
+	{
+		handleUpdateTag(pkt.getTag());
 	}
 
 	private ItemStackHandler createItemHandler()
@@ -201,15 +229,15 @@ public class FirstBlockTile extends TileEntity implements ITickableTileEntity, I
 	}
 
 	@Override
-	public ITextComponent getDisplayName()
+	public Component getDisplayName()
 	{
-		return new StringTextComponent(getType().getRegistryName().getPath());
+		return new TextComponent(getType().getRegistryName().getPath());
 	}
 
 	@Nullable
 	@Override
-	public Container createMenu(
-			int windowId, PlayerInventory playerInventory, PlayerEntity playerEntity
+	public AbstractContainerMenu createMenu(
+			int windowId, Inventory playerInventory, Player playerEntity
 	)
 	{
 		return new FirstBlockContainer(windowId, level, worldPosition, playerInventory);
